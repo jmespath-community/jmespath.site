@@ -17,5 +17,6 @@ changes. Proposals are marked as either "draft", "accepted", or "rejected".
    proposals/jep-008-exptype
    proposals/jep-009-improved-filters
    proposals/jep-010-slice-projections
+   proposals/jep-011-let-function
    proposals/jep-012-raw-string-literals
 
