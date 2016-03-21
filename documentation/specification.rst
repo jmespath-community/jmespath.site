@@ -978,6 +978,8 @@ for brevity, but the same rules apply.
 .. include:: grammar/functions/contains.inc
 .. include:: grammar/functions/ends-with.inc
 .. include:: grammar/functions/floor.inc
+.. include:: grammar/functions/from_items.inc
+.. include:: grammar/functions/items.inc
 .. include:: grammar/functions/join.inc
 .. include:: grammar/functions/keys.inc
 .. include:: grammar/functions/length.inc
@@ -997,3 +999,4 @@ for brevity, but the same rules apply.
 .. include:: grammar/functions/to-string.inc
 .. include:: grammar/functions/type.inc
 .. include:: grammar/functions/values.inc
+.. include:: grammar/functions/zip.inc
