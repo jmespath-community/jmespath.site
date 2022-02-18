@@ -1,3 +1,4 @@
-docs/_build/
+documentation/_build/
+docs/
 *.pyc
 venv/
