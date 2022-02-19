@@ -9,6 +9,11 @@ This document describes the specification for jmespath.
 If you'd like an introduction to the JMESPath language,
 see the :doc:`tutorial` and the :doc:`examples` page.
 
+.. note::
+
+  Any changes to the JMESPath specification  must have a JEP (JMESPath Enhancement Proposal)
+  which is `tracked in a corresponding repository <https://github.com/jmespath-unofficial/jmespath.jep/>`__.
+
 In the specification, examples are shown through the use
 of a ``search`` function.  The syntax for this function is::
 
