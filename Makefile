@@ -12,6 +12,9 @@ clean:
 html:
 	$(MAKE) -C documentation/ html
 
+markdown:
+	$(MAKE) -C documentation/ markdown
+
 doclint:
 	find . -type f -name "*.rst" | xargs doc8
 

@@ -5,8 +5,12 @@ import os
 sys.path.insert(0, os.path.abspath('.'))
 sys.path.append(os.path.abspath('_themes'))
 sys.path.append(os.path.abspath('..'))
-extensions = ['sphinx.ext.autodoc', 'sphinx.ext.viewcode',
-              'jpexample', 'sitemap']
+extensions = [
+    'sphinx.ext.autodoc',
+    'sphinx.ext.viewcode',
+    'jpexample',
+    'sitemap'
+]
 templates_path = ['_templates']
 source_suffix = '.rst'
 # The master toctree document.

@@ -39,7 +39,6 @@ help:
 	@echo "  changes    to make an overview of all changed/added/deprecated items"
 	@echo "  linkcheck  to check all external links for integrity"
 	@echo "  doctest    to run all doctests embedded in the documentation (if enabled)"
-	@echo "  publish    to upload to an s3 bucket"
 
 clean:
 	-rm -rf $(BUILDDIR)/*
@@ -111,6 +110,9 @@ latexpdf:
 	$(MAKE) -C $(BUILDDIR)/latex all-pdf
 	@echo "pdflatex finished; the PDF files are in $(BUILDDIR)/latex."
 
+markdown:
+	$(SPHINXBUILD) -b markdown $(ALLSPHINXOPTS) $(BUILDDIR)/markdown
+
 text:
 	$(SPHINXBUILD) -b text $(ALLSPHINXOPTS) $(BUILDDIR)/text
 	@echo
@@ -154,6 +156,3 @@ doctest:
 	$(SPHINXBUILD) -b doctest $(ALLSPHINXOPTS) $(BUILDDIR)/doctest
 	@echo "Testing of doctests in the sources finished, look at the " \
 	      "results in $(BUILDDIR)/doctest/output.txt."
-
-publish: html
-	aws s3 sync $(BUILD_DIR)/ s3://$(S3_BUCKET) --acl public-read --delete --region us-west-2
