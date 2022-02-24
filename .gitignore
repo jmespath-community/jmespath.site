@@ -1,4 +1,5 @@
-documentation/_build/
-docs/
 *.pyc
+docs/
+documentation/_build/
+jp.exe
 venv/
