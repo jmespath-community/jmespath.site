@@ -59,16 +59,16 @@ BEGIN {
 
 		$complianceAssetName = "compliance-$($specVersion).json"
 
-		## Repository with a single release will return a object instead of an array
-		$expression = "{ name: name, assets: assets[? name == '$($complianceAssetName)' ].{ name: name, url: browser_download_url } }"
-		if ($releases.StartsWith("[")) { $expression = "[].$($expression)" }
+		## Repository with a single release will return an object instead of an array
+		$expression = "{url:assets[?name == '$($complianceAssetName)']|[0].browser_download_url}"
+		if ($releases.StartsWith("[")) {
+			$expression = "[].$($expression)[?url != `null`]|[0]"
+		}
 
 		Write-Verbose "Applying JMESPath expression: $expression"
 		$json = $releases | . $jp_exe $expression | ConvertFrom-JSON
-		$release = $json | ? { $_.assets.name -eq $complianceAssetName } | Select-Object -First 1
-		$asset = $release.assets | ? { $_.name -eq $complianceAssetName }
-		if ($asset) {
-			return $asset.url
+		if ($json) {
+			return $json.url
 		}
 	}
 }

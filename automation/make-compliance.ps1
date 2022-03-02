@@ -1,7 +1,7 @@
 [CmdletBinding()]
 param(
 	[Alias("RootFolder")]
-	[string] $path = "$($PWD)/../documentation/compliance"
+	[string] $path = "$($PSScriptRoot)/../documentation/compliance"
 )
 
 BEGIN {

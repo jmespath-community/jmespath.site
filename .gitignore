@@ -1,5 +1,6 @@
 *.pyc
 docs/
 documentation/_build/
+jp
 jp.exe
 venv/
