@@ -978,7 +978,7 @@ for brevity, but the same rules apply.
 .. include:: grammar/functions/contains.inc
 .. include:: grammar/functions/ends-with.inc
 .. include:: grammar/functions/floor.inc
-.. include:: grammar/functions/from_items.inc
+.. include:: grammar/functions/from-items.inc
 .. include:: grammar/functions/items.inc
 .. include:: grammar/functions/join.inc
 .. include:: grammar/functions/keys.inc
@@ -989,7 +989,7 @@ for brevity, but the same rules apply.
 .. include:: grammar/functions/merge.inc
 .. include:: grammar/functions/min-by.inc
 .. include:: grammar/functions/min.inc
-.. include:: grammar/functions/not_null.inc
+.. include:: grammar/functions/not-null.inc
 .. include:: grammar/functions/reverse.inc
 .. include:: grammar/functions/sort-by.inc
 .. include:: grammar/functions/sort.inc
