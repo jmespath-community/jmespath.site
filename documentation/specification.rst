@@ -989,6 +989,7 @@ for brevity, but the same rules apply.
 .. include:: grammar/functions/merge.inc
 .. include:: grammar/functions/min-by.inc
 .. include:: grammar/functions/min.inc
+.. include:: grammar/functions/not_null.inc
 .. include:: grammar/functions/reverse.inc
 .. include:: grammar/functions/sort-by.inc
 .. include:: grammar/functions/sort.inc
