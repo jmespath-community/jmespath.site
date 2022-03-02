@@ -46,8 +46,10 @@ and ``nil`` in ruby and go.
 
 .. _grammar:
 
-Grammar
-=======
+Grammar |specification_version|
+===============================
+
+.. |specification_version| image:: https://img.shields.io/badge/version-2016--09--05--9e8d0e3-blue.svg
 
 The grammar is specified using ABNF, as described in `RFC4234`_
 

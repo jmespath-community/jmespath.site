@@ -20,7 +20,7 @@ level is based on which compliance tests the library can pass.
     - Fully compliant
   * - .NET
     - `jmespath.net <https://github.com/jdevillard/JmesPath.Net>`__
-    - Fully compliant
+    - .. include:: compliance/jdevillard/jmespath.net.inc
   * - Elixir
     - `ex-jmes <https://github.com/stephan83/ex-jmes>`__
     - Fully compliant
