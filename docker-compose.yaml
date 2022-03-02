@@ -1,0 +1,13 @@
+version: "2"
+
+services:
+  workspace:
+    build:
+      context: .
+      dockerfile: ./.devcontainer/Dockerfile
+    volumes:
+      - /mnt/c/Projects/springcomp/jmespath/jmespath.site:/workspace:cached
+    ports:
+      - "8000:8000"
+
+    command: /bin/sh -c "while sleep 1000; do :; done"
