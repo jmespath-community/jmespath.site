@@ -2,7 +2,7 @@ name: build-sphinx-to-gh-pages
 
 env:
   GITHUB_ACTOR: Springcomp
-  GITHUB_REPOSITORY: jmespath-unofficial/jmespath.site
+  GITHUB_REPOSITORY: jmespath-community/jmespath.site
 
 on:
   push:

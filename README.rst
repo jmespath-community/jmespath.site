@@ -5,7 +5,7 @@ JMESPath Site
    :target: https://gitter.im/jmespath/chat
 
 
-This is the repo for the unofficial website: https://jmespath-unofficial.github.io/jmespath.site
+This is the repo for the community website: https://jmespath-community.github.io/jmespath.site
 This is a clone of the official website: https://jmespath.org
 
 Join us on our `Gitter channel <https://gitter.im/jmespath/chat>`__.
@@ -14,7 +14,7 @@ Join us on our `Gitter channel <https://gitter.im/jmespath/chat>`__.
 Overview
 ========
 
-The https://jmespath-unofficial.github.io/jmespath.site/ site is a static website that uses
+The https://jmespath-community.github.io/jmespath.site/ site is a static website that uses
 `Sphinx <http://sphinx-doc.org/>`__, a python documentation
 system, under the hood.  If you are familiar with sphinx, then you know how to
 build this static site.
