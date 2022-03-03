@@ -46,7 +46,7 @@ Next, install the python package requirements::
   $ pip install -r requirements.txt
 
 You're now all set to start working on the JMESPath site.  Note that if you
-want to exist the virtualenv environment once you're done working on the
+want to exit the virtualenv environment once you're done working on the
 JMESPath site, you can just run "deactivate", which will deactivate your
 virtual environment.
 
@@ -54,7 +54,7 @@ Making Changes to the Site
 --------------------------
 
 Once you have a virtual environment set up, you can start working on the
-JMESPath site. All the content is under the ``docs/`` folder.  All of the
+JMESPath site. All the content is under the ``documentation/`` folder.  All of the
 content is written using reStructuredText.  If you are not familiar with the
 syntax, the sphinx site has an excellent
 `reStructuredText primer <http://sphinx-doc.org/rest.html>`__.
@@ -62,13 +62,13 @@ syntax, the sphinx site has an excellent
 Once you've made changes you can build the docs by running ``make html``.  Make
 sure that you've activated your virtual environment (this was done in the
 previous section when you ran ``. venv/bin/activate``.  Once the docs have
-finished building the html files will be in ``docs/_build/html/``.  **Pro
+finished building the html files will be in ``documentation/_build/html/``.  **Pro
 Tip**: python has a built in web server you can use the easily view the
 rendered html::
 
   $ make html
-  $ cd docs/_build/html
-  $ python -m http.server
+  $ cd documentation/_build/html
+  $ python3 -m http.server
 
 You can then view the docs at http://localhost:8000/
 
