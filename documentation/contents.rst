@@ -22,6 +22,7 @@ Contents
    tutorial
    examples
    specification
+   specification_v2015.09.05
    libraries
    compliance
    proposals

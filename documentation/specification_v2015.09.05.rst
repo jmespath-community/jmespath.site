@@ -1,10 +1,10 @@
 .. _spec:
 
-===============================
-JMESPath Specification 
-===============================
+======================
+JMESPath Specification
+======================
 
-This document describes the **latest** |specification_version| specification for jmespath.
+This document describes the |specification_version| specification for jmespath.
 
 If you'd like an introduction to the JMESPath language,
 see the :doc:`tutorial` and the :doc:`examples` page.
@@ -49,7 +49,7 @@ and ``nil`` in ruby and go.
 Grammar |specification_version|
 ===============================
 
-.. |specification_version| image:: https://img.shields.io/badge/version-2016--09--05--9e8d0e3-blue.svg
+.. |specification_version| image:: https://img.shields.io/badge/version-2015--09--05--9e8d0e3-blue.svg
 
 The grammar is specified using ABNF, as described in `RFC4234`_
 
