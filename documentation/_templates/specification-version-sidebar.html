@@ -1,6 +1,15 @@
+{%- macro specification_sidebar(name, version) -%}
+<li {%- if pagename!=name %} style="list-style:none" {%- endif %} > <a href="/{{ name }}.html"><img src="https://img.shields.io/badge/{{version}}.svg"/></a></li>
+{%- endmacro -%}
+
 <h3>Specification Version</h3>
 <ul>
-  <li><a href="/specification.html"><img src="https://img.shields.io/badge/version-2016--09--05--9e8d0e3-blue.svg"/></a></li>
-  <li><a href="/specification_v2015.09.05.html"><img src="https://img.shields.io/badge/version-2015--09--05--9e8d0e3-blue.svg"/></a></li>
-  <li><a href="https://gitter.im/jmespath/chat"><img src="https://img.shields.io/badge/version-2014--09--05--9e8d0e3-blue.svg"/></a></li>
+  <ul>
+    {{ specification_sidebar("specification","2016--09--05--9e8d0e3-blue") }}
+    {{ specification_sidebar("specification_v2015.09.05","version-2015--09--05--9e8d0e3-blue") }}
+
+  </ul>
+  <!-- <li>{{ specification_sidebar("specification_v2015.09.05") }} <a href="/specification_v2015.09.05.html"><img src="https://img.shields.io/badge/version-2015--09--05--9e8d0e3-blue.svg"/></a></li> -->
+  <!-- <li><a href="https://gitter.im/jmespath/chat"><img src="https://img.shields.io/badge/version-2014--09--05--9e8d0e3-blue.svg"/></a></li> -->
+
 </ul>
