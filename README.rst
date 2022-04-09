@@ -5,7 +5,7 @@ JMESPath Site
    :target: https://gitter.im/jmespath/chat
 
 
-This is the repo for the community website: https://jmespath.site
+This is the repo for the community website: https://jmespath.site. 
 This is a clone of the official website: https://jmespath.org
 
 Join us on our `Gitter channel <https://gitter.im/jmespath/chat>`__.
