@@ -18,12 +18,12 @@ jobs:
         path: build/
     - uses: actions/checkout@v3
       with:
-        repository: https://github.com/jmespath-community/jmespath.jep.git
+        repository: https://github.com/jmespath-community/jmespath.spec.git
         ref: ${{ github.event.inputs.version }}
         path: content/spec
     - uses: actions/checkout@v3
       with:
-        repository: https://github.com/jmespath-community/jmespath.jep.wiki.git
+        repository: https://github.com/jmespath-community/jmespath.spec.wiki.git
         path: content/wiki
     - name: Setup Hugo
       uses: peaceiris/actions-hugo@v2
