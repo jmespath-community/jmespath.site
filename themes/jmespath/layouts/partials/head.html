@@ -1,0 +1,16 @@
+<meta charset="utf-8">
+<title>{{ block "title" . }}{{ .Site.Title }}{{ end }}</title>
+
+<!-- Stylesheets -->
+<link href="https://unpkg.com/sanitize.css" rel="stylesheet" />
+
+{{ $maincss := resources.Get "main.scss" | resources.ToCSS | resources.Minify |  resources.Fingerprint }}
+<link rel="stylesheet" href="{{ $maincss.Permalink }}" integrity="{{ $maincss.Data.Integrity }}">
+{{ $democss := resources.Get "demo.scss" | resources.ToCSS | resources.Minify |  resources.Fingerprint }}
+<link rel="stylesheet" href="{{ $democss.Permalink }}" integrity="{{ $democss.Data.Integrity }}">
+
+<!-- Scripts -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jmespath/0.16.0/jmespath.min.js" integrity="sha512-w/sNKK/59oJUi6v+SjgfIijrkFN8Pfv5QFZSV4KvrNMJrlbVM3017ZGNCA2AwZ6PKJzTPxQaDs/TbPcVGnF+pQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+{{ $demojs := resources.Get "demo.js" |  resources.Fingerprint }}
+<script src="{{ $demojs.Permalink}}" integrity="{{ $demojs.Data.Integrity }}"></script>

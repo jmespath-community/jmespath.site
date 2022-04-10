@@ -1,0 +1,1 @@
+<h{{ .Level }} id="{{ if not (eq .Page.Type "page") }}{{ .Page.Type }}-{{ end }}{{ .Anchor | safeURL }}">{{ .Text | safeHTML }}</h{{ .Level }}>

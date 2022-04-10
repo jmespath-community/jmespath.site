@@ -1,0 +1,46 @@
+name: Build
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: Spec repo version tag
+        required: true
+        type: string
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - uses: actions/checkout@v3
+      with:
+        ref: gh-pages
+        path: build/
+    - uses: actions/checkout@v3
+      with:
+        repository: https://github.com/jmespath-community/jmespath.jep.git
+        ref: ${{ github.event.inputs.version }}
+        path: content/spec
+    - uses: actions/checkout@v3
+      with:
+        repository: https://github.com/jmespath-community/jmespath.jep.wiki.git
+        path: content/wiki
+    - name: Setup Hugo
+      uses: peaceiris/actions-hugo@v2
+      with:
+        hugo-version: 'latest'
+    - name: Build
+      env:
+        OUTPUTDIR: "build/${{ github.event.inputs.version }}"
+      run: .github/workflows/build.sh
+    - name: Update versions
+      run: "ls -d v* | sort -V > VERSIONS"
+      working-directory: build/
+    - name: Update latest
+      run: "ln -sf $(tail -1 VERSIONS) latest"
+      working-directory: build/
+    - name: Deploy
+      if: github.ref == 'refs/heads/main'
+      uses: EndBug/add-and-commit@v9.0.0
+      with:
+        cwd: build/

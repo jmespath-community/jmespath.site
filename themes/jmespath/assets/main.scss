@@ -1,0 +1,168 @@
+body {
+  width: 80vw;
+  margin-left: auto;
+  margin-right: auto;
+  font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+main {
+  article {
+    margin-left: -9vw;
+    margin-right: -9vw;
+    padding: 1em 9vw 4em;
+    border-bottom: 1px solid #d2d2d2;
+
+    & > h1:first-child {
+      font-size: 4em;
+      margin-top: 0;
+      margin-bottom: 1rem;
+      line-height: 1.2em;
+    }
+  }
+
+  article:nth-child(even) {
+    background-color: #f6f6f6;
+  }
+
+  nav {
+    float: left;
+    margin-right: 3ch;
+    ul {
+      li:before {
+        content: "‣";
+        padding-right: 1ch;
+      }
+
+      ul {
+        margin-left: 2ch;
+        font-size: 0.9em;
+      }
+    }
+  }
+}
+
+header {
+  figure.logo {
+    text-align: center;
+    margin-bottom: 2em;
+
+    img {
+      min-height: 6em;
+    }
+
+    figcaption {
+      font-size: 1.6em;
+    }
+  }
+
+  nav.main {
+    background-image: linear-gradient(to bottom, #585858 0, #222 100%);
+    background-repeat: repeat-x;
+
+    background-color: #222;
+    border-color: #080808;
+
+    min-height: 50px;
+    margin-left: -9vw;
+    margin-right: -9vw;
+
+    ol {
+      margin: 0;
+      padding-top: calc(25px - 0.5em);
+      line-height: 16px;
+      display: flex;
+      justify-content: center;
+    }
+    li {
+      display: inline-block;
+      margin-left: 2em;
+      margin-right: 2em;
+
+      a {
+        font-weight: bold;
+        text-shadow: 0 -1px 0 rgba(0,0,0,0.25);
+        color: #bbb;
+        text-decoration: none;
+        font-size: 16px;
+
+        &:hover, &:focus {
+          color: #fff;
+          background-color: transparent;
+        }
+      }
+    }
+  }
+}
+
+#intro {
+  display: grid;
+  grid-template-columns: auto auto auto;
+  grid-template-areas: "demo demo tryit" "abnf test lang";
+  gap: 30px 30px;
+
+  .demo {
+    grid-area: demo;
+
+    .result::before {
+      content: "Result:";
+      top: -1.5em;
+      position: absolute;
+      font-weight: bold;
+    }
+
+    .result {
+      margin-top: 2em;
+      position: relative;
+    }
+  }
+
+  h1, p {
+    margin-top: 0;
+    margin-bottom: 0.5rem;
+  }
+
+  h1 {
+    font-size: 1.5rem;
+  }
+}
+
+table {
+  width: 100%;
+  text-align: center;
+}
+
+#libraries table {
+  border: 1px solid black;
+  tr:not(:last-child), thead > tr {
+    border-bottom: 1px solid lightgrey;
+  }
+  td {
+    padding-left: 1em;
+    padding-right: 1em;
+  }
+}
+
+pre, textarea.data, .result, code {
+  font-size: 0.8em;
+}
+
+.highlight > pre {
+  padding-left: 0.5ch;
+}
+
+.up {
+  position: sticky;
+  top: calc(100vh - 2em);
+  float: right;
+  z-index: 1;
+  border: 1px solid darkgrey;
+  background: white;
+  padding: 5px 20px;
+  border-radius: 5px;
+  margin-right: -9vw;
+  text-decoration: none;
+  margin-top: 150vh;
+  &:after {
+    content: "Up";
+  }
+}

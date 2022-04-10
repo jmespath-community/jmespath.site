@@ -1,0 +1,67 @@
+{{ define "partials/spec-item.html" }}
+<section>
+  {{- if .Get "id" -}}
+  {{ or (.Get "header") ( print "# " (.Get "id")) | markdownify }}
+  <pre>
+    {{- delimit (.Get "expressions") "\n" }}
+  </pre>
+  <div>
+    {{ delimit (.Get "body") "\n" | markdownify }}
+  </div>
+  {{ else -}}
+    {{ delimit (.Get "body") "\n" | markdownify }}
+  {{- end -}}
+</section>
+{{ end -}}
+
+{{ $scratch := newScratch -}}
+{{ $scratch.Set "inHead" true -}}
+{{ $scratch.Set "inSection" false -}}
+{{ $scratch.Set "header" "" -}}
+{{ $scratch.Set "id" "" -}}
+{{ $scratch.Set "expressions" slice -}}
+{{ $scratch.Set "body" slice -}}
+{{ range split . "\n" -}}
+{{ if not (and ($scratch.Get "inHead") (eq (substr . 0 1) ";")) -}}
+{{ $scratch.Set "inHead" false -}}
+{{ with $line := split . ";;" -}}
+    {{ with index . 0 | strings.TrimLeft " " | strings.TrimRight " " -}}{{/* expression line */}}
+        {{- if len ($scratch.Get "body") -}}
+            {{ partial "spec-item.html" $scratch -}}
+            {{ $scratch.Set "inSection" false -}}
+            {{ $scratch.Set "header" "" -}}
+            {{ $scratch.Set "expressions" slice -}}
+            {{ $scratch.Set "body" slice -}}
+        {{ end -}}
+
+        {{ if or ($scratch.Get "inSection") (in . " =/ ") -}}
+            {{ $scratch.Add "expressions" . -}}
+        {{ else }}
+            {{ $scratch.Set "expressions" (slice .) -}}
+            {{ $scratch.Set "id" "" -}}
+        {{ end -}}
+
+        {{ if and (not ($scratch.Get "id")) (in . "=") -}}
+            {{/* Use the first expression name as the default header */}}
+            {{- index (split . "=") 0 | strings.TrimLeft " " | strings.TrimRight " " | $scratch.Set "id" -}}
+        {{ end -}}
+
+        {{ with index $line 1 -}}
+            {{- if strings.HasSuffix . "\\" -}}
+                {{ $scratch.Set "inSection" true -}}
+                {{with substr . 0 -1 | strings.TrimLeft " " | strings.TrimRight " " }}{{ $scratch.Set "header" . -}}{{ end -}}
+            {{ else -}}
+                {{ with strings.TrimLeft " " . | strings.TrimRight " " }}{{ $scratch.Set "header" . -}}{{ end -}}
+            {{ end -}}
+        {{ end -}}
+
+    {{ else }}{{/* doc line */}}
+        {{- $scratch.Add "body" ( index . 1 | strings.TrimRight " " ) -}}
+        {{ $scratch.Set "inSection" false -}}
+    {{ end -}}
+{{ end -}}
+{{ end -}}
+{{ end -}}
+{{ if or ( gt (len ($scratch.Get "body")) 1) (index ($scratch.Get "body") 0 ) -}}
+{{ partial "spec-item.html" $scratch }}
+{{ end -}}

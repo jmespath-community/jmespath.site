@@ -1,0 +1,40 @@
+{{ $name := .name -}}
+<dt id="{{ .name }}">{{ .name }}</dt>
+<dd>
+    <div class="fsig">
+        <span class="rettype">{{ .returns.type }}</span>&nbsp;
+        <span class="fname">{{ .name }}</span>(
+        {{ range .args.required }}
+            {{ apply print .type " " .name }}
+        {{ end }}
+        {{ range .args.optional }}
+        {{ end }}
+        )
+    </div>
+    <table class="args">
+        <tbody class="required">
+        {{ range .args.required }}
+        <tr><td>{{ .name }}</td><td>required</td><td>{{ .type }}</td><td>{{ .desc }}</td></tr>
+        {{ end }}
+        </tbody>
+        <tbody class="optional">
+        {{ range .args.optional }}
+        <tr><td>{{ .name }}</td><td>optional</td><td>{{ .type }}</td><td>{{ .desc }}</td></tr>
+        {{ end }}
+        </tbody>
+        <tbody><tr><td>Returns</td><td></td><td>{{ .returns.type }}</td><td>{{ .returns.desc }}</td></tr></tbody>
+    </table>
+    <div class="description">{{ .desc }}</div>
+
+    <table class="examples">
+        <caption>Examples</caption>
+        <thead>
+            <tr><th>Given</th><th>Expression</th><th>Result</th></tr>
+        </thead>
+        <tbody>
+        {{- range .examples }}
+            <tr><td>{{ .context }}</td><td>{{ $name }}({{ delimit .args ", " }})</td><td>{{ .returns }}</td></tr>
+        {{ end -}}
+        </tbody>
+    </table>
+</dd>

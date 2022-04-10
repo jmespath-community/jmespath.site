@@ -1,0 +1,1 @@
+<a href="{{if and (hasPrefix .Destination "#") ( not (eq .Page.Type "page") ) }}#{{ .Page.Type }}-{{ strings.TrimPrefix "#" .Destination | safeURL }}{{ else }}{{ .Destination | safeURL }}{{ end }}"{{ with .Title}} title="{{ . }}"{{ end }}{{ if strings.HasPrefix .Destination "http" }} target="_blank" rel="noopener"{{ end }}>{{ .Text | safeHTML }}</a>

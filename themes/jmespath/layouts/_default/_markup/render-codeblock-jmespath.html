@@ -1,0 +1,17 @@
+{{/* https://gohugo.io/templates/render-hooks/#render-hooks-for-code-blocks */}}
+{{ $block := . }}
+{{ with split .Inner "\n" }}
+<div class="demo{{with index $block.Attributes "class" }} {{ . }}{{ end }}" onclick="demo(event)"{{ range $k, $v := $block.Attributes}} {{$k}}="{{$v}}"{{ end }}>
+    <input type="text" class="query" oninput="demoInput(event)" value="{{ index . 0 }}"></input>
+    <textarea class="data" rows="10" oninput="demoInput(event)">{{ delimit (after 1 .) "\n" }}</textarea>
+    <div class="result">
+        {{- with resources.GetRemote "http://localhost:8000/json.txt"  (dict "body" $block.Inner ) -}}
+            {{ with .Err -}}
+                {{ errorf "error in demo %s: %s" $block.Position . -}}
+            {{ else -}}
+                {{- strings.TrimLeft "\n" .Content | strings.TrimRight "\n" | replaceRE ", *\n *" ", " -}}
+            {{- end -}}
+        {{- end -}}
+    </div>
+</div>
+{{ end }}
