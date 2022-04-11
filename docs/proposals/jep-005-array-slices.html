@@ -1,0 +1,278 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  
+  <link rel="stylesheet" type="text/css" href="../_static/css/bootstrap.min.css" />
+  <link rel="stylesheet" type="text/css" href="../_static/css/bootstrap-theme.min.css" />
+  <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+    <title>Array Slice Expressions &#8212; JMESPath</title>
+    <link rel="stylesheet" href="../_static/jmespath.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Improved Identifiers" href="jep-006-improved-identifiers.html" />
+    <link rel="prev" title="Pipe Expressions" href="jep-004-pipes.html" />
+  
+   
+
+  </head><body>
+<nav class="navbar navbar-inverse navbar-static-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#toggle-main-nav">
+      </button>
+      <a class="navbar-brand" href="../contents.html"></a>
+    </div>
+    <div class="collapse navbar-collapse" id="toggle-main-nav">
+      <ul class="nav navbar-nav">
+        <li><a href="../index.html">Home</a></li>
+        <li><a href="../tutorial.html">Tutorial</a></li>
+        <li><a href="../examples.html">Examples</a></li>
+        <li><a href="../specification.html">Specification</a></li>
+        <li><a href="../libraries.html">Libraries</a></li>
+        <li><a href="https://github.com/jmespath-community">Github</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="jep-006-improved-identifiers.html" title="Improved Identifiers"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="jep-004-pipes.html" title="Pipe Expressions"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../contents.html">JMESPath</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../proposals.html" accesskey="U">JMESPath Proposals</a> &#187;</li> 
+      </ul>
+    </div>
+        <div class="container">
+            <div class="main-content">
+              <div class="row">
+                  <div class="col-md-9 col-md-push-3">
+                    
+  <div class="section" id="array-slice-expressions">
+<h1>Array Slice Expressions<a class="headerlink" href="#array-slice-expressions" title="Permalink to this headline">¶</a></h1>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">JEP:</th><td class="field-body">5</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Author:</th><td class="field-body">Michael Dowling</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Status:</th><td class="field-body">accepted</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Created:</th><td class="field-body">08-Dec-2013</td>
+</tr>
+</tbody>
+</table>
+<div class="section" id="abstract">
+<h2>Abstract<a class="headerlink" href="#abstract" title="Permalink to this headline">¶</a></h2>
+<p>This document proposes modifying the JMESPath grammar to support array slicing
+for accessing specific portions of an array.</p>
+</div>
+<div class="section" id="motivation">
+<h2>Motivation<a class="headerlink" href="#motivation" title="Permalink to this headline">¶</a></h2>
+<p>The current JMESPath grammar does not allow plucking out specific portions of
+an array.</p>
+<p>The following examples are possible with array slicing notation utilizing an
+optional start position, optional stop position, and optional step that can be
+less than or greater than 0:</p>
+<ol class="arabic simple">
+<li>Extracting every N indices (e.g., only even <code class="docutils literal notranslate"><span class="pre">[::2]</span></code>, only odd <code class="docutils literal notranslate"><span class="pre">[1::2]</span></code>,
+etc)</li>
+<li>Extracting only elements after a given start position: <code class="docutils literal notranslate"><span class="pre">[2:]</span></code></li>
+<li>Extracting only elements before a given stop position: <code class="docutils literal notranslate"><span class="pre">[:5]</span></code></li>
+<li>Extracting elements between a given start and end position: <code class="docutils literal notranslate"><span class="pre">[2::5]</span></code></li>
+<li>Only the last 5 elements: <code class="docutils literal notranslate"><span class="pre">[-5:]</span></code></li>
+<li>The last five elements in reverse order: <code class="docutils literal notranslate"><span class="pre">[:-5:-1]</span></code></li>
+<li>Reversing the order of an array: <code class="docutils literal notranslate"><span class="pre">[::-1]</span></code></li>
+</ol>
+</div>
+<div class="section" id="syntax">
+<h2>Syntax<a class="headerlink" href="#syntax" title="Permalink to this headline">¶</a></h2>
+<p>This syntax introduces Python style array slicing that allows a start position,
+stop position, and step.  This syntax also proposes following the same
+semantics as python slices.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">start</span><span class="p">:</span><span class="n">stop</span><span class="p">:</span><span class="n">step</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>Each part of the expression is optional. You can omit the start position, stop
+position, or step. No more than three values can be provided in a slice
+expression.</p>
+<p>The step value determines how my indices to skip after each element is plucked
+from the array. A step of 1 (the default step) will not skip any indices. A
+step value of 2 will skip every other index while plucking values from an
+array. A step value of -1 will extract values in reverse order from the array.
+A step value of -2 will extract values in reverse order from the array while,
+skipping every other index.</p>
+<p>Slice expressions adhere to the following rules:</p>
+<ol class="arabic simple">
+<li>If a negative start position is given, it is calculated as the total length
+of the array plus the given start position.</li>
+<li>If no start position is given, it is assumed to be 0 if the given step is
+greater than 0 or the end of the array if the given step is less than 0.</li>
+<li>If a negative stop position is given, it is calculated as the total length
+of the array plus the given stop position.</li>
+<li>If no stop position is given, it is assumed to be the length of the array if
+the given step is greater than 0 or 0 if the given step is less than 0.</li>
+<li>If the given step is omitted, it it assumed to be 1.</li>
+<li>If the given step is 0, an error must be raised.</li>
+<li>If the element being sliced is not an array, the result must be <code class="docutils literal notranslate"><span class="pre">null</span></code>.</li>
+<li>If the element being sliced is an array and yields no results, the result
+must be an empty array.</li>
+</ol>
+</div>
+<div class="section" id="modified-grammar">
+<h2>Modified Grammar<a class="headerlink" href="#modified-grammar" title="Permalink to this headline">¶</a></h2>
+<p>The following modified JMESPath grammar supports array slicing.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">expression</span>        <span class="o">=</span> <span class="n">sub</span><span class="o">-</span><span class="n">expression</span> <span class="o">/</span> <span class="n">index</span><span class="o">-</span><span class="n">expression</span> <span class="o">/</span> <span class="ow">or</span><span class="o">-</span><span class="n">expression</span> <span class="o">/</span> <span class="n">identifier</span> <span class="o">/</span> <span class="s2">&quot;*&quot;</span>
+<span class="n">expression</span>        <span class="o">=/</span> <span class="n">multi</span><span class="o">-</span><span class="n">select</span><span class="o">-</span><span class="nb">list</span> <span class="o">/</span> <span class="n">multi</span><span class="o">-</span><span class="n">select</span><span class="o">-</span><span class="nb">hash</span>
+<span class="n">sub</span><span class="o">-</span><span class="n">expression</span>    <span class="o">=</span> <span class="n">expression</span> <span class="s2">&quot;.&quot;</span> <span class="n">expression</span>
+<span class="ow">or</span><span class="o">-</span><span class="n">expression</span>     <span class="o">=</span> <span class="n">expression</span> <span class="s2">&quot;||&quot;</span> <span class="n">expression</span>
+<span class="n">index</span><span class="o">-</span><span class="n">expression</span>  <span class="o">=</span> <span class="n">expression</span> <span class="n">bracket</span><span class="o">-</span><span class="n">specifier</span> <span class="o">/</span> <span class="n">bracket</span><span class="o">-</span><span class="n">specifier</span>
+<span class="n">multi</span><span class="o">-</span><span class="n">select</span><span class="o">-</span><span class="nb">list</span> <span class="o">=</span> <span class="s2">&quot;[&quot;</span> <span class="p">(</span> <span class="n">expression</span> <span class="o">*</span><span class="p">(</span> <span class="s2">&quot;,&quot;</span> <span class="n">expression</span> <span class="p">)</span> <span class="p">)</span> <span class="s2">&quot;]&quot;</span>
+<span class="n">multi</span><span class="o">-</span><span class="n">select</span><span class="o">-</span><span class="nb">hash</span> <span class="o">=</span> <span class="s2">&quot;{&quot;</span> <span class="p">(</span> <span class="n">keyval</span><span class="o">-</span><span class="n">expr</span> <span class="o">*</span><span class="p">(</span> <span class="s2">&quot;,&quot;</span> <span class="n">keyval</span><span class="o">-</span><span class="n">expr</span> <span class="p">)</span> <span class="p">)</span> <span class="s2">&quot;}&quot;</span>
+<span class="n">keyval</span><span class="o">-</span><span class="n">expr</span>       <span class="o">=</span> <span class="n">identifier</span> <span class="s2">&quot;:&quot;</span> <span class="n">expression</span>
+<span class="n">bracket</span><span class="o">-</span><span class="n">specifier</span> <span class="o">=</span> <span class="s2">&quot;[&quot;</span> <span class="p">(</span><span class="n">number</span> <span class="o">/</span> <span class="s2">&quot;*&quot;</span> <span class="o">/</span> <span class="nb">slice</span><span class="o">-</span><span class="n">expression</span><span class="p">)</span> <span class="s2">&quot;]&quot;</span> <span class="o">/</span> <span class="s2">&quot;[]&quot;</span>
+<span class="nb">slice</span><span class="o">-</span><span class="n">expression</span>  <span class="o">=</span> <span class="s2">&quot;:&quot;</span>
+<span class="nb">slice</span><span class="o">-</span><span class="n">expression</span>  <span class="o">=/</span> <span class="n">number</span> <span class="s2">&quot;:&quot;</span> <span class="n">number</span> <span class="s2">&quot;:&quot;</span> <span class="n">number</span>
+<span class="nb">slice</span><span class="o">-</span><span class="n">expression</span>  <span class="o">=/</span> <span class="n">number</span> <span class="s2">&quot;:&quot;</span>
+<span class="nb">slice</span><span class="o">-</span><span class="n">expression</span>  <span class="o">=/</span> <span class="n">number</span> <span class="s2">&quot;:&quot;</span> <span class="s2">&quot;:&quot;</span> <span class="n">number</span>
+<span class="nb">slice</span><span class="o">-</span><span class="n">expression</span>  <span class="o">=/</span> <span class="s2">&quot;:&quot;</span> <span class="n">number</span>
+<span class="nb">slice</span><span class="o">-</span><span class="n">expression</span>  <span class="o">=/</span> <span class="s2">&quot;:&quot;</span> <span class="n">number</span> <span class="s2">&quot;:&quot;</span> <span class="n">number</span>
+<span class="nb">slice</span><span class="o">-</span><span class="n">expression</span>  <span class="o">=/</span> <span class="s2">&quot;:&quot;</span> <span class="s2">&quot;:&quot;</span> <span class="n">number</span>
+<span class="n">number</span>            <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="p">]</span><span class="mi">1</span><span class="o">*</span><span class="n">digit</span>
+<span class="n">digit</span>             <span class="o">=</span> <span class="s2">&quot;1&quot;</span> <span class="o">/</span> <span class="s2">&quot;2&quot;</span> <span class="o">/</span> <span class="s2">&quot;3&quot;</span> <span class="o">/</span> <span class="s2">&quot;4&quot;</span> <span class="o">/</span> <span class="s2">&quot;5&quot;</span> <span class="o">/</span> <span class="s2">&quot;6&quot;</span> <span class="o">/</span> <span class="s2">&quot;7&quot;</span> <span class="o">/</span> <span class="s2">&quot;8&quot;</span> <span class="o">/</span> <span class="s2">&quot;9&quot;</span> <span class="o">/</span> <span class="s2">&quot;0&quot;</span>
+<span class="n">identifier</span>        <span class="o">=</span> <span class="mi">1</span><span class="o">*</span><span class="n">char</span>
+<span class="n">identifier</span>        <span class="o">=/</span> <span class="n">quote</span> <span class="mi">1</span><span class="o">*</span><span class="p">(</span><span class="n">unescaped</span><span class="o">-</span><span class="n">char</span> <span class="o">/</span> <span class="n">escaped</span><span class="o">-</span><span class="n">quote</span><span class="p">)</span> <span class="n">quote</span>
+<span class="n">escaped</span><span class="o">-</span><span class="n">quote</span>     <span class="o">=</span> <span class="n">escape</span> <span class="n">quote</span>
+<span class="n">unescaped</span><span class="o">-</span><span class="n">char</span>    <span class="o">=</span> <span class="o">%</span><span class="n">x30</span><span class="o">-</span><span class="mi">10</span><span class="n">FFFF</span>
+<span class="n">escape</span>            <span class="o">=</span> <span class="o">%</span><span class="n">x5C</span>   <span class="p">;</span> <span class="n">Back</span> <span class="n">slash</span><span class="p">:</span> \
+<span class="n">quote</span>             <span class="o">=</span> <span class="o">%</span><span class="n">x22</span>   <span class="p">;</span> <span class="n">Double</span> <span class="n">quote</span><span class="p">:</span> <span class="s1">&#39;&quot;&#39;</span>
+<span class="n">char</span>              <span class="o">=</span> <span class="o">%</span><span class="n">x30</span><span class="o">-</span><span class="mi">39</span> <span class="o">/</span> <span class="p">;</span> <span class="mi">0</span><span class="o">-</span><span class="mi">9</span>
+                    <span class="o">%</span><span class="n">x41</span><span class="o">-</span><span class="mi">5</span><span class="n">A</span> <span class="o">/</span> <span class="p">;</span> <span class="n">A</span><span class="o">-</span><span class="n">Z</span>
+                    <span class="o">%</span><span class="n">x5F</span> <span class="o">/</span>    <span class="p">;</span> <span class="n">_</span>
+                    <span class="o">%</span><span class="n">x61</span><span class="o">-</span><span class="mi">7</span><span class="n">A</span> <span class="o">/</span> <span class="p">;</span> <span class="n">a</span><span class="o">-</span><span class="n">z</span>
+                    <span class="o">%</span><span class="n">x7F</span><span class="o">-</span><span class="mi">10</span><span class="n">FFFF</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+                  </div>
+  <div class="col-md-3 col-md-pull-9 sphinxsidebar">
+    <div class="sphinxsidebarwrapper"><p class="logo"><a href="/">
+  <img id="sidebar-logo" src="../_static/img/logo-dark.png" alt="JMESPath Logo" />
+</a></p>
+  <h3><a href="../contents.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Array Slice Expressions</a><ul>
+<li><a class="reference internal" href="#abstract">Abstract</a></li>
+<li><a class="reference internal" href="#motivation">Motivation</a></li>
+<li><a class="reference internal" href="#syntax">Syntax</a></li>
+<li><a class="reference internal" href="#modified-grammar">Modified Grammar</a></li>
+</ul>
+</li>
+</ul>
+
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+
+    </div>
+  </div>
+              </div>
+            </div>
+
+        </div>
+
+<script>
+$(document).ready(function() {
+    $('.jmespath-demo').each(function(i, el) {
+        function evaluateDemo(el) {
+            var expression = $(el).find('.jmespath-expression').val();
+            var inputData = JSON.parse($(el).find('.jmespath-input').val());
+            var result = jmespath.search(inputData, expression);
+            $(el).find('.jmespath-result').text(JSON.stringify(result, null, 2));
+        }
+        $(el).find('.jmespath-expression').bind('keyup', function() {
+            evaluateDemo(el);
+        });
+        $(el).find('.jmespath-input').bind('keyup', function() {
+            evaluateDemo(el);
+        });
+        evaluateDemo(el);
+    });
+    $('.jmespath-form').submit(function() {
+      return false;
+    });
+
+    $('.collapse').on('shown.bs.collapse', function() {
+        $(this).parent().find(".glyphicon-chevron-right").removeClass(
+            "glyphicon-chevron-right").addClass("glyphicon-chevron-down");
+    }).on('hidden.bs.collapse', function(){
+        $(this).parent().find(".glyphicon-chevron-down").removeClass(
+            "glyphicon-chevron-down").addClass("glyphicon-chevron-right");
+    });
+
+})
+</script>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="jep-006-improved-identifiers.html" title="Improved Identifiers"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="jep-004-pipes.html" title="Pipe Expressions"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../contents.html">JMESPath</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../proposals.html" >JMESPath Proposals</a> &#187;</li> 
+      </ul>
+    </div>
+
+  <script type="text/javascript" src="../_static/js/bootstrap.js"></script>
+  <script type="text/javascript" src="../_static/js/jmespath.min.js"></script>
+  <script type="text/javascript" src="../_static/js/jquery-migrate-1.2.1.min.js"></script>
+  <script src="//static.getclicky.com/js" type="text/javascript"></script>
+  <script type="text/javascript">try{ clicky.init(100732121); }catch(e){}</script>
+  <noscript><p><img alt="Clicky" width="1" height="1" src="//in.getclicky.com/100732121ns.gif" /></p></noscript>
+  <div class="footer container">
+    &copy; Copyright 2014-2015, James Saryerwinnie.
+  </div>
+  </body>
+</html>

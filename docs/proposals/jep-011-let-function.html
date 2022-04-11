@@ -1,0 +1,380 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  
+  <link rel="stylesheet" type="text/css" href="../_static/css/bootstrap.min.css" />
+  <link rel="stylesheet" type="text/css" href="../_static/css/bootstrap-theme.min.css" />
+  <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+    <title>Lexical Scoping &#8212; JMESPath</title>
+    <link rel="stylesheet" href="../_static/jmespath.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Raw String Literals" href="jep-012-raw-string-literals.html" />
+    <link rel="prev" title="Slice Projections" href="jep-010-slice-projections.html" />
+  
+   
+
+  </head><body>
+<nav class="navbar navbar-inverse navbar-static-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#toggle-main-nav">
+      </button>
+      <a class="navbar-brand" href="../contents.html"></a>
+    </div>
+    <div class="collapse navbar-collapse" id="toggle-main-nav">
+      <ul class="nav navbar-nav">
+        <li><a href="../index.html">Home</a></li>
+        <li><a href="../tutorial.html">Tutorial</a></li>
+        <li><a href="../examples.html">Examples</a></li>
+        <li><a href="../specification.html">Specification</a></li>
+        <li><a href="../libraries.html">Libraries</a></li>
+        <li><a href="https://github.com/jmespath-community">Github</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="jep-012-raw-string-literals.html" title="Raw String Literals"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="jep-010-slice-projections.html" title="Slice Projections"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../contents.html">JMESPath</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../proposals.html" accesskey="U">JMESPath Proposals</a> &#187;</li> 
+      </ul>
+    </div>
+        <div class="container">
+            <div class="main-content">
+              <div class="row">
+                  <div class="col-md-9 col-md-push-3">
+                    
+  <div class="section" id="lexical-scoping">
+<h1>Lexical Scoping<a class="headerlink" href="#lexical-scoping" title="Permalink to this headline">¶</a></h1>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">JEP:</th><td class="field-body">11</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Author:</th><td class="field-body">James Saryerwinnie</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Status:</th><td class="field-body">draft</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Created:</th><td class="field-body">24-Feb-2015</td>
+</tr>
+</tbody>
+</table>
+<div class="section" id="abstract">
+<h2>Abstract<a class="headerlink" href="#abstract" title="Permalink to this headline">¶</a></h2>
+<p>This JEP proposes a new function <code class="docutils literal notranslate"><span class="pre">let()</span></code> (originally proposed by Michael
+Dowling) that allows for evaluating an expression with an explicitly defined
+lexical scope.  This will require some changes to the lookup semantics in
+JMESPath to introduce scoping, but provides useful functionality such as being
+able to refer to elements defined outside of the current scope used to evaluate
+an expression.</p>
+</div>
+<div class="section" id="motivation">
+<h2>Motivation<a class="headerlink" href="#motivation" title="Permalink to this headline">¶</a></h2>
+<p>As a JMESPath expression is being evaluated, the current element, which can be
+explicitly referred to via the <code class="docutils literal notranslate"><span class="pre">&#64;</span></code> token, changes as expressions are
+evaluated.  Given a simple sub expression such as <code class="docutils literal notranslate"><span class="pre">foo.bar</span></code>, first the
+<code class="docutils literal notranslate"><span class="pre">foo</span></code> expression is evaluted with the starting input JSON document, and the
+result of that expression is then used as the current element when the <code class="docutils literal notranslate"><span class="pre">bar</span></code>
+element is evaluted.  Conceptually we’re taking some object, and narrowing down
+its current element as the expression is evaluted.</p>
+<p>Once we’ve drilled down to a specific current element, there is no way, in the
+context of the currently evaluated expression, to refer to any elements outside
+of that element.  One scenario where this is problematic is being able to refer
+to a parent element.</p>
+<p>For example, suppose we had this data:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s2">&quot;first_choice&quot;</span><span class="p">:</span> <span class="s2">&quot;WA&quot;</span><span class="p">,</span>
+ <span class="s2">&quot;states&quot;</span><span class="p">:</span> <span class="p">[</span>
+   <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;WA&quot;</span><span class="p">,</span> <span class="s2">&quot;cities&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;Seattle&quot;</span><span class="p">,</span> <span class="s2">&quot;Bellevue&quot;</span><span class="p">,</span> <span class="s2">&quot;Olympia&quot;</span><span class="p">]},</span>
+   <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;CA&quot;</span><span class="p">,</span> <span class="s2">&quot;cities&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;Los Angeles&quot;</span><span class="p">,</span> <span class="s2">&quot;San Francisco&quot;</span><span class="p">]},</span>
+   <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;NY&quot;</span><span class="p">,</span> <span class="s2">&quot;cities&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;New York City&quot;</span><span class="p">,</span> <span class="s2">&quot;Albany&quot;</span><span class="p">]},</span>
+ <span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Let’s say we wanted to get the list of cities of the state corresponding to our
+<code class="docutils literal notranslate"><span class="pre">first_choice</span></code> key.  We’ll make the assumption that the state names are
+unique in the <code class="docutils literal notranslate"><span class="pre">states</span></code> list.  This is currently not possible with JMESPath.
+In this example we can hard code the state <code class="docutils literal notranslate"><span class="pre">WA</span></code>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>states[?name==`WA`].cities
+</pre></div>
+</div>
+<p>but it is not possible to base this on a value of <code class="docutils literal notranslate"><span class="pre">first_choice</span></code>, which
+comes from the parent element.  This JEP proposes a solution that makes
+this possible in JMESPath.</p>
+</div>
+<div class="section" id="specification">
+<h2>Specification<a class="headerlink" href="#specification" title="Permalink to this headline">¶</a></h2>
+<p>There are two components to this JEP, a new function, <code class="docutils literal notranslate"><span class="pre">let()</span></code>, and a change
+to the way that identifiers are resolved.</p>
+<div class="section" id="the-let-function">
+<h3>The let() Function<a class="headerlink" href="#the-let-function" title="Permalink to this headline">¶</a></h3>
+<p>The <code class="docutils literal notranslate"><span class="pre">let()</span></code> function is heavily inspired from the <code class="docutils literal notranslate"><span class="pre">let</span></code> function commonly
+seen in the Lisp family of languages:</p>
+<ul class="simple">
+<li><a class="reference external" href="https://clojuredocs.org/clojure.core/let">https://clojuredocs.org/clojure.core/let</a></li>
+<li><a class="reference external" href="http://docs.racket-lang.org/guide/let.html">http://docs.racket-lang.org/guide/let.html</a></li>
+</ul>
+<p>The let function is defined as follows:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nb">any</span> <span class="n">let</span><span class="p">(</span><span class="nb">object</span> <span class="n">scope</span><span class="p">,</span> <span class="n">expression</span><span class="o">-&gt;</span><span class="nb">any</span> <span class="n">expr</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">let</span></code> is a function that takes two arguments.  The first argument is a JSON
+object.  This hash defines the names and their corresponding values that will
+be accessible to the expression specified in the second argument.  The second
+argument is an expression reference that will be evaluated.</p>
+</div>
+<div class="section" id="resolving-identifiers">
+<h3>Resolving Identifiers<a class="headerlink" href="#resolving-identifiers" title="Permalink to this headline">¶</a></h3>
+<p>Prior to this JEP, identifiers are resolved by consulting the current context
+in which the expression is evaluted.  For example, using the same
+<code class="docutils literal notranslate"><span class="pre">search</span></code> function as defined in the JMESPath specification, the
+evaluation of:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">search</span><span class="p">(</span><span class="n">foo</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;foo&quot;</span><span class="p">:</span> <span class="s2">&quot;a&quot;</span><span class="p">,</span> <span class="s2">&quot;bar&quot;</span><span class="p">:</span> <span class="s2">&quot;b&quot;</span><span class="p">})</span> <span class="o">-&gt;</span> <span class="s2">&quot;a&quot;</span>
+</pre></div>
+</div>
+<p>will result in the <code class="docutils literal notranslate"><span class="pre">foo</span></code> identifier being resolved in the context of
+the input object <code class="docutils literal notranslate"><span class="pre">{&quot;foo&quot;:</span> <span class="pre">&quot;a&quot;,</span> <span class="pre">&quot;bar&quot;:</span> <span class="pre">&quot;b&quot;}</span></code>.  The context object defines
+<code class="docutils literal notranslate"><span class="pre">foo</span></code> as <code class="docutils literal notranslate"><span class="pre">a</span></code>, which results in the identifier <code class="docutils literal notranslate"><span class="pre">foo</span></code> being resolved as
+<code class="docutils literal notranslate"><span class="pre">a</span></code>.</p>
+<p>In the case of a sub expression, where the current evaluation context
+changes once the left hand side of the sub expression is evaluted:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">search</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">b</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;a&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;b&quot;</span><span class="p">:</span> <span class="s2">&quot;y&quot;</span><span class="p">})</span> <span class="o">-&gt;</span> <span class="s2">&quot;y&quot;</span>
+</pre></div>
+</div>
+<p>The identifier <code class="docutils literal notranslate"><span class="pre">b</span></code> is resolved with a current context of
+<code class="docutils literal notranslate"><span class="pre">{&quot;b&quot;:</span> <span class="pre">&quot;y&quot;}</span></code>, which results in a value of <code class="docutils literal notranslate"><span class="pre">y</span></code>.</p>
+<p>This JEP adds an additional step to resolving identifiers.  In addition
+to the implicit evaluation context that changes based on the result
+of continually evaluating expressions, the <code class="docutils literal notranslate"><span class="pre">let()</span></code> command allows
+for additional contexts to be specified, which we refer to by the common
+name scope.  The steps for resolving an identifier are:</p>
+<ul class="simple">
+<li>Attempt to lookup the identifier in the current evaluation context.</li>
+<li>If this identifier is not resolved, look up the value in the current
+scope provided by the user.</li>
+<li>If the idenfitier is not resolved and there is a parent scope, attempt
+to resolve the identifier in the parent scope.  Continue doing this until
+there is no parent scope, in which case, if the identifier has not been
+resolved, the identifier is resolved as <code class="docutils literal notranslate"><span class="pre">null</span></code>.</li>
+</ul>
+<p>Parent scopes are created by nested <code class="docutils literal notranslate"><span class="pre">let()</span></code> calls.</p>
+<p>Below are a few examples to make this more clear.  First, let’s
+examine the case where the identifier can be resolved from the
+current evaluation context:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>search(let({a: `x`}, &amp;b), {&quot;b&quot;: &quot;y&quot;}) -&gt; &quot;y&quot;
+</pre></div>
+</div>
+<p>In this scenario, we are evaluating the expression <code class="docutils literal notranslate"><span class="pre">b</span></code>, with the
+context object of <code class="docutils literal notranslate"><span class="pre">{&quot;b&quot;:</span> <span class="pre">&quot;y&quot;}</span></code>.  Here <code class="docutils literal notranslate"><span class="pre">b</span></code> has a value of <code class="docutils literal notranslate"><span class="pre">y</span></code>,
+so the result of this function is <code class="docutils literal notranslate"><span class="pre">y</span></code>.</p>
+<p>Now let’s look at an example where an identifier is resolved from
+a scope object provided via <code class="docutils literal notranslate"><span class="pre">let()</span></code>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>search(let({a: `x`}, &amp;a, {&quot;b&quot;: &quot;y&quot;})) -&gt; &quot;x&quot;
+</pre></div>
+</div>
+<p>Here, we’re trying to resolve the <code class="docutils literal notranslate"><span class="pre">a</span></code> identifier.  The current
+evaluation context, <code class="docutils literal notranslate"><span class="pre">{&quot;b&quot;:</span> <span class="pre">&quot;y&quot;}</span></code>, does not define <code class="docutils literal notranslate"><span class="pre">a</span></code>.  Normally,
+this would result in the identifier being resolved as <code class="docutils literal notranslate"><span class="pre">null</span></code>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">search</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;b&quot;</span><span class="p">:</span> <span class="s2">&quot;y&quot;</span><span class="p">})</span> <span class="o">-&gt;</span> <span class="n">null</span>
+</pre></div>
+</div>
+<p>However, we now fall back to looking in the provided scope object <code class="docutils literal notranslate"><span class="pre">{&quot;a&quot;:</span>
+<span class="pre">&quot;x&quot;}</span></code>, which was provided as the first argument to <code class="docutils literal notranslate"><span class="pre">let</span></code>.  Note here that
+the value of <code class="docutils literal notranslate"><span class="pre">a</span></code> has a value of <code class="docutils literal notranslate"><span class="pre">&quot;x&quot;</span></code>, so the identifier is resolved as
+<code class="docutils literal notranslate"><span class="pre">&quot;x&quot;</span></code>, and the return value of the <code class="docutils literal notranslate"><span class="pre">let()</span></code> function is <code class="docutils literal notranslate"><span class="pre">&quot;x&quot;</span></code>.</p>
+<p>Finally, let’s look at an example of parent scopes.  Consider the
+following expression:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>search(let({a: `x`}, &amp;let({b: `y`}, &amp;{a: a, b: b, c: c})),
+       {&quot;c&quot;: &quot;z&quot;}) -&gt; {&quot;a&quot;: &quot;x&quot;, &quot;b&quot;: &quot;y&quot;, &quot;c&quot;: &quot;z&quot;}
+</pre></div>
+</div>
+<p>Here we have nested let calls, and the expression we are trying to
+evaluate is the multiselect hash <code class="docutils literal notranslate"><span class="pre">{a:</span> <span class="pre">a,</span> <span class="pre">b:</span> <span class="pre">b,</span> <span class="pre">c:</span> <span class="pre">c}</span></code>.  The
+<code class="docutils literal notranslate"><span class="pre">c</span></code> identifier comes from the evaluation context <code class="docutils literal notranslate"><span class="pre">{&quot;c&quot;:</span> <span class="pre">&quot;z&quot;}</span></code>.
+The <code class="docutils literal notranslate"><span class="pre">b</span></code> identifier comes from the scope object in the second <code class="docutils literal notranslate"><span class="pre">let</span></code>
+call: <code class="docutils literal notranslate"><span class="pre">{b:</span> <span class="pre">`y`}</span></code>.  And finally, here’s the lookup process for the
+<code class="docutils literal notranslate"><span class="pre">a</span></code> identifier:</p>
+<ul class="simple">
+<li>Is <code class="docutils literal notranslate"><span class="pre">a</span></code> defined in the current evaluation context?  No.</li>
+<li>Is <code class="docutils literal notranslate"><span class="pre">a</span></code> defined in the scope provided by the user?  No.</li>
+<li>Is there a parent scope?  Yes</li>
+<li>Does the parent scope, <code class="docutils literal notranslate"><span class="pre">{a:</span> <span class="pre">`x`}</span></code>, define <code class="docutils literal notranslate"><span class="pre">a</span></code>?  Yes, <code class="docutils literal notranslate"><span class="pre">a</span></code> has
+the value of <code class="docutils literal notranslate"><span class="pre">&quot;x&quot;</span></code>, so <code class="docutils literal notranslate"><span class="pre">a</span></code> is resolved as the string <code class="docutils literal notranslate"><span class="pre">&quot;x&quot;</span></code>.</li>
+</ul>
+</div>
+<div class="section" id="current-node-evaluation">
+<h3>Current Node Evaluation<a class="headerlink" href="#current-node-evaluation" title="Permalink to this headline">¶</a></h3>
+<p>While the JMESPath specification defines how the current node is determined,
+it is worth explicitly calling out how this works with the <code class="docutils literal notranslate"><span class="pre">let()</span></code> function
+and expression references.  Consider the following expression:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>a.let({x: `x`}, &amp;b.let({y: `y`}, &amp;c))
+</pre></div>
+</div>
+<p>Given the input data:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s2">&quot;a&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;b&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;c&quot;</span><span class="p">:</span> <span class="s2">&quot;foo&quot;</span><span class="p">}}}</span>
+</pre></div>
+</div>
+<p>When the expression <code class="docutils literal notranslate"><span class="pre">c</span></code> is evaluated, the current evaluation context is
+<code class="docutils literal notranslate"><span class="pre">{&quot;c&quot;:</span> <span class="pre">&quot;foo&quot;}</span></code>.  This is because this expression isn’t evaluated until
+the second <code class="docutils literal notranslate"><span class="pre">let()</span></code> call evaluates the expression, which does not
+occur until the first <code class="docutils literal notranslate"><span class="pre">let()</span></code> function evaluates the expression.</p>
+</div>
+<div class="section" id="motivating-example">
+<h3>Motivating Example<a class="headerlink" href="#motivating-example" title="Permalink to this headline">¶</a></h3>
+<p>With these changes defined, the expression in the “Motivation” section can be
+be written as:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>let({first_choice: first_choice}, &amp;states[?name==first_choice].cities)
+</pre></div>
+</div>
+<p>Which evalutes to <code class="docutils literal notranslate"><span class="pre">[&quot;Seattle&quot;,</span> <span class="pre">&quot;Bellevue&quot;,</span> <span class="pre">&quot;Olympia&quot;]</span></code>.</p>
+</div>
+</div>
+<div class="section" id="rationale">
+<h2>Rationale<a class="headerlink" href="#rationale" title="Permalink to this headline">¶</a></h2>
+<p>If we just consider the feature of being able to refer to a parent element,
+this approach is not the only way to accomplish this.  We could also allow
+for explicit references using a specific token, say <code class="docutils literal notranslate"><span class="pre">$</span></code>.
+The original example in the “Motivation” section would be:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>states[?name==$.first_choice].cities
+</pre></div>
+</div>
+<p>While this could work, this has a number of downsides, the biggest one being
+that you’ll need to always keep track of the parent element.  You don’t know
+ahead of time if you’re going to need the parent element, so you’ll always need
+to track this value.  It also doesn’t handle nested lexical scopes.  What if
+you wanted to access a value in the grand parent element?  Requiring an
+explicit binding approach via <code class="docutils literal notranslate"><span class="pre">let()</span></code> handles both these cases, and doesn’t
+require having to track parent elements.  You only need to track additional
+scope when <code class="docutils literal notranslate"><span class="pre">let()</span></code> is used.</p>
+</div>
+</div>
+
+
+                  </div>
+  <div class="col-md-3 col-md-pull-9 sphinxsidebar">
+    <div class="sphinxsidebarwrapper"><p class="logo"><a href="/">
+  <img id="sidebar-logo" src="../_static/img/logo-dark.png" alt="JMESPath Logo" />
+</a></p>
+  <h3><a href="../contents.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Lexical Scoping</a><ul>
+<li><a class="reference internal" href="#abstract">Abstract</a></li>
+<li><a class="reference internal" href="#motivation">Motivation</a></li>
+<li><a class="reference internal" href="#specification">Specification</a><ul>
+<li><a class="reference internal" href="#the-let-function">The let() Function</a></li>
+<li><a class="reference internal" href="#resolving-identifiers">Resolving Identifiers</a></li>
+<li><a class="reference internal" href="#current-node-evaluation">Current Node Evaluation</a></li>
+<li><a class="reference internal" href="#motivating-example">Motivating Example</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#rationale">Rationale</a></li>
+</ul>
+</li>
+</ul>
+
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+
+    </div>
+  </div>
+              </div>
+            </div>
+
+        </div>
+
+<script>
+$(document).ready(function() {
+    $('.jmespath-demo').each(function(i, el) {
+        function evaluateDemo(el) {
+            var expression = $(el).find('.jmespath-expression').val();
+            var inputData = JSON.parse($(el).find('.jmespath-input').val());
+            var result = jmespath.search(inputData, expression);
+            $(el).find('.jmespath-result').text(JSON.stringify(result, null, 2));
+        }
+        $(el).find('.jmespath-expression').bind('keyup', function() {
+            evaluateDemo(el);
+        });
+        $(el).find('.jmespath-input').bind('keyup', function() {
+            evaluateDemo(el);
+        });
+        evaluateDemo(el);
+    });
+    $('.jmespath-form').submit(function() {
+      return false;
+    });
+
+    $('.collapse').on('shown.bs.collapse', function() {
+        $(this).parent().find(".glyphicon-chevron-right").removeClass(
+            "glyphicon-chevron-right").addClass("glyphicon-chevron-down");
+    }).on('hidden.bs.collapse', function(){
+        $(this).parent().find(".glyphicon-chevron-down").removeClass(
+            "glyphicon-chevron-down").addClass("glyphicon-chevron-right");
+    });
+
+})
+</script>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="jep-012-raw-string-literals.html" title="Raw String Literals"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="jep-010-slice-projections.html" title="Slice Projections"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../contents.html">JMESPath</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../proposals.html" >JMESPath Proposals</a> &#187;</li> 
+      </ul>
+    </div>
+
+  <script type="text/javascript" src="../_static/js/bootstrap.js"></script>
+  <script type="text/javascript" src="../_static/js/jmespath.min.js"></script>
+  <script type="text/javascript" src="../_static/js/jquery-migrate-1.2.1.min.js"></script>
+  <script src="//static.getclicky.com/js" type="text/javascript"></script>
+  <script type="text/javascript">try{ clicky.init(100732121); }catch(e){}</script>
+  <noscript><p><img alt="Clicky" width="1" height="1" src="//in.getclicky.com/100732121ns.gif" /></p></noscript>
+  <div class="footer container">
+    &copy; Copyright 2014-2015, James Saryerwinnie.
+  </div>
+  </body>
+</html>

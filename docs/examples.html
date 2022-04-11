@@ -1,0 +1,835 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  
+  <link rel="stylesheet" type="text/css" href="_static/css/bootstrap.min.css" />
+  <link rel="stylesheet" type="text/css" href="_static/css/bootstrap-theme.min.css" />
+  <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+    <title>JMESPath Examples &#8212; JMESPath</title>
+    <link rel="stylesheet" href="_static/jmespath.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/language_data.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="JMESPath Specification" href="specification.html" />
+    <link rel="prev" title="JMESPath Tutorial" href="tutorial.html" />
+  
+   
+
+  </head><body>
+<nav class="navbar navbar-inverse navbar-static-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#toggle-main-nav">
+      </button>
+      <a class="navbar-brand" href="contents.html"></a>
+    </div>
+    <div class="collapse navbar-collapse" id="toggle-main-nav">
+      <ul class="nav navbar-nav">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="tutorial.html">Tutorial</a></li>
+        <li><a href="#">Examples</a></li>
+        <li><a href="specification.html">Specification</a></li>
+        <li><a href="libraries.html">Libraries</a></li>
+        <li><a href="https://github.com/jmespath-community">Github</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="specification.html" title="JMESPath Specification"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="tutorial.html" title="JMESPath Tutorial"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="contents.html">JMESPath</a> &#187;</li> 
+      </ul>
+    </div>
+        <div class="container">
+            <div class="main-content">
+              <div class="row">
+                  <div class="col-md-9 col-md-push-3">
+                    
+  <div class="section" id="jmespath-examples">
+<h1>JMESPath Examples<a class="headerlink" href="#jmespath-examples" title="Permalink to this headline">¶</a></h1>
+<p>This page contains numerous examples of JMESPath examples
+in action.  If you’re new to JMESPath, you can start with the
+<a class="reference internal" href="tutorial.html"><span class="doc">JMESPath Tutorial</span></a>, which goes over the basics of JMESPath.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Do you have any examples you’d like to add?  Send a
+<a class="reference external" href="https://github.com/jmespath/jmespath.site">pull request</a> on github.
+Are there examples you’d like to see that aren’t here?  Let us know
+by opening an <a class="reference external" href="https://github.com/jmespath/jmespath.site/issues">issue on github</a>.</p>
+</div>
+<div class="section" id="filters-and-multiselect-lists">
+<h2>Filters and Multiselect Lists<a class="headerlink" href="#filters-and-multiselect-lists" title="Permalink to this headline">¶</a></h2>
+<p>One of the most common usage scenarios for JMESPath is being able to take
+a complex JSON document and simplify it down.  The main features at work
+here are filters and multiselects.  In this example below, we’re taking the
+array of people and, for any element with an age key whose value is greater
+than 20, we’re creating a sub list of the name and age values.</p>
+<div class="jmespath-demo">
+  <div class="jmespath-example-heading" data-target="#jpexample-1" data-toggle="collapse">
+    <span class="glyphicon glyphicon-chevron-right"></span>
+    <a class="jp-demo-expr">
+        people[?age > `20`].[name, age]
+    </a>
+  </div>
+  <div class="panel panel-primary collapse" id="jpexample-1">
+    <div class="panel-body">
+      <div class="row">
+        <div class="col-md-12">
+          <form class="jmespath-form">
+            <div class="left-inner-addon">
+              <span class="glyphicon glyphicon-search"></span>
+              <input class="form-control jmespath-expression"
+                     type="text" placeholder="Expression"
+                     value="people[?age > `20`].[name, age]" />
+            </div>
+          </form>
+        </div>
+      </div> <!-- end row -->
+      <div class="row">
+        <div class="col-md-6 col-md-push-6">
+          <pre class="jmespath-result"></pre>
+        </div>
+        <div class="col-md-6 col-md-pull-6">
+          <form class="jmespath-form">
+            <textarea class="form-control jmespath-input" rows="19">{
+  "people": [
+    {
+      "age": 20,
+      "other": "foo",
+      "name": "Bob"
+    },
+    {
+      "age": 25,
+      "other": "bar",
+      "name": "Fred"
+    },
+    {
+      "age": 30,
+      "other": "baz",
+      "name": "George"
+    }
+  ]
+}</textarea>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+<div class="section" id="filters-and-multiselect-hashes">
+<h2>Filters and Multiselect Hashes<a class="headerlink" href="#filters-and-multiselect-hashes" title="Permalink to this headline">¶</a></h2>
+<p>In the previous example we were taking an array of hashes, and simplifying down
+to an array of two element arrays containing a name and an age.  We’re also
+only including list elements where the <code class="docutils literal notranslate"><span class="pre">age</span></code> key is greater than <code class="docutils literal notranslate"><span class="pre">20</span></code>.  If
+instead we want to create the same hash structure but only include the <code class="docutils literal notranslate"><span class="pre">age</span></code>
+and <code class="docutils literal notranslate"><span class="pre">name</span></code> key, we can instead say:</p>
+<div class="jmespath-demo">
+  <div class="jmespath-example-heading" data-target="#jpexample-2" data-toggle="collapse">
+    <span class="glyphicon glyphicon-chevron-right"></span>
+    <a class="jp-demo-expr">
+        people[?age > `20`].{name: name, age: age}
+    </a>
+  </div>
+  <div class="panel panel-primary collapse" id="jpexample-2">
+    <div class="panel-body">
+      <div class="row">
+        <div class="col-md-12">
+          <form class="jmespath-form">
+            <div class="left-inner-addon">
+              <span class="glyphicon glyphicon-search"></span>
+              <input class="form-control jmespath-expression"
+                     type="text" placeholder="Expression"
+                     value="people[?age > `20`].{name: name, age: age}" />
+            </div>
+          </form>
+        </div>
+      </div> <!-- end row -->
+      <div class="row">
+        <div class="col-md-6 col-md-push-6">
+          <pre class="jmespath-result"></pre>
+        </div>
+        <div class="col-md-6 col-md-pull-6">
+          <form class="jmespath-form">
+            <textarea class="form-control jmespath-input" rows="19">{
+  "people": [
+    {
+      "age": 20,
+      "other": "foo",
+      "name": "Bob"
+    },
+    {
+      "age": 25,
+      "other": "bar",
+      "name": "Fred"
+    },
+    {
+      "age": 30,
+      "other": "baz",
+      "name": "George"
+    }
+  ]
+}</textarea>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<p>The last half of the above expression contains key value pairs which have the
+general form <code class="docutils literal notranslate"><span class="pre">keyname:</span> <span class="pre">&lt;expression&gt;</span></code>.  In the above expression we’re just
+using a field as an expression, but they can be more advanced expressions.  For
+example:</p>
+<div class="jmespath-demo">
+  <div class="jmespath-example-heading" data-target="#jpexample-3" data-toggle="collapse">
+    <span class="glyphicon glyphicon-chevron-right"></span>
+    <a class="jp-demo-expr">
+        people[*].{name: name, tags: tags[0]}
+    </a>
+  </div>
+  <div class="panel panel-primary collapse" id="jpexample-3">
+    <div class="panel-body">
+      <div class="row">
+        <div class="col-md-12">
+          <form class="jmespath-form">
+            <div class="left-inner-addon">
+              <span class="glyphicon glyphicon-search"></span>
+              <input class="form-control jmespath-expression"
+                     type="text" placeholder="Expression"
+                     value="people[*].{name: name, tags: tags[0]}" />
+            </div>
+          </form>
+        </div>
+      </div> <!-- end row -->
+      <div class="row">
+        <div class="col-md-6 col-md-push-6">
+          <pre class="jmespath-result"></pre>
+        </div>
+        <div class="col-md-6 col-md-pull-6">
+          <form class="jmespath-form">
+            <textarea class="form-control jmespath-input" rows="19">{
+  "people": [
+    {
+      "age": 20,
+      "tags": ["a", "b", "c"],
+      "name": "Bob"
+    },
+    {
+      "age": 25,
+      "tags": ["d", "e", "f"],
+      "name": "Fred"
+    },
+    {
+      "age": 30,
+      "tags": ["g", "h", "i"],
+      "name": "George"
+    }
+  ]
+}</textarea>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<p>Notice in the above example instead of applying a filter expression
+(<code class="docutils literal notranslate"><span class="pre">[?</span> <span class="pre">&lt;expr&gt;</span> <span class="pre">]</span></code>), we’re selecting all array elements via <code class="docutils literal notranslate"><span class="pre">[*]</span></code>.</p>
+</div>
+<div class="section" id="working-with-nested-data">
+<h2>Working with Nested Data<a class="headerlink" href="#working-with-nested-data" title="Permalink to this headline">¶</a></h2>
+<div class="jmespath-demo">
+  <div class="jmespath-example-heading" data-target="#jpexample-4" data-toggle="collapse">
+    <span class="glyphicon glyphicon-chevron-right"></span>
+    <a class="jp-demo-expr">
+        reservations[].instances[].[tags[?Key=='Name'].Values[] | [0], type, state.name]
+    </a>
+  </div>
+  <div class="panel panel-primary collapse" id="jpexample-4">
+    <div class="panel-body">
+      <div class="row">
+        <div class="col-md-12">
+          <form class="jmespath-form">
+            <div class="left-inner-addon">
+              <span class="glyphicon glyphicon-search"></span>
+              <input class="form-control jmespath-expression"
+                     type="text" placeholder="Expression"
+                     value="reservations[].instances[].[tags[?Key=='Name'].Values[] | [0], type, state.name]" />
+            </div>
+          </form>
+        </div>
+      </div> <!-- end row -->
+      <div class="row">
+        <div class="col-md-6 col-md-push-6">
+          <pre class="jmespath-result"></pre>
+        </div>
+        <div class="col-md-6 col-md-pull-6">
+          <form class="jmespath-form">
+            <textarea class="form-control jmespath-input" rows="35">{
+  "reservations": [
+    {
+      "instances": [
+        {"type": "small",
+         "state": {"name": "running"},
+         "tags": [{"Key": "Name",
+                   "Values": ["Web"]},
+                  {"Key": "version",
+                   "Values": ["1"]}]},
+        {"type": "large",
+         "state": {"name": "stopped"},
+         "tags": [{"Key": "Name",
+                   "Values": ["Web"]},
+                  {"Key": "version",
+                   "Values": ["1"]}]}
+      ]
+    }, {
+      "instances": [
+        {"type": "medium",
+         "state": {"name": "terminated"},
+         "tags": [{"Key": "Name",
+                   "Values": ["Web"]},
+                  {"Key": "version",
+                   "Values": ["1"]}]},
+        {"type": "xlarge",
+         "state": {"name": "running"},
+         "tags": [{"Key": "Name",
+                   "Values": ["DB"]},
+                  {"Key": "version",
+                   "Values": ["1"]}]}
+      ]
+    }
+  ]
+}</textarea>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<p>The above example combines several JMESPath features including the flatten
+operator, multiselect lists, filters, and pipes.</p>
+<p>The input data contains a top level key, “reservations”, which is a list.
+Within each list, there is an “instances” key, which is also a list.</p>
+<p>The first thing we’re doing here is creating a single list from multiple lists
+of instances.  By using the <a class="reference internal" href="specification.html#flatten"><span class="std std-ref">Flatten Operator</span></a> we can take the two instances from
+the first list and the two instances from the second list, and combine them
+into a single list.  Try changing the above expression to just
+<code class="docutils literal notranslate"><span class="pre">reservations[].instances[]</span></code> to see what this flattened list looks like.
+Everything to the right of the <code class="docutils literal notranslate"><span class="pre">reservations[].instances[]</span></code> is about taking
+the flattened list and paring it down to contain only the data that we want.
+This expression is taking each element in the original list and transforming it
+into a three element sublist.  The three elements are:</p>
+<ul class="simple">
+<li>In the <code class="docutils literal notranslate"><span class="pre">tags</span></code> list, select the first element in the flattened <code class="docutils literal notranslate"><span class="pre">Values</span></code>
+list whose <code class="docutils literal notranslate"><span class="pre">Key</span></code> has a value of <code class="docutils literal notranslate"><span class="pre">Name</span></code>.</li>
+<li>The <code class="docutils literal notranslate"><span class="pre">type</span></code></li>
+<li>The <code class="docutils literal notranslate"><span class="pre">state.name</span></code> of each instance.</li>
+</ul>
+<p>The most interesting of those three expressions is the
+<code class="docutils literal notranslate"><span class="pre">tags[?Key=='Name'].Values[]</span> <span class="pre">|</span> <span class="pre">[0]</span></code> part.  Let’s examine that further.</p>
+<p>The first thing to notice is the we’re filtering down the list associated
+with the <code class="docutils literal notranslate"><span class="pre">tags</span></code> key.  The <code class="docutils literal notranslate"><span class="pre">tags[?Key==`Name`]</span></code> tells us to only include
+list elements that contain a <code class="docutils literal notranslate"><span class="pre">Key</span></code> whose value is <code class="docutils literal notranslate"><span class="pre">Name</span></code>.  From those
+filtered list elements we’re going to take the <code class="docutils literal notranslate"><span class="pre">Values</span></code> key and flatten
+the list.  Finally, the <code class="docutils literal notranslate"><span class="pre">|</span> <span class="pre">[0]</span></code> will take the entire list and extract the
+0th element.</p>
+<div class="section" id="filtering-and-selecting-nested-data">
+<h3>Filtering and Selecting Nested Data<a class="headerlink" href="#filtering-and-selecting-nested-data" title="Permalink to this headline">¶</a></h3>
+<p>In this example, we’re going to look at how you can filter nested hashes.</p>
+<div class="jmespath-demo">
+  <div class="jmespath-example-heading" data-target="#jpexample-5" data-toggle="collapse">
+    <span class="glyphicon glyphicon-chevron-right"></span>
+    <a class="jp-demo-expr">
+        people[?general.id==`100`].general | [0]
+    </a>
+  </div>
+  <div class="panel panel-primary collapse" id="jpexample-5">
+    <div class="panel-body">
+      <div class="row">
+        <div class="col-md-12">
+          <form class="jmespath-form">
+            <div class="left-inner-addon">
+              <span class="glyphicon glyphicon-search"></span>
+              <input class="form-control jmespath-expression"
+                     type="text" placeholder="Expression"
+                     value="people[?general.id==`100`].general | [0]" />
+            </div>
+          </form>
+        </div>
+      </div> <!-- end row -->
+      <div class="row">
+        <div class="col-md-6 col-md-push-6">
+          <pre class="jmespath-result"></pre>
+        </div>
+        <div class="col-md-6 col-md-pull-6">
+          <form class="jmespath-form">
+            <textarea class="form-control jmespath-input" rows="28">{
+  "people": [
+    {
+      "general": {
+        "id": 100,
+        "age": 20,
+        "other": "foo",
+        "name": "Bob"
+      },
+      "history": {
+        "first_login": "2014-01-01",
+        "last_login": "2014-01-02"
+      }
+    },
+    {
+      "general": {
+        "id": 101,
+        "age": 30,
+        "other": "bar",
+        "name": "Bill"
+      },
+      "history": {
+        "first_login": "2014-05-01",
+        "last_login": "2014-05-02"
+      }
+    }
+  ]
+}</textarea>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<p>In this example we’re searching through the <code class="docutils literal notranslate"><span class="pre">people</span></code> array.  Each element in
+this array contains a hash of two elements, and each value in the hash is
+itself a hash.  We’re trying to retrieve the value of the <code class="docutils literal notranslate"><span class="pre">general</span></code> key
+that contains an <code class="docutils literal notranslate"><span class="pre">id</span></code> key with a value of <code class="docutils literal notranslate"><span class="pre">100</span></code>.</p>
+<p>If we just had the expression <code class="docutils literal notranslate"><span class="pre">people[?general.id==`100`]</span></code>, we’d have a
+result of:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[{</span>
+  <span class="s2">&quot;general&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="mi">100</span><span class="p">,</span>
+    <span class="s2">&quot;age&quot;</span><span class="p">:</span> <span class="mi">20</span><span class="p">,</span>
+    <span class="s2">&quot;other&quot;</span><span class="p">:</span> <span class="s2">&quot;foo&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;Bob&quot;</span>
+  <span class="p">},</span>
+  <span class="s2">&quot;history&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="s2">&quot;first_login&quot;</span><span class="p">:</span> <span class="s2">&quot;2014-01-01&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;last_login&quot;</span><span class="p">:</span> <span class="s2">&quot;2014-01-02&quot;</span>
+  <span class="p">}</span>
+<span class="p">}]</span>
+</pre></div>
+</div>
+<p>Let’s walk through how we arrived at this result.  In words, the
+<code class="docutils literal notranslate"><span class="pre">people[?general.id==`100`]</span></code> expression is saying “for each element in the
+people array, select the elements where the <code class="docutils literal notranslate"><span class="pre">general.id</span></code> equals <code class="docutils literal notranslate"><span class="pre">100</span></code>”.
+If we trace the execution of this filtering process we have:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># First element:</span>
+    <span class="p">{</span>
+      <span class="s2">&quot;general&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="mi">100</span><span class="p">,</span>
+        <span class="s2">&quot;age&quot;</span><span class="p">:</span> <span class="mi">20</span><span class="p">,</span>
+        <span class="s2">&quot;other&quot;</span><span class="p">:</span> <span class="s2">&quot;foo&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;Bob&quot;</span>
+      <span class="p">},</span>
+      <span class="s2">&quot;history&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;first_login&quot;</span><span class="p">:</span> <span class="s2">&quot;2014-01-01&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;last_login&quot;</span><span class="p">:</span> <span class="s2">&quot;2014-01-02&quot;</span>
+      <span class="p">}</span>
+    <span class="p">},</span>
+<span class="c1"># Applying the expression ``general.id`` to this hash::</span>
+    <span class="mi">100</span>
+<span class="c1"># Does 100==100?</span>
+    <span class="n">true</span>
+<span class="c1"># Add this first element (in its entirety) to the result list.</span>
+
+<span class="c1"># Second element:</span>
+    <span class="p">{</span>
+      <span class="s2">&quot;general&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="mi">101</span><span class="p">,</span>
+        <span class="s2">&quot;age&quot;</span><span class="p">:</span> <span class="mi">30</span><span class="p">,</span>
+        <span class="s2">&quot;other&quot;</span><span class="p">:</span> <span class="s2">&quot;bar&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;Bill&quot;</span>
+      <span class="p">},</span>
+      <span class="s2">&quot;history&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;first_login&quot;</span><span class="p">:</span> <span class="s2">&quot;2014-05-01&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;last_login&quot;</span><span class="p">:</span> <span class="s2">&quot;2014-05-02&quot;</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+
+<span class="c1"># Applying the expression ``general.id`` to this element::</span>
+    <span class="mi">101</span>
+<span class="c1"># Does 101==100?</span>
+    <span class="n">false</span>
+<span class="c1"># Do not add this element to the results list.</span>
+<span class="c1"># Result of this expression is a list containing the first element.</span>
+</pre></div>
+</div>
+<p>However, this still isn’t the final value we want which is:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+  <span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="mi">100</span><span class="p">,</span>
+  <span class="s2">&quot;age&quot;</span><span class="p">:</span> <span class="mi">20</span><span class="p">,</span>
+  <span class="s2">&quot;other&quot;</span><span class="p">:</span> <span class="s2">&quot;foo&quot;</span><span class="p">,</span>
+  <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;Bob&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>In order to get to this value from our filtered results we need to first
+select the <code class="docutils literal notranslate"><span class="pre">general</span></code> key.  This gives us a list of just the values of the
+<code class="docutils literal notranslate"><span class="pre">general</span></code> hash:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[{</span>
+  <span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="mi">100</span><span class="p">,</span>
+  <span class="s2">&quot;age&quot;</span><span class="p">:</span> <span class="mi">20</span><span class="p">,</span>
+  <span class="s2">&quot;other&quot;</span><span class="p">:</span> <span class="s2">&quot;foo&quot;</span><span class="p">,</span>
+  <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;Bob&quot;</span>
+<span class="p">}]</span>
+</pre></div>
+</div>
+<p>From there, we then uses a pipe (<code class="docutils literal notranslate"><span class="pre">|</span></code>) to stop projections so that we can
+finally select the first element (<code class="docutils literal notranslate"><span class="pre">[0]</span></code>).  Note that we are making the
+assumption that there’s only one hash that contains an <code class="docutils literal notranslate"><span class="pre">id</span></code> of <code class="docutils literal notranslate"><span class="pre">100</span></code>.
+Given the way the data is structured, it’s entirely possible to have data such
+as:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+  <span class="s2">&quot;people&quot;</span><span class="p">:</span> <span class="p">[</span>
+    <span class="p">{</span>
+      <span class="s2">&quot;general&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="mi">100</span><span class="p">,</span>
+        <span class="s2">&quot;age&quot;</span><span class="p">:</span> <span class="mi">20</span>
+      <span class="p">},</span>
+      <span class="s2">&quot;history&quot;</span><span class="p">:</span> <span class="p">{</span>
+      <span class="p">}</span>
+    <span class="p">},</span>
+    <span class="p">{</span>
+      <span class="s2">&quot;general&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="mi">101</span><span class="p">,</span>
+        <span class="s2">&quot;age&quot;</span><span class="p">:</span> <span class="mi">30</span>
+      <span class="p">},</span>
+      <span class="s2">&quot;history&quot;</span><span class="p">:</span> <span class="p">{</span>
+      <span class="p">}</span>
+    <span class="p">},</span>
+    <span class="p">{</span>
+      <span class="s2">&quot;general&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="mi">100</span><span class="p">,</span>
+        <span class="s2">&quot;age&quot;</span><span class="p">:</span> <span class="mi">30</span>
+      <span class="p">},</span>
+      <span class="s2">&quot;history&quot;</span><span class="p">:</span> <span class="p">{</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+  <span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Note here that the first and last elements in the <code class="docutils literal notranslate"><span class="pre">people</span></code> array both have an
+<code class="docutils literal notranslate"><span class="pre">id</span></code> of <code class="docutils literal notranslate"><span class="pre">100</span></code>.  Our expression would then select the first element that
+matched.</p>
+<p>Finally, it’s worth mentioning there is more than one way to write this
+expression.  In this example we’ve decided that after we filter the list we’re
+going to select the value of the <code class="docutils literal notranslate"><span class="pre">general</span></code> key and then select the first
+element in that list.  We could also reverse the order of those operations, we
+could have taken the filtered list, selected the first element, and then
+extracted the value associated with the <code class="docutils literal notranslate"><span class="pre">general</span></code> key.  That expression
+would be:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>people[?general.id==`100`] | [0].general
+</pre></div>
+</div>
+<p>Both versions are equally valid.</p>
+</div>
+</div>
+<div class="section" id="using-functions">
+<h2>Using Functions<a class="headerlink" href="#using-functions" title="Permalink to this headline">¶</a></h2>
+<p><a class="reference internal" href="specification.html#functions"><span class="std std-ref">JMESPath functions</span></a> give you a lot of power and flexibility
+when working with JMESPath expressions.  Below are some common expressions and
+functions used in JMESPath.</p>
+<div class="section" id="sort-by">
+<h3>sort_by<a class="headerlink" href="#sort-by" title="Permalink to this headline">¶</a></h3>
+<div class="jmespath-demo">
+  <div class="jmespath-example-heading" data-target="#jpexample-6" data-toggle="collapse">
+    <span class="glyphicon glyphicon-chevron-right"></span>
+    <a class="jp-demo-expr">
+        sort_by(Contents, &Date)[*].{Key: Key, Size: Size}
+    </a>
+  </div>
+  <div class="panel panel-primary collapse" id="jpexample-6">
+    <div class="panel-body">
+      <div class="row">
+        <div class="col-md-12">
+          <form class="jmespath-form">
+            <div class="left-inner-addon">
+              <span class="glyphicon glyphicon-search"></span>
+              <input class="form-control jmespath-expression"
+                     type="text" placeholder="Expression"
+                     value="sort_by(Contents, &Date)[*].{Key: Key, Size: Size}" />
+            </div>
+          </form>
+        </div>
+      </div> <!-- end row -->
+      <div class="row">
+        <div class="col-md-6 col-md-push-6">
+          <pre class="jmespath-result"></pre>
+        </div>
+        <div class="col-md-6 col-md-pull-6">
+          <form class="jmespath-form">
+            <textarea class="form-control jmespath-input" rows="34">{
+  "Contents": [
+    {
+      "Date": "2014-12-21T05:18:08.000Z",
+      "Key": "logs/bb",
+      "Size": 303
+    },
+    {
+      "Date": "2014-12-20T05:19:10.000Z",
+      "Key": "logs/aa",
+      "Size": 308
+    },
+    {
+      "Date": "2014-12-20T05:19:12.000Z",
+      "Key": "logs/qux",
+      "Size": 297
+    },
+    {
+      "Date": "2014-11-20T05:22:23.000Z",
+      "Key": "logs/baz",
+      "Size": 329
+    },
+    {
+      "Date": "2014-12-20T05:25:24.000Z",
+      "Key": "logs/bar",
+      "Size": 604
+    },
+    {
+      "Date": "2014-12-20T05:27:12.000Z",
+      "Key": "logs/foo",
+      "Size": 647
+    }
+  ]
+}</textarea>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<p>The first interesting thing here if the use of the function <code class="docutils literal notranslate"><span class="pre">sort_by</span></code>.  In
+this example we are sorting the <code class="docutils literal notranslate"><span class="pre">Contents</span></code> array by the value of each
+<code class="docutils literal notranslate"><span class="pre">Date</span></code> key in each element in the <code class="docutils literal notranslate"><span class="pre">Contents</span></code> array.  The
+<code class="docutils literal notranslate"><span class="pre">sort_by</span></code> function takes two arguments.  The first argument is an array, and
+the second argument describes the key that should be used to sort the array.</p>
+<p>The second interesting thing in this expression is that the second argument
+starts with <code class="docutils literal notranslate"><span class="pre">&amp;</span></code>, which creates an expression type.  Think of this
+conceptually as a reference to an expression that can be evaluated later.  If
+you are familiar with lambda and anonymous functions, expression types are
+similiar.  The reason we use <code class="docutils literal notranslate"><span class="pre">&amp;Date</span></code> instead of <code class="docutils literal notranslate"><span class="pre">Date</span></code> is
+because if the expression is <code class="docutils literal notranslate"><span class="pre">Date</span></code>, it would be evaluated before
+calling the function, and given there’s no <code class="docutils literal notranslate"><span class="pre">Date</span></code> key in the outer
+hash, the second argument would evaluate to <code class="docutils literal notranslate"><span class="pre">null</span></code>.  Check out
+<a class="reference internal" href="specification.html#function-evaluation"><span class="std std-ref">Function Evaluation</span></a> in the specification for more information on how
+functions are evaluated in JMESPath.  Also, note that we’re taking advantage of
+the fact that the dates are in ISO 8601 format, which can be sorted
+lexicographically.</p>
+<p>And finally, the last interesting thing in this expression is the <code class="docutils literal notranslate"><span class="pre">[*]</span></code>
+immediately after the <code class="docutils literal notranslate"><span class="pre">sort_by</span></code> function call.  The reason for this is that
+we want to apply the multiselect hash, the second half of the expression, to
+each element in the sorted array.  In order to do this we need a projection.
+The <code class="docutils literal notranslate"><span class="pre">[*]</span></code> does exactly that, it takes the input array and creates a
+projection such that the multiselect hash <code class="docutils literal notranslate"><span class="pre">{Key:</span> <span class="pre">Key,</span> <span class="pre">Size:</span> <span class="pre">Size}</span></code> will be
+applied to each element in the list.</p>
+<p>There are other functions that take expression types that are similar to
+<code class="docutils literal notranslate"><span class="pre">sort_by</span></code> including <a class="reference internal" href="specification.html#func-min-by"><span class="std std-ref">min_by</span></a> and <a class="reference internal" href="specification.html#func-max-by"><span class="std std-ref">max_by</span></a>.</p>
+</div>
+</div>
+<div class="section" id="pipes">
+<h2>Pipes<a class="headerlink" href="#pipes" title="Permalink to this headline">¶</a></h2>
+<p>Pipe expression are useful for stopping projections.  They can also be used to
+group expressions.</p>
+<div class="section" id="main-page">
+<h3>Main Page<a class="headerlink" href="#main-page" title="Permalink to this headline">¶</a></h3>
+<p>Let’s look at a modified version of the expression on the <a class="reference external" href="https://jmespath.org">JMESPath front page</a>.</p>
+<div class="jmespath-demo">
+  <div class="jmespath-example-heading" data-target="#jpexample-7" data-toggle="collapse">
+    <span class="glyphicon glyphicon-chevron-right"></span>
+    <a class="jp-demo-expr">
+        locations[?state == 'WA'].name | sort(@)[-2:] | {WashingtonCities: join(', ', @)}
+    </a>
+  </div>
+  <div class="panel panel-primary collapse" id="jpexample-7">
+    <div class="panel-body">
+      <div class="row">
+        <div class="col-md-12">
+          <form class="jmespath-form">
+            <div class="left-inner-addon">
+              <span class="glyphicon glyphicon-search"></span>
+              <input class="form-control jmespath-expression"
+                     type="text" placeholder="Expression"
+                     value="locations[?state == 'WA'].name | sort(@)[-2:] | {WashingtonCities: join(', ', @)}" />
+            </div>
+          </form>
+        </div>
+      </div> <!-- end row -->
+      <div class="row">
+        <div class="col-md-6 col-md-push-6">
+          <pre class="jmespath-result"></pre>
+        </div>
+        <div class="col-md-6 col-md-pull-6">
+          <form class="jmespath-form">
+            <textarea class="form-control jmespath-input" rows="8">{
+  "locations": [
+    {"name": "Seattle", "state": "WA"},
+    {"name": "New York", "state": "NY"},
+    {"name": "Bellevue", "state": "WA"},
+    {"name": "Olympia", "state": "WA"}
+  ]
+}</textarea>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<p>We can think of this JMESPath expression as having three components, each
+separated by the pipe character <code class="docutils literal notranslate"><span class="pre">|</span></code>.  The first expression is familiar to us,
+it’s similar to the first example on this page.  The second part of the
+expression, <code class="docutils literal notranslate"><span class="pre">sort(&#64;)</span></code>, is similar to the <code class="docutils literal notranslate"><span class="pre">sort_by</span></code> function we saw in the
+previous section.  The <code class="docutils literal notranslate"><span class="pre">&#64;</span></code> token is used to refer to the current element.
+The <a class="reference internal" href="specification.html#func-sort"><span class="std std-ref">sort</span></a> function takes a single parameter which is an array.  If
+the input JSON document was a hash, and we wanted to sort the <code class="docutils literal notranslate"><span class="pre">foo</span></code> key,
+which was an array, we could just use <code class="docutils literal notranslate"><span class="pre">sort(foo)</span></code>.  In this scenario, the
+input JSON document is the array we want to sort.  To refer to this value, we
+use the current element, <code class="docutils literal notranslate"><span class="pre">&#64;</span></code>, to indicate this.  We’re also only taking a
+subset of the sorted array.  We’re using a slice (<code class="docutils literal notranslate"><span class="pre">[-2:]</span></code>) to indicate that
+we only want the last two elements in the sorted array to be passed through to
+the final third of this expression.</p>
+<p>And finally, the third part of the expression,
+<code class="docutils literal notranslate"><span class="pre">{WashingtonCities:</span> <span class="pre">join(',</span> <span class="pre">',</span> <span class="pre">&#64;)}</span></code>, creates a multiselect hash.  It takes as
+input, the list of sorted city names, and produces a hash witih a single key,
+<code class="docutils literal notranslate"><span class="pre">WashingtonCities</span></code>, whose values are the input list (denoted by <code class="docutils literal notranslate"><span class="pre">&#64;</span></code>) as a
+string separated by a comma.</p>
+</div>
+</div>
+</div>
+
+
+                  </div>
+  <div class="col-md-3 col-md-pull-9 sphinxsidebar">
+    <div class="sphinxsidebarwrapper"><p class="logo"><a href="/">
+  <img id="sidebar-logo" src="_static/img/logo-dark.png" alt="JMESPath Logo" />
+</a></p>
+  <h3><a href="contents.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">JMESPath Examples</a><ul>
+<li><a class="reference internal" href="#filters-and-multiselect-lists">Filters and Multiselect Lists</a></li>
+<li><a class="reference internal" href="#filters-and-multiselect-hashes">Filters and Multiselect Hashes</a></li>
+<li><a class="reference internal" href="#working-with-nested-data">Working with Nested Data</a><ul>
+<li><a class="reference internal" href="#filtering-and-selecting-nested-data">Filtering and Selecting Nested Data</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#using-functions">Using Functions</a><ul>
+<li><a class="reference internal" href="#sort-by">sort_by</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#pipes">Pipes</a><ul>
+<li><a class="reference internal" href="#main-page">Main Page</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+
+    </div>
+  </div>
+              </div>
+            </div>
+
+        </div>
+
+<script>
+$(document).ready(function() {
+    $('.jmespath-demo').each(function(i, el) {
+        function evaluateDemo(el) {
+            var expression = $(el).find('.jmespath-expression').val();
+            var inputData = JSON.parse($(el).find('.jmespath-input').val());
+            var result = jmespath.search(inputData, expression);
+            $(el).find('.jmespath-result').text(JSON.stringify(result, null, 2));
+        }
+        $(el).find('.jmespath-expression').bind('keyup', function() {
+            evaluateDemo(el);
+        });
+        $(el).find('.jmespath-input').bind('keyup', function() {
+            evaluateDemo(el);
+        });
+        evaluateDemo(el);
+    });
+    $('.jmespath-form').submit(function() {
+      return false;
+    });
+
+    $('.collapse').on('shown.bs.collapse', function() {
+        $(this).parent().find(".glyphicon-chevron-right").removeClass(
+            "glyphicon-chevron-right").addClass("glyphicon-chevron-down");
+    }).on('hidden.bs.collapse', function(){
+        $(this).parent().find(".glyphicon-chevron-down").removeClass(
+            "glyphicon-chevron-down").addClass("glyphicon-chevron-right");
+    });
+
+})
+</script>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="specification.html" title="JMESPath Specification"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="tutorial.html" title="JMESPath Tutorial"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="contents.html">JMESPath</a> &#187;</li> 
+      </ul>
+    </div>
+
+  <script type="text/javascript" src="_static/js/bootstrap.js"></script>
+  <script type="text/javascript" src="_static/js/jmespath.min.js"></script>
+  <script type="text/javascript" src="_static/js/jquery-migrate-1.2.1.min.js"></script>
+  <script src="//static.getclicky.com/js" type="text/javascript"></script>
+  <script type="text/javascript">try{ clicky.init(100732121); }catch(e){}</script>
+  <noscript><p><img alt="Clicky" width="1" height="1" src="//in.getclicky.com/100732121ns.gif" /></p></noscript>
+  <div class="footer container">
+    &copy; Copyright 2014-2015, James Saryerwinnie.
+  </div>
+  </body>
+</html>

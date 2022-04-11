@@ -1,0 +1,1035 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  
+  <link rel="stylesheet" type="text/css" href="../_static/css/bootstrap.min.css" />
+  <link rel="stylesheet" type="text/css" href="../_static/css/bootstrap-theme.min.css" />
+  <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+    <title>Functions &#8212; JMESPath</title>
+    <link rel="stylesheet" href="../_static/jmespath.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Pipe Expressions" href="jep-004-pipes.html" />
+    <link rel="prev" title="Nested Expressions" href="jep-001-nested-expressions.html" />
+  
+   
+
+  </head><body>
+<nav class="navbar navbar-inverse navbar-static-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#toggle-main-nav">
+      </button>
+      <a class="navbar-brand" href="../contents.html"></a>
+    </div>
+    <div class="collapse navbar-collapse" id="toggle-main-nav">
+      <ul class="nav navbar-nav">
+        <li><a href="../index.html">Home</a></li>
+        <li><a href="../tutorial.html">Tutorial</a></li>
+        <li><a href="../examples.html">Examples</a></li>
+        <li><a href="../specification.html">Specification</a></li>
+        <li><a href="../libraries.html">Libraries</a></li>
+        <li><a href="https://github.com/jmespath-community">Github</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="jep-004-pipes.html" title="Pipe Expressions"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="jep-001-nested-expressions.html" title="Nested Expressions"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../contents.html">JMESPath</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../proposals.html" accesskey="U">JMESPath Proposals</a> &#187;</li> 
+      </ul>
+    </div>
+        <div class="container">
+            <div class="main-content">
+              <div class="row">
+                  <div class="col-md-9 col-md-push-3">
+                    
+  <div class="section" id="functions">
+<h1>Functions<a class="headerlink" href="#functions" title="Permalink to this headline">¶</a></h1>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">JEP:</th><td class="field-body">3</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Author:</th><td class="field-body">Michael Dowling, James Saryerwinnie</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Status:</th><td class="field-body">accepted</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Created:</th><td class="field-body">27-Nov-2013</td>
+</tr>
+</tbody>
+</table>
+<div class="section" id="abstract">
+<h2>Abstract<a class="headerlink" href="#abstract" title="Permalink to this headline">¶</a></h2>
+<p>This document proposes modifying the
+<a class="reference external" href="https://jmespath.org/specification.html#grammar">JMESPath grammar</a>
+to support function expressions.</p>
+</div>
+<div class="section" id="motivation">
+<h2>Motivation<a class="headerlink" href="#motivation" title="Permalink to this headline">¶</a></h2>
+<p>Functions allow users to easily transform and filter data in JMESPath
+expressions. As JMESPath is currently implemented, functions would be very
+useful in <code class="docutils literal notranslate"><span class="pre">multi-select-list</span></code> and <code class="docutils literal notranslate"><span class="pre">multi-select-hash</span></code> expressions to format
+the output of an expression to contain data that might not have been in the
+original JSON input. Combined with filtered expressions, functions would be a
+powerful mechanism to perform any kind of special comparisons for things like
+<code class="docutils literal notranslate"><span class="pre">length()</span></code>, <code class="docutils literal notranslate"><span class="pre">contains()</span></code>, etc.</p>
+</div>
+<div class="section" id="data-types">
+<h2>Data Types<a class="headerlink" href="#data-types" title="Permalink to this headline">¶</a></h2>
+<p>In order to support functions, a type system is needed.  The JSON types are
+used:</p>
+<ul class="simple">
+<li>number (integers and double-precision floating-point format in JSON)</li>
+<li>string</li>
+<li>boolean (<code class="docutils literal notranslate"><span class="pre">true</span></code> or <code class="docutils literal notranslate"><span class="pre">false</span></code>)</li>
+<li>array (an ordered, sequence of values)</li>
+<li>object (an unordered collection of key value pairs)</li>
+<li>null</li>
+</ul>
+</div>
+<div class="section" id="syntax-changes">
+<h2>Syntax Changes<a class="headerlink" href="#syntax-changes" title="Permalink to this headline">¶</a></h2>
+<p>Functions are defined in the <code class="docutils literal notranslate"><span class="pre">function-expression</span></code> rule below.  A function
+expression is an <code class="docutils literal notranslate"><span class="pre">expression</span></code> itself, and is valid any place an
+<code class="docutils literal notranslate"><span class="pre">expression</span></code> is allowed.</p>
+<p>The grammar will require the following grammar additions:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">function</span><span class="o">-</span><span class="n">expression</span> <span class="o">=</span> <span class="n">unquoted</span><span class="o">-</span><span class="n">string</span>  <span class="p">(</span>
+                        <span class="n">no</span><span class="o">-</span><span class="n">args</span>  <span class="o">/</span>
+                        <span class="n">one</span><span class="o">-</span><span class="ow">or</span><span class="o">-</span><span class="n">more</span><span class="o">-</span><span class="n">args</span> <span class="p">)</span>
+<span class="n">no</span><span class="o">-</span><span class="n">args</span>             <span class="o">=</span> <span class="s2">&quot;(&quot;</span> <span class="s2">&quot;)&quot;</span>
+<span class="n">one</span><span class="o">-</span><span class="ow">or</span><span class="o">-</span><span class="n">more</span><span class="o">-</span><span class="n">args</span>    <span class="o">=</span> <span class="s2">&quot;(&quot;</span> <span class="p">(</span> <span class="n">function</span><span class="o">-</span><span class="n">arg</span> <span class="o">*</span><span class="p">(</span> <span class="s2">&quot;,&quot;</span> <span class="n">function</span><span class="o">-</span><span class="n">arg</span> <span class="p">)</span> <span class="p">)</span> <span class="s2">&quot;)&quot;</span>
+<span class="n">function</span><span class="o">-</span><span class="n">arg</span>        <span class="o">=</span> <span class="n">expression</span> <span class="o">/</span> <span class="n">number</span> <span class="o">/</span> <span class="n">current</span><span class="o">-</span><span class="n">node</span>
+<span class="n">current</span><span class="o">-</span><span class="n">node</span>        <span class="o">=</span> <span class="s2">&quot;@&quot;</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">expression</span></code> will need to be updated to add the <code class="docutils literal notranslate"><span class="pre">function-expression</span></code>
+production:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">expression</span>        <span class="o">=</span> <span class="n">sub</span><span class="o">-</span><span class="n">expression</span> <span class="o">/</span> <span class="n">index</span><span class="o">-</span><span class="n">expression</span> <span class="o">/</span> <span class="ow">or</span><span class="o">-</span><span class="n">expression</span> <span class="o">/</span> <span class="n">identifier</span> <span class="o">/</span> <span class="s2">&quot;*&quot;</span>
+<span class="n">expression</span>        <span class="o">=/</span> <span class="n">multi</span><span class="o">-</span><span class="n">select</span><span class="o">-</span><span class="nb">list</span> <span class="o">/</span> <span class="n">multi</span><span class="o">-</span><span class="n">select</span><span class="o">-</span><span class="nb">hash</span>
+<span class="n">expression</span>        <span class="o">=/</span> <span class="n">literal</span> <span class="o">/</span> <span class="n">function</span><span class="o">-</span><span class="n">expression</span>
+</pre></div>
+</div>
+<p>A function can accept any number of arguments, and each argument can be an
+expression.  Each function must define a signature that specifies the number
+and allowed types of its expected arguments.  Functions can be variadic.</p>
+<div class="section" id="current-node">
+<h3>current-node<a class="headerlink" href="#current-node" title="Permalink to this headline">¶</a></h3>
+<p>The <code class="docutils literal notranslate"><span class="pre">current-node</span></code> token can be used to represent the current node being
+evaluated. The <code class="docutils literal notranslate"><span class="pre">current-node</span></code> token is useful for functions that require the
+current node being evaluated as an argument. For example, the following
+expression creates an array containing the total number of elements in the
+<code class="docutils literal notranslate"><span class="pre">foo</span></code> object followed by the value of <code class="docutils literal notranslate"><span class="pre">foo[&quot;bar&quot;]</span></code>.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">foo</span><span class="p">[]</span><span class="o">.</span><span class="p">[</span><span class="n">count</span><span class="p">(</span><span class="o">@</span><span class="p">),</span> <span class="n">bar</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>JMESPath assumes that all function arguments operate on the current node unless
+the argument is a <code class="docutils literal notranslate"><span class="pre">literal</span></code> or <code class="docutils literal notranslate"><span class="pre">number</span></code> token.  Because of this, an
+expression such as <code class="docutils literal notranslate"><span class="pre">&#64;.bar</span></code> would be equivalent to just <code class="docutils literal notranslate"><span class="pre">bar</span></code>, so the
+current node is only allowed as a bare expression.</p>
+<div class="section" id="current-node-state">
+<h4>current-node state<a class="headerlink" href="#current-node-state" title="Permalink to this headline">¶</a></h4>
+<p>At the start of an expression, the value of the current node is the data
+being evaluated by the JMESPath expression. As an expression is evaluated, the
+value the the current node represents MUST change to reflect the node currently
+being evaluated. When in a projection, the current node value MUST be changed
+to the node currently being evaluated by the projection.</p>
+</div>
+</div>
+</div>
+<div class="section" id="function-evaluation">
+<h2>Function Evaluation<a class="headerlink" href="#function-evaluation" title="Permalink to this headline">¶</a></h2>
+<p>Functions are evaluated in applicative order.  Each argument must be an
+expression, each argument expression must be evaluated before evaluating the
+function.  The function is then called with the evaluated function arguments.
+The result of the <code class="docutils literal notranslate"><span class="pre">function-expression</span></code> is the result returned by the
+function call.  If a <code class="docutils literal notranslate"><span class="pre">function-expression</span></code> is evaluated for a function that
+does not exist, the JMESPath implementation must indicate to the caller that an
+<code class="docutils literal notranslate"><span class="pre">unknown-function</span></code> error occurred.  How and when this error is raised is
+implementation specific, but implementations should indicate to the caller that
+this specific error occurred.</p>
+<p>Functions can either have a specific arity or be variadic with a minimum
+number of arguments.  If a <code class="docutils literal notranslate"><span class="pre">function-expression</span></code> is encountered where the
+arity does not match or the minimum number of arguments for a variadic function
+is not provided, then implementations must indicate to the caller than an
+<code class="docutils literal notranslate"><span class="pre">invalid-arity</span></code> error occurred.  How and when this error is raised is
+implementation specific.</p>
+<p>Each function signature declares the types of its input parameters.  If any
+type constraints are not met, implementations must indicate that an
+<code class="docutils literal notranslate"><span class="pre">invalid-type</span></code> error occurred.</p>
+<p>In order to accommodate type contraints, functions are provided to convert
+types to other types (<code class="docutils literal notranslate"><span class="pre">to_string</span></code>, <code class="docutils literal notranslate"><span class="pre">to_number</span></code>) which are defined below.
+No explicit type conversion happens unless a user specifically uses one of
+these type conversion functions.</p>
+<p>Function expressions are also allowed as the child element of a sub expression.
+This allows functions to be used with projections, which can enable functions
+to be applied to every element in a projection.  For example, given the input
+data of <code class="docutils literal notranslate"><span class="pre">[&quot;1&quot;,</span> <span class="pre">&quot;2&quot;,</span> <span class="pre">&quot;3&quot;,</span> <span class="pre">&quot;notanumber&quot;,</span> <span class="pre">true]</span></code>, the following expression can
+be used to convert (and filter) all elements to numbers:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>search([].to_number(@), ``[&quot;1&quot;, &quot;2&quot;, &quot;3&quot;, &quot;notanumber&quot;, true]``) -&gt; [1, 2, 3]
+</pre></div>
+</div>
+<p>This provides a simple mechanism to explicitly convert types when needed.</p>
+</div>
+<div class="section" id="built-in-functions">
+<h2>Built-in Functions<a class="headerlink" href="#built-in-functions" title="Permalink to this headline">¶</a></h2>
+<p>JMESPath has various built-in functions that operate on different
+data types, documented below.  Each function below has a signature
+that defines the expected types of the input and the type of the returned
+output:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>return_type function_name(type $argname)
+return_type function_name2(type1|type2 $argname)
+</pre></div>
+</div>
+<p>If a function can accept multiple types for an input value, then the
+multiple types are separated with <code class="docutils literal notranslate"><span class="pre">|</span></code>.  If the resolved arguments do not
+match the types specified in the signature, an <code class="docutils literal notranslate"><span class="pre">invalid-type</span></code> error occurs.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">array</span></code> type can further specify requirements on the type of the elements
+if they want to enforce homogeneous types.  The subtype is surrounded by
+<code class="docutils literal notranslate"><span class="pre">[type]</span></code>, for example, the function signature below requires its input
+argument resolves to an array of numbers:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>return_type foo(array[number] $argname)
+</pre></div>
+</div>
+<p>As a shorthand, the type <code class="docutils literal notranslate"><span class="pre">any</span></code> is used to indicate that the argument can be
+of any type (<code class="docutils literal notranslate"><span class="pre">array|object|number|string|boolean|null</span></code>).</p>
+<p>The first function below, <code class="docutils literal notranslate"><span class="pre">abs</span></code> is discussed in detail to demonstrate the
+above points.  Subsequent function definitions will not include these details
+for brevity, but the same rules apply.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">All string related functions are defined on the basis of Unicode code
+points; they do not take normalization into account.</p>
+</div>
+<div class="section" id="abs">
+<h3>abs<a class="headerlink" href="#abs" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>number abs(number $value)
+</pre></div>
+</div>
+<p>Returns the absolute value of the provided argument.  The signature indicates
+that a number is returned, and that the input argument <code class="docutils literal notranslate"><span class="pre">$value</span></code> <strong>must</strong>
+resolve to a number, otherwise a <code class="docutils literal notranslate"><span class="pre">invalid-type</span></code> error is triggered.</p>
+<p>Below is a worked example.  Given:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s2">&quot;foo&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;bar&quot;</span><span class="p">:</span> <span class="s2">&quot;2&quot;</span><span class="p">}</span>
+</pre></div>
+</div>
+<p>Evaluating <code class="docutils literal notranslate"><span class="pre">abs(foo)</span></code> works as follows:</p>
+<ol class="arabic">
+<li><p class="first">Evaluate the input argument against the current data:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">search</span><span class="p">(</span><span class="n">foo</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;foo&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mi">11</span><span class="p">,</span> <span class="s2">&quot;bar&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="s2">&quot;}) -&gt; -1</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">Validate the type of the resolved argument.  In this case
+<code class="docutils literal notranslate"><span class="pre">-1</span></code> is of type <code class="docutils literal notranslate"><span class="pre">number</span></code> so it passes the type check.</p>
+</li>
+<li><p class="first">Call the function with the resolved argument:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nb">abs</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="mi">1</span>
+</pre></div>
+</div>
+</li>
+<li><dl class="first docutils">
+<dt>The value of <code class="docutils literal notranslate"><span class="pre">1</span></code> is the resolved value of the function expression</dt>
+<dd><p class="first last"><code class="docutils literal notranslate"><span class="pre">abs(foo)</span></code>.</p>
+</dd>
+</dl>
+</li>
+</ol>
+<p>Below is the same steps for evaluating <code class="docutils literal notranslate"><span class="pre">abs(bar)</span></code>:</p>
+<ol class="arabic">
+<li><p class="first">Evaluate the input argument against the current data:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">search</span><span class="p">(</span><span class="n">foo</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;foo&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;bar&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="s2">&quot;}) -&gt; &quot;</span><span class="mi">2</span><span class="s2">&quot;</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">Validate the type of the resolved argument.  In this case
+<code class="docutils literal notranslate"><span class="pre">&quot;2</span></code> is of type <code class="docutils literal notranslate"><span class="pre">string</span></code> so the immediate indicate that
+an <code class="docutils literal notranslate"><span class="pre">invalid-type</span></code> error occurred.</p>
+</li>
+</ol>
+<p>As a final example, here is the steps for evaluating <code class="docutils literal notranslate"><span class="pre">abs(to_number(bar))</span></code>:</p>
+<ol class="arabic">
+<li><p class="first">Evaluate the input argument against the current data:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">search</span><span class="p">(</span><span class="n">to_number</span><span class="p">(</span><span class="n">bar</span><span class="p">),</span> <span class="p">{</span><span class="s2">&quot;foo&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;bar&quot;</span><span class="p">:</span> <span class="s2">&quot;2&quot;</span><span class="p">})</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">In order to evaluate the above expression, we need to evaluate
+<code class="docutils literal notranslate"><span class="pre">to_number(bar)</span></code>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">search</span><span class="p">(</span><span class="n">bar</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;foo&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;bar&quot;</span><span class="p">:</span> <span class="s2">&quot;2&quot;</span><span class="p">})</span> <span class="o">-&gt;</span> <span class="s2">&quot;2&quot;</span>
+<span class="c1"># Validate &quot;2&quot; passes the type check for to_number, which it does.</span>
+<span class="n">to_number</span><span class="p">(</span><span class="s2">&quot;2&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="mi">2</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">Now we can evaluate the original expression:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">search</span><span class="p">(</span><span class="n">to_number</span><span class="p">(</span><span class="n">bar</span><span class="p">),</span> <span class="p">{</span><span class="s2">&quot;foo&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;bar&quot;</span><span class="p">:</span> <span class="s2">&quot;2&quot;</span><span class="p">})</span> <span class="o">-&gt;</span> <span class="mi">2</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">Call the function with the final resolved value:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nb">abs</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="mi">2</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">The value of <code class="docutils literal notranslate"><span class="pre">2</span></code> is the resolved value of the function expression
+<code class="docutils literal notranslate"><span class="pre">abs(to_number(bar))</span></code>.</p>
+</li>
+</ol>
+<table border="1" class="docutils" id="id1">
+<caption><span class="caption-text">Examples</span><a class="headerlink" href="#id1" title="Permalink to this table">¶</a></caption>
+<colgroup>
+<col width="50%" />
+<col width="50%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Expression</th>
+<th class="head">Result</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">abs(1)</span></code></td>
+<td>1</td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">abs(-1)</span></code></td>
+<td>1</td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">abs(`abc`)</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">&lt;error:</span> <span class="pre">invalid-type&gt;</span></code></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="avg">
+<h3>avg<a class="headerlink" href="#avg" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>number avg(array[number] $elements)
+</pre></div>
+</div>
+<p>Returns the average of the elements in the provided array.</p>
+<p>An empty array will produce a return value of null.</p>
+<table border="1" class="docutils" id="id2">
+<caption><span class="caption-text">Examples</span><a class="headerlink" href="#id2" title="Permalink to this table">¶</a></caption>
+<colgroup>
+<col width="33%" />
+<col width="33%" />
+<col width="33%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Given</th>
+<th class="head">Expression</th>
+<th class="head">Result</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">[10,</span> <span class="pre">15,</span> <span class="pre">20]</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">avg(&#64;)</span></code></td>
+<td>15</td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">[10,</span> <span class="pre">false,</span> <span class="pre">20]</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">avg(&#64;)</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">&lt;error:</span> <span class="pre">invalid-type&gt;</span></code></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">[false]</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">avg(&#64;)</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">&lt;error:</span> <span class="pre">invalid-type&gt;</span></code></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">false</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">avg(&#64;)</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">&lt;error:</span> <span class="pre">invalid-type&gt;</span></code></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="contains">
+<h3>contains<a class="headerlink" href="#contains" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>boolean contains(array|string $subject, array|object|string|number|boolean $search)
+</pre></div>
+</div>
+<p>Returns <code class="docutils literal notranslate"><span class="pre">true</span></code> if the given <code class="docutils literal notranslate"><span class="pre">$subject</span></code> contains the provided <code class="docutils literal notranslate"><span class="pre">$search</span></code>
+string.</p>
+<p>If <code class="docutils literal notranslate"><span class="pre">$subject</span></code> is an array, this function returns true if one of the elements
+in the array is equal to the provided <code class="docutils literal notranslate"><span class="pre">$search</span></code> value.</p>
+<p>If the provided <code class="docutils literal notranslate"><span class="pre">$subject</span></code> is a string, this function returns true if
+the string contains the provided <code class="docutils literal notranslate"><span class="pre">$search</span></code> argument.</p>
+<table border="1" class="docutils" id="id3">
+<caption><span class="caption-text">Examples</span><a class="headerlink" href="#id3" title="Permalink to this table">¶</a></caption>
+<colgroup>
+<col width="33%" />
+<col width="33%" />
+<col width="33%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Given</th>
+<th class="head">Expression</th>
+<th class="head">Result</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>n/a</td>
+<td><code class="docutils literal notranslate"><span class="pre">contains(`foobar`,</span> <span class="pre">`foo`)</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">true</span></code></td>
+</tr>
+<tr class="row-odd"><td>n/a</td>
+<td><code class="docutils literal notranslate"><span class="pre">contains(`foobar`,</span> <span class="pre">`not`)</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">false</span></code></td>
+</tr>
+<tr class="row-even"><td>n/a</td>
+<td><code class="docutils literal notranslate"><span class="pre">contains(`foobar`,</span> <span class="pre">`bar`)</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">true</span></code></td>
+</tr>
+<tr class="row-odd"><td>n/a</td>
+<td><code class="docutils literal notranslate"><span class="pre">contains(`false`,</span> <span class="pre">`bar`)</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">&lt;error:</span> <span class="pre">invalid-type&gt;</span></code></td>
+</tr>
+<tr class="row-even"><td>n/a</td>
+<td><code class="docutils literal notranslate"><span class="pre">contains(`foobar`,</span> <span class="pre">123)</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">false</span></code></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">[&quot;a&quot;,</span> <span class="pre">&quot;b&quot;]</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">contains(&#64;,</span> <span class="pre">`a`)</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">true</span></code></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">[&quot;a&quot;]</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">contains(&#64;,</span> <span class="pre">`a`)</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">true</span></code></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">[&quot;a&quot;]</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">contains(&#64;,</span> <span class="pre">`b`)</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">false</span></code></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="ceil">
+<h3>ceil<a class="headerlink" href="#ceil" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>number ceil(number $value)
+</pre></div>
+</div>
+<p>Returns the next highest integer value by rounding up if necessary.</p>
+<table border="1" class="docutils" id="id4">
+<caption><span class="caption-text">Examples</span><a class="headerlink" href="#id4" title="Permalink to this table">¶</a></caption>
+<colgroup>
+<col width="50%" />
+<col width="50%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Expression</th>
+<th class="head">Result</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">ceil(`1.001`)</span></code></td>
+<td>2</td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">ceil(`1.9`)</span></code></td>
+<td>2</td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">ceil(`1`)</span></code></td>
+<td>1</td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">ceil(`abc`)</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">null</span></code></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="floor">
+<h3>floor<a class="headerlink" href="#floor" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>number floor(number $value)
+</pre></div>
+</div>
+<p>Returns the next lowest integer value by rounding down if necessary.</p>
+<table border="1" class="docutils" id="id5">
+<caption><span class="caption-text">Examples</span><a class="headerlink" href="#id5" title="Permalink to this table">¶</a></caption>
+<colgroup>
+<col width="50%" />
+<col width="50%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Expression</th>
+<th class="head">Result</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">floor(`1.001`)</span></code></td>
+<td>1</td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">floor(`1.9`)</span></code></td>
+<td>1</td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">floor(`1`)</span></code></td>
+<td>1</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="join">
+<h3>join<a class="headerlink" href="#join" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>string join(string $glue, array[string] $stringsarray)
+</pre></div>
+</div>
+<p>Returns all of the elements from the provided <code class="docutils literal notranslate"><span class="pre">$stringsarray</span></code> array joined
+together using the <code class="docutils literal notranslate"><span class="pre">$glue</span></code> argument as a separator between each.</p>
+<table border="1" class="docutils" id="id6">
+<caption><span class="caption-text">Examples</span><a class="headerlink" href="#id6" title="Permalink to this table">¶</a></caption>
+<colgroup>
+<col width="33%" />
+<col width="33%" />
+<col width="33%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Given</th>
+<th class="head">Expression</th>
+<th class="head">Result</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">[&quot;a&quot;,</span> <span class="pre">&quot;b&quot;]</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">join(`,</span> <span class="pre">`,</span> <span class="pre">&#64;)</span></code></td>
+<td>“a, b”</td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">[&quot;a&quot;,</span> <span class="pre">&quot;b&quot;]</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">join(</span></code>, &#64;)``</td>
+<td>“ab”</td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">[&quot;a&quot;,</span> <span class="pre">false,</span> <span class="pre">&quot;b&quot;]</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">join(`,</span> <span class="pre">`,</span> <span class="pre">&#64;)</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">&lt;error:</span> <span class="pre">invalid-type&gt;</span></code></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">[false]</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">join(`,</span> <span class="pre">`,</span> <span class="pre">&#64;)</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">&lt;error:</span> <span class="pre">invalid-type&gt;</span></code></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="keys">
+<h3>keys<a class="headerlink" href="#keys" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>array keys(object $obj)
+</pre></div>
+</div>
+<p>Returns an array containing the keys of the provided object.</p>
+<table border="1" class="docutils" id="id7">
+<caption><span class="caption-text">Examples</span><a class="headerlink" href="#id7" title="Permalink to this table">¶</a></caption>
+<colgroup>
+<col width="33%" />
+<col width="33%" />
+<col width="33%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Given</th>
+<th class="head">Expression</th>
+<th class="head">Result</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">{&quot;foo&quot;:</span> <span class="pre">&quot;baz&quot;,</span> <span class="pre">&quot;bar&quot;:</span> <span class="pre">&quot;bam&quot;}</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">keys(&#64;)</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">[&quot;foo&quot;,</span> <span class="pre">&quot;bar&quot;]</span></code></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">{}</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">keys(&#64;)</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">[]</span></code></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">false</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">keys(&#64;)</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">&lt;error:</span> <span class="pre">invalid-type&gt;</span></code></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">[b,</span> <span class="pre">a,</span> <span class="pre">c]</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">keys(&#64;)</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">&lt;error:</span> <span class="pre">invalid-type&gt;</span></code></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="length">
+<h3>length<a class="headerlink" href="#length" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>number length(string|array|object $subject)
+</pre></div>
+</div>
+<p>Returns the length of the given argument using the following types rules:</p>
+<ol class="arabic simple">
+<li>string: returns the number of code points in the string</li>
+<li>array: returns the number of elements in the array</li>
+<li>object: returns the number of key-value pairs in the object</li>
+</ol>
+<table border="1" class="docutils" id="id8">
+<caption><span class="caption-text">Examples</span><a class="headerlink" href="#id8" title="Permalink to this table">¶</a></caption>
+<colgroup>
+<col width="33%" />
+<col width="33%" />
+<col width="33%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Given</th>
+<th class="head">Expression</th>
+<th class="head">Result</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>n/a</td>
+<td><code class="docutils literal notranslate"><span class="pre">length(`abc`)</span></code></td>
+<td>3</td>
+</tr>
+<tr class="row-odd"><td>“current”</td>
+<td><code class="docutils literal notranslate"><span class="pre">length(&#64;)</span></code></td>
+<td>7</td>
+</tr>
+<tr class="row-even"><td>“current”</td>
+<td><code class="docutils literal notranslate"><span class="pre">length(not_there)</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">&lt;error:</span> <span class="pre">invalid-type&gt;</span></code></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">[&quot;a&quot;,</span> <span class="pre">&quot;b&quot;,</span> <span class="pre">&quot;c&quot;]</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">length(&#64;)</span></code></td>
+<td>3</td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">[]</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">length(&#64;)</span></code></td>
+<td>0</td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">{}</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">length(&#64;)</span></code></td>
+<td>0</td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">{&quot;foo&quot;:</span> <span class="pre">&quot;bar&quot;,</span> <span class="pre">&quot;baz&quot;:</span> <span class="pre">&quot;bam&quot;}</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">length(&#64;)</span></code></td>
+<td>2</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="max">
+<h3>max<a class="headerlink" href="#max" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>number max(array[number] $collection)
+</pre></div>
+</div>
+<p>Returns the highest found number in the provided array argument.</p>
+<p>An empty array will produce a return value of null.</p>
+<table border="1" class="docutils" id="id9">
+<caption><span class="caption-text">Examples</span><a class="headerlink" href="#id9" title="Permalink to this table">¶</a></caption>
+<colgroup>
+<col width="33%" />
+<col width="33%" />
+<col width="33%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Given</th>
+<th class="head">Expression</th>
+<th class="head">Result</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">[10,</span> <span class="pre">15]</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">max(&#64;)</span></code></td>
+<td>15</td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">[10,</span> <span class="pre">false,</span> <span class="pre">20]</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">max(&#64;)</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">&lt;error:</span> <span class="pre">invalid-type&gt;</span></code></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="min">
+<h3>min<a class="headerlink" href="#min" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>number min(array[number] $collection)
+</pre></div>
+</div>
+<p>Returns the lowest found number in the provided <code class="docutils literal notranslate"><span class="pre">$collection</span></code> argument.</p>
+<table border="1" class="docutils" id="id10">
+<caption><span class="caption-text">Examples</span><a class="headerlink" href="#id10" title="Permalink to this table">¶</a></caption>
+<colgroup>
+<col width="33%" />
+<col width="33%" />
+<col width="33%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Given</th>
+<th class="head">Expression</th>
+<th class="head">Result</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">[10,</span> <span class="pre">15]</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">min(&#64;)</span></code></td>
+<td>10</td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">[10,</span> <span class="pre">false,</span> <span class="pre">20]</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">min(&#64;)</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">&lt;error:</span> <span class="pre">invalid-type&gt;</span></code></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="sort">
+<h3>sort<a class="headerlink" href="#sort" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>array sort(array $list)
+</pre></div>
+</div>
+<p>This function accepts an array <code class="docutils literal notranslate"><span class="pre">$list</span></code> argument and returns the sorted
+elements of the <code class="docutils literal notranslate"><span class="pre">$list</span></code> as an array.</p>
+<p>The array must be a list of strings or numbers.  Sorting strings is based on
+code points.  Locale is not taken into account.</p>
+<table border="1" class="docutils" id="id11">
+<caption><span class="caption-text">Examples</span><a class="headerlink" href="#id11" title="Permalink to this table">¶</a></caption>
+<colgroup>
+<col width="33%" />
+<col width="33%" />
+<col width="33%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Given</th>
+<th class="head">Expression</th>
+<th class="head">Result</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">[b,</span> <span class="pre">a,</span> <span class="pre">c]</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">sort(&#64;)</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">[a,</span> <span class="pre">b,</span> <span class="pre">c]</span></code></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">[1,</span> <span class="pre">a,</span> <span class="pre">c]</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">sort(&#64;)</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">[1,</span> <span class="pre">a,</span> <span class="pre">c]</span></code></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">[false,</span> <span class="pre">[],</span> <span class="pre">null]</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">sort(&#64;)</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">[[],</span> <span class="pre">null,</span> <span class="pre">false]</span></code></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">[[],</span> <span class="pre">{},</span> <span class="pre">false]</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">sort(&#64;)</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">[{},</span> <span class="pre">[],</span> <span class="pre">false]</span></code></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">{&quot;a&quot;:</span> <span class="pre">1,</span> <span class="pre">&quot;b&quot;:</span> <span class="pre">2}</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">sort(&#64;)</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">null</span></code></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">false</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">sort(&#64;)</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">null</span></code></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="to-string">
+<h3>to_string<a class="headerlink" href="#to-string" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>string to_string(string|number|array|object|boolean $arg)
+</pre></div>
+</div>
+<ul class="simple">
+<li>string - Returns the passed in value.</li>
+<li>number/array/object/boolean - The JSON encoded value of the object.  The
+JSON encoder should emit the encoded JSON value without adding any additional
+new lines.</li>
+</ul>
+<table border="1" class="docutils" id="id12">
+<caption><span class="caption-text">Examples</span><a class="headerlink" href="#id12" title="Permalink to this table">¶</a></caption>
+<colgroup>
+<col width="33%" />
+<col width="33%" />
+<col width="33%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Given</th>
+<th class="head">Expression</th>
+<th class="head">Result</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">null</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">to_string(`2`)</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">&quot;2&quot;</span></code></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="to-number">
+<h3>to_number<a class="headerlink" href="#to-number" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>number to_number(string|number $arg)
+</pre></div>
+</div>
+<ul class="simple">
+<li>string - Returns the parsed number.  Any string that conforms to the
+<code class="docutils literal notranslate"><span class="pre">json-number</span></code> production is supported.</li>
+<li>number - Returns the passed in value.</li>
+<li>array - null</li>
+<li>object - null</li>
+<li>boolean - null</li>
+</ul>
+</div>
+<div class="section" id="type">
+<h3>type<a class="headerlink" href="#type" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>string type(array|object|string|number|boolean|null $subject)
+</pre></div>
+</div>
+<p>Returns the JavaScript type of the given <code class="docutils literal notranslate"><span class="pre">$subject</span></code> argument as a string
+value.</p>
+<p>The return value MUST be one of the following:</p>
+<ul class="simple">
+<li>number</li>
+<li>string</li>
+<li>boolean</li>
+<li>array</li>
+<li>object</li>
+<li>null</li>
+</ul>
+<table border="1" class="docutils" id="id13">
+<caption><span class="caption-text">Examples</span><a class="headerlink" href="#id13" title="Permalink to this table">¶</a></caption>
+<colgroup>
+<col width="33%" />
+<col width="33%" />
+<col width="33%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Given</th>
+<th class="head">Expression</th>
+<th class="head">Result</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>“foo”</td>
+<td><code class="docutils literal notranslate"><span class="pre">type(&#64;)</span></code></td>
+<td>“string”</td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">true</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">type(&#64;)</span></code></td>
+<td>“boolean”</td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">false</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">type(&#64;)</span></code></td>
+<td>“boolean”</td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">null</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">type(&#64;)</span></code></td>
+<td>“null”</td>
+</tr>
+<tr class="row-even"><td>123</td>
+<td><code class="docutils literal notranslate"><span class="pre">type(&#64;)</span></code></td>
+<td>number</td>
+</tr>
+<tr class="row-odd"><td>123.05</td>
+<td><code class="docutils literal notranslate"><span class="pre">type(&#64;)</span></code></td>
+<td>number</td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">[&quot;abc&quot;]</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">type(&#64;)</span></code></td>
+<td>“array”</td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">{&quot;abc&quot;:</span> <span class="pre">&quot;123&quot;}</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">type(&#64;)</span></code></td>
+<td>“object”</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="values">
+<h3>values<a class="headerlink" href="#values" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>array values(object $obj)
+</pre></div>
+</div>
+<p>Returns the values of the provided object.</p>
+<table border="1" class="docutils" id="id14">
+<caption><span class="caption-text">Examples</span><a class="headerlink" href="#id14" title="Permalink to this table">¶</a></caption>
+<colgroup>
+<col width="33%" />
+<col width="33%" />
+<col width="33%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Given</th>
+<th class="head">Expression</th>
+<th class="head">Result</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">{&quot;foo&quot;:</span> <span class="pre">&quot;baz&quot;,</span> <span class="pre">&quot;bar&quot;:</span> <span class="pre">&quot;bam&quot;}</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">values(&#64;)</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">[&quot;baz&quot;,</span> <span class="pre">&quot;bam&quot;]</span></code></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">[&quot;a&quot;,</span> <span class="pre">&quot;b&quot;]</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">values(&#64;)</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">&lt;error:</span> <span class="pre">invalid-type&gt;</span></code></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">false</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">values(&#64;)</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">&lt;error:</span> <span class="pre">invalid-type&gt;</span></code></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="section" id="compliance-tests">
+<h2>Compliance Tests<a class="headerlink" href="#compliance-tests" title="Permalink to this headline">¶</a></h2>
+<p>A <code class="docutils literal notranslate"><span class="pre">functions.json</span></code> will be added to the compliance test suite.
+The test suite will add the following new error types:</p>
+<ul class="simple">
+<li>unknown-function</li>
+<li>invalid-arity</li>
+<li>invalid-type</li>
+</ul>
+<p>The compliance does not specify <strong>when</strong> the errors are raised, as this will
+depend on implementation details.  For an implementation to be compliant they
+need to indicate that an error occurred while attempting to evaluate the
+JMESPath expression.</p>
+</div>
+<div class="section" id="history">
+<h2>History<a class="headerlink" href="#history" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>This JEP originally proposed the literal syntax. The literal portion of this
+JEP was removed and added instead to JEP 7.</li>
+<li>This JEP originally specified that types matches should return null.  This
+has been updated to specify that an invalid type error should occur instead.</li>
+</ul>
+</div>
+</div>
+
+
+                  </div>
+  <div class="col-md-3 col-md-pull-9 sphinxsidebar">
+    <div class="sphinxsidebarwrapper"><p class="logo"><a href="/">
+  <img id="sidebar-logo" src="../_static/img/logo-dark.png" alt="JMESPath Logo" />
+</a></p>
+  <h3><a href="../contents.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Functions</a><ul>
+<li><a class="reference internal" href="#abstract">Abstract</a></li>
+<li><a class="reference internal" href="#motivation">Motivation</a></li>
+<li><a class="reference internal" href="#data-types">Data Types</a></li>
+<li><a class="reference internal" href="#syntax-changes">Syntax Changes</a><ul>
+<li><a class="reference internal" href="#current-node">current-node</a><ul>
+<li><a class="reference internal" href="#current-node-state">current-node state</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#function-evaluation">Function Evaluation</a></li>
+<li><a class="reference internal" href="#built-in-functions">Built-in Functions</a><ul>
+<li><a class="reference internal" href="#abs">abs</a></li>
+<li><a class="reference internal" href="#avg">avg</a></li>
+<li><a class="reference internal" href="#contains">contains</a></li>
+<li><a class="reference internal" href="#ceil">ceil</a></li>
+<li><a class="reference internal" href="#floor">floor</a></li>
+<li><a class="reference internal" href="#join">join</a></li>
+<li><a class="reference internal" href="#keys">keys</a></li>
+<li><a class="reference internal" href="#length">length</a></li>
+<li><a class="reference internal" href="#max">max</a></li>
+<li><a class="reference internal" href="#min">min</a></li>
+<li><a class="reference internal" href="#sort">sort</a></li>
+<li><a class="reference internal" href="#to-string">to_string</a></li>
+<li><a class="reference internal" href="#to-number">to_number</a></li>
+<li><a class="reference internal" href="#type">type</a></li>
+<li><a class="reference internal" href="#values">values</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#compliance-tests">Compliance Tests</a></li>
+<li><a class="reference internal" href="#history">History</a></li>
+</ul>
+</li>
+</ul>
+
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+
+    </div>
+  </div>
+              </div>
+            </div>
+
+        </div>
+
+<script>
+$(document).ready(function() {
+    $('.jmespath-demo').each(function(i, el) {
+        function evaluateDemo(el) {
+            var expression = $(el).find('.jmespath-expression').val();
+            var inputData = JSON.parse($(el).find('.jmespath-input').val());
+            var result = jmespath.search(inputData, expression);
+            $(el).find('.jmespath-result').text(JSON.stringify(result, null, 2));
+        }
+        $(el).find('.jmespath-expression').bind('keyup', function() {
+            evaluateDemo(el);
+        });
+        $(el).find('.jmespath-input').bind('keyup', function() {
+            evaluateDemo(el);
+        });
+        evaluateDemo(el);
+    });
+    $('.jmespath-form').submit(function() {
+      return false;
+    });
+
+    $('.collapse').on('shown.bs.collapse', function() {
+        $(this).parent().find(".glyphicon-chevron-right").removeClass(
+            "glyphicon-chevron-right").addClass("glyphicon-chevron-down");
+    }).on('hidden.bs.collapse', function(){
+        $(this).parent().find(".glyphicon-chevron-down").removeClass(
+            "glyphicon-chevron-down").addClass("glyphicon-chevron-right");
+    });
+
+})
+</script>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="jep-004-pipes.html" title="Pipe Expressions"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="jep-001-nested-expressions.html" title="Nested Expressions"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../contents.html">JMESPath</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../proposals.html" >JMESPath Proposals</a> &#187;</li> 
+      </ul>
+    </div>
+
+  <script type="text/javascript" src="../_static/js/bootstrap.js"></script>
+  <script type="text/javascript" src="../_static/js/jmespath.min.js"></script>
+  <script type="text/javascript" src="../_static/js/jquery-migrate-1.2.1.min.js"></script>
+  <script src="//static.getclicky.com/js" type="text/javascript"></script>
+  <script type="text/javascript">try{ clicky.init(100732121); }catch(e){}</script>
+  <noscript><p><img alt="Clicky" width="1" height="1" src="//in.getclicky.com/100732121ns.gif" /></p></noscript>
+  <div class="footer container">
+    &copy; Copyright 2014-2015, James Saryerwinnie.
+  </div>
+  </body>
+</html>
