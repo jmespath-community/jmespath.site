@@ -72,6 +72,11 @@ rendered html::
 
 You can then view the docs at http://localhost:8000/
 
+You can also contribute and test your changes
+[from a Docker-based development environment](/jmespath-community/jmespath.site/wiki#running-the-website-locally)
+if you would rather not install all prerequisite development tools on your local machine.
+Please follow the detailed instructions from the Wiki.
+
 License
 =======
 
