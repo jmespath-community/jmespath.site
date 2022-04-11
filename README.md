@@ -56,3 +56,8 @@ Start the development server:
 ncat -lk -p 8000 -e ".github/workflows/jp_service.sh" &
 hugo server
 ```
+
+Alternatively, you can avoid installing Hugo and run within Docker via:
+```bash
+docker run --rm --net=host -v $(pwd):/src klakegg/hugo server
+```
