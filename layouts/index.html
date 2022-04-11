@@ -66,6 +66,13 @@
         else window.addEventListener("load", _init_version)
     </script>
     <label class="version">Version: <select id="version" oninput="window.location.href = `${event.currentTarget.value}/#specification`"></select></label>
+    {{ if fileExists "TAG_MESSAGE" -}}
+    {{ with readFile "TAG_MESSAGE" -}}
+    <section class="changelog">
+        {{ . | markdownify }}
+    </section>
+    {{ end -}}
+    {{ end -}}
     <nav>
         <ul><li>
     {{ $lastlevel := 1 -}}

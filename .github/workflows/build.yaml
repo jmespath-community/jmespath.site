@@ -29,6 +29,8 @@ jobs:
       uses: peaceiris/actions-hugo@v2
       with:
         hugo-version: 'latest'
+    - name: Dump tag message
+      run: "git tag -l --format='%(contents)' ${{ github.event.inputs.version }} > TAG_MESSAGE"
     - name: Build
       env:
         OUTPUTDIR: "build/${{ github.event.inputs.version }}"
