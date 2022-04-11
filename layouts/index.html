@@ -52,6 +52,20 @@
 <article id="specification">
     <h1>Syntax</h1>
     <a class="up" href="#specification"></a>
+    <script>
+        function _init_version() {
+            fetch("/VERSIONS").then(r=>r.text()).then(body=>{
+                const elem = document.getElementById("version")
+                const versions  = body.split("\n").filter(v=>v)
+                const latest = versions.pop()
+                elem.add(new Option(latest, ""))
+                versions.reverse().forEach(v=>elem.add(new Option(v, `/${v}`)))
+            })
+        }
+        if (document.readyState === 'complete') _init_version();
+        else window.addEventListener("load", _init_version)
+    </script>
+    <label class="version">Version: <select id="version" oninput="window.location.href = `${event.currentTarget.value}/#specification`"></select></label>
     <nav>
         <ul><li>
     {{ $lastlevel := 1 -}}
