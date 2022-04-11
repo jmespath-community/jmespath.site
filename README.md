@@ -1,6 +1,6 @@
 # JMESPath Community Site
 
-[![gitter](https://badges.gitter.im/Join Chat.svg)](https://gitter.im/jmespath/chat)
+[![gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/jmespath/chat)
 
 This is the repo for the community website: https://jmespath.site. This is a reworking of the official
 website: https://jmespath.org
