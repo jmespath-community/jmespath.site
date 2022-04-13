@@ -109,15 +109,15 @@
     <a class="up" href="#functions"></a>
     <nav>
         <ul>
-        {{- range . }}{{ if eq (printf "%T") "dict" }}
-            <li><a href="func-{{ .name }}">{{ .name }}</a></li>
-        {{ end }}{{ end -}}
+        {{- range $file, $data := . }}
+            <li><a href="#func-{{ $data.name }}">{{ $data.name }}</a></li>
+        {{ end -}}
         </ul>
     </nav>
     <dl>
-    {{- range . }}{{ if eq (printf "%T") "dict" }}
-    {{ partial "function.html" . }}
-    {{ end }}{{ end }}
+    {{- range $file, $data := . }}
+    {{ partial "function.html" $data }}
+    {{ end }}
     </dl>
 </article>
 {{- end -}}

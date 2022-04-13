@@ -1,30 +1,72 @@
 {{ $name := .name -}}
-<dt id="{{ .name }}">{{ .name }}</dt>
+<dt id="func-{{ .name }}">{{ .name }}</dt>
 <dd>
     <div class="fsig">
-        <span class="rettype">{{ .returns.type }}</span>&nbsp;
-        <span class="fname">{{ .name }}</span>(
-        {{ range .args.required }}
-            {{ apply print .type " " .name }}
-        {{ end }}
-        {{ range .args.optional }}
-        {{ end }}
-        )
+        <span class="rettype">
+            {{- $rettype := .returns.type -}}
+            {{ if not (eq (printf "%T" $rettype) "string") }}{{ $rettype = delimit $rettype "|" }}{{ end -}}
+            {{ $rettype -}}
+        </span>
+        <span class="fname">{{ .name }}</span>
+        <span class="fargs">
+        {{- range .args.required -}}
+            {{ $type := .type -}}
+            {{ if not (eq (printf "%T" $type) "string") }}{{ $type = delimit $type "|" }}{{ end -}}
+            <span class="fargtype">{{ $type }}</span> <span class="fargname">${{ .name }}</span>
+        {{- end -}}
+        {{ range .args.optional -}}
+            {{ $type := .type -}}
+            {{ if not (eq (printf "%T" $type) "string") }}{{ $type = delimit $type "|" }}{{ end -}}
+            <span class="fargtype">{{ $type }}</span> <span class="fargname">${{ .name }}</span>
+        {{ end -}}
+        </span>
     </div>
     <table class="args">
+        <caption>Arguments</caption>
+        <thead>
+            <tr><th>Name</th><th>Presence</th><th>Type</th><th>Description</th></tr>
+        </thead>
         <tbody class="required">
-        {{ range .args.required }}
-        <tr><td>{{ .name }}</td><td>required</td><td>{{ .type }}</td><td>{{ .desc }}</td></tr>
-        {{ end }}
+        {{ range .args.required -}}
+        <tr>
+            <td>${{ .name }}</td>
+            <td>required</td><td>
+                {{- $type := .type -}}
+                {{ if not (eq (printf "%T" $type) "string") }}{{ $type = delimit $type "|" }}{{ end -}}
+                {{ $type -}}
+            </td>
+            <td>{{ .desc }}</td>
+        </tr>
+        {{ end -}}
         </tbody>
         <tbody class="optional">
-        {{ range .args.optional }}
-        <tr><td>{{ .name }}</td><td>optional</td><td>{{ .type }}</td><td>{{ .desc }}</td></tr>
-        {{ end }}
+        {{ range .args.optional -}}
+        <tr>
+            <td>${{ .name }}</td>
+            <td>optional</td>
+            <td>
+                {{- $type := .type -}}
+                {{ if not (eq (printf "%T" $type) "string") }}{{ $type = delimit $type "|" }}{{ end -}}
+                {{ $type -}}
+            </td>
+            <td>{{ .desc }}</td>
+        </tr>
+        {{ end -}}
         </tbody>
-        <tbody><tr><td>Returns</td><td></td><td>{{ .returns.type }}</td><td>{{ .returns.desc }}</td></tr></tbody>
+        <tbody class="returns">
+        <tr>
+            <td>Returns</td>
+            <td></td>
+            <td>
+                {{- $type := .returns.type -}}
+                {{ if not (eq (printf "%T" $type) "string") }}{{ $type = delimit $type "|" }}{{ end -}}
+                {{ $type -}}
+            </td>
+            <td>{{ .returns.desc }}</td>
+        </tr>
+        </tbody>
     </table>
-    <div class="description">{{ .desc }}</div>
+    <div class="description">{{ .desc | markdownify }}</div>
 
     <table class="examples">
         <caption>Examples</caption>
@@ -32,8 +74,11 @@
             <tr><th>Given</th><th>Expression</th><th>Result</th></tr>
         </thead>
         <tbody>
-        {{- range .examples }}
-            <tr><td>{{ .context }}</td><td>{{ $name }}({{ delimit .args ", " }})</td><td>{{ .returns }}</td></tr>
+        {{- $inTests := false }}
+        {{ range .examples }}
+            {{ $context := jsonify .context | safeHTML -}}
+            {{ if gt (len $context) 30 -}}{{if not $inTests}}<tr class="more" onclick="event.currentTarget.parentElement.classList.toggle('showall')"><td colspan="3">Show more..</td></tr>{{ end }}{{ $inTests = true }}{{ end -}}
+            <tr {{ if $inTests }}class="test"{{ end }}><td>{{ $context }}</td><td>{{ $name }}({{ delimit .args ", " }})</td><td>{{ .returns | jsonify | safeHTML }}</td></tr>
         {{ end -}}
         </tbody>
     </table>

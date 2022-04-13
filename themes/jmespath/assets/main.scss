@@ -170,3 +170,80 @@ pre, textarea.data, .result, code {
 .version {
   display: block;
 }
+
+#functions {
+  nav {
+    float: unset;
+    ul {
+      display: flex;
+      flex-direction: column;
+      flex-wrap: wrap;
+      max-height: 10em;
+    }
+  }
+  dt {
+    font-size: 1.5em;
+    font-weight: bold;
+    margin-top: 1em;
+    padding-top: 0.5em;
+    border-top: 1px solid black;
+    &:before {
+      content: ": "
+    }
+  }
+  dd {
+    margin-left: 0;
+  }
+
+  .fsig {
+    .rettype {
+      color: lightslategrey;
+    }
+    .fname {
+      margin-right: -0.4ch; // Fix weird gap added between spans
+    }
+    .fargs{
+      &:before {
+        content: "("
+      }
+      &:after {
+        content: ")"
+      }
+      .fargname:not(:last-child):after {
+        content: ", "
+      }
+      .fargtype {
+        color: lightslategrey;
+      }
+    }
+  }
+
+  .args, .examples {
+    border: 1px black solid;
+    table-layout: fixed;
+    caption {
+      text-align: left;
+      font-weight: bold;
+      font-size: 1.2em;
+    }
+  }
+
+  .args {
+    margin: 1em 0;
+  }
+
+  .description {
+    min-height: 3em;
+    margin: 1em 0;
+  }
+
+  .examples {
+    tbody:not(.showall) .test {
+      display: none;
+    }
+    td[colspan="3"] {
+      color: blue;
+      background: lightslategrey;
+    }
+  }
+}
