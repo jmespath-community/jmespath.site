@@ -158,23 +158,6 @@ pre, textarea.data, .result, code {
   padding-left: 0.5ch;
 }
 
-.up {
-  position: sticky;
-  top: calc(100vh - 2em);
-  float: right;
-  z-index: 1;
-  border: 1px solid darkgrey;
-  background: white;
-  padding: 5px 20px;
-  border-radius: 5px;
-  margin-right: -9vw;
-  text-decoration: none;
-  margin-top: 150vh;
-  &:after {
-    content: "Up";
-  }
-}
-
 #version {
   margin: 5px 1ch;
   float: left;

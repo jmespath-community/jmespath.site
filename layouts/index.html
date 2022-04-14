@@ -36,7 +36,6 @@
 {{ with .Site.GetPage "wiki/Tutorial" -}}
 <article id="tutorial">
     <h1>Tutorial</h1>
-    <a class="up" href="#tutorial"></a>
     {{/* https://github.com/gohugoio/hugo/issues/8383 */}}
     {{ replaceRE "href=\"#([^\"]+)\"" "href=\"#wiki-$1\"" .TableOfContents | safeHTML }}
     {{- .Content -}}
@@ -47,7 +46,6 @@
 {{ with .Site.GetPage "wiki/Examples" -}}
 <article id="examples">
     <h1>Examples</h1>
-    <a class="up" href="#examples"></a>
     {{/* https://github.com/gohugoio/hugo/issues/8383 */}}
     {{ replaceRE "href=\"#([^\"]+)\"" "href=\"#wiki-$1\"" .TableOfContents | safeHTML }}
     {{- .Content -}}
@@ -65,7 +63,6 @@
 {{ $spec := partial "spec.html" . }}
 <article id="specification">
     <h1>Syntax</h1>
-    <a class="up" href="#specification"></a>
     {{ if fileExists "TAG_MESSAGE" -}}
     {{ with readFile "TAG_MESSAGE" -}}
     <section class="changelog">
@@ -106,7 +103,6 @@
 {{ with .Site.Data.functions -}}
 <article id="functions">
     <h1>Built-in Functions</h1>
-    <a class="up" href="#functions"></a>
     <nav>
         <ul>
         {{- range $file, $data := . }}
