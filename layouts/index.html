@@ -59,7 +59,7 @@
 </article>
 {{- end -}}
 
-{{ with readFile "spec/GRAMMAR" -}}
+{{ with readFile "spec/GRAMMAR.ABNF" -}}
 {{ $spec := partial "spec.html" . }}
 <article id="specification">
     <h1>Syntax</h1>
