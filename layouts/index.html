@@ -96,7 +96,7 @@
     {{ end -}}
         </li></ul>
     </nav>
-    {{- replace $spec "%%GRAMMAR.ABNF%%" (transform.Highlight (partial "grammar.html" . ) "abnf") 1 | replaceRE "id=\"([^\"]+)\"" "id=\"spec-$1\"" | safeHTML -}}
+    {{- replace $spec "%%GRAMMAR%%" (transform.Highlight (partial "grammar.html" . ) "abnf") 1 | replaceRE "id=\"([^\"]+)\"" "id=\"spec-$1\"" | safeHTML -}}
 </article>
 {{- end -}}
 
