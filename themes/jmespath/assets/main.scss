@@ -175,8 +175,9 @@ pre, textarea.data, .result, code {
   }
 }
 
-.version {
-  display: block;
+#version {
+  margin: 5px 1ch;
+  float: left;
 }
 
 #functions {
