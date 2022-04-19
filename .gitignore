@@ -1,2 +1,8 @@
 content/spec/
 content/wiki/
+public/
+resources/
+
+\.hugo_build\.lock
+
+jp
