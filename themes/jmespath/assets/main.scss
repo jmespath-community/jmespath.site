@@ -2,7 +2,7 @@ body {
   width: 80vw;
   margin-left: auto;
   margin-right: auto;
-  font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-family: "Open Sans", Helvetica, Arial, sans-serif;
 }
 
 nav.main {
@@ -10,14 +10,14 @@ nav.main {
   top: 0;
   z-index: 10;
 
-  background-image: linear-gradient(to bottom, #585858 0, #222 100%);
+  background-image: linear-gradient(to bottom, #3c3c3c 0, #222 100%);
   background-repeat: repeat-x;
 
   background-color: #222;
   border-color: #080808;
 
-  min-height: 30px;
-  line-height: 30px;
+  min-height: 40px;
+  line-height: 22.8571px;
   font-size: 16px;
   margin-left: -9vw;
   margin-right: -9vw;
@@ -36,7 +36,7 @@ nav.main {
     height: 100%;
 
     a {
-      font-weight: bold;
+      font-weight: normal;
       text-shadow: 0 -1px 0 rgba(0,0,0,0.25);
       color: #bbb;
       text-decoration: none;
@@ -88,15 +88,19 @@ main {
 }
 
 header {
+
+	background-image: linear-gradient(to bottom, #14284D 0%, #050538 100%); 
+
   figure.logo {
     text-align: center;
-    margin-bottom: 2em;
+    margin: 0em;
 
     img {
       min-height: 6em;
     }
 
     figcaption {
+	    color: rgb(180, 180, 180);
       font-size: 1.6em;
     }
   }
