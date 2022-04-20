@@ -13,6 +13,8 @@ ENV HUGO_EDITON extended
 ENV HUGO_VERSION_OVERRIDE 0.97.0
 ENV HUGO_VERSION 0.97.0
 
+RUN apt-get install -y vim nginx
+
 ## To build this image, the following incorrect command was run:
 ## `hugo gen autocomplete > /etc/bash_completion.d/hugo.sh`
 ## (see https://github.com/klakegg/docker-hugo/blob/847a21f53c4074721573bb7e38e3fe61e593755c/src/files/_script/hugo-extended.sh#L48)
