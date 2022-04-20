@@ -30,13 +30,13 @@ jobs:
       with:
         hugo-version: 'latest'
     - name: Dump tag message
-      run: "git tag -l --format='%(contents)' ${{ github.event.inputs.version }} > TAG_MESSAGE"
+      run: "git -C content/spec tag -l --format='%(contents)' ${{ github.event.inputs.version }} > TAG_MESSAGE"
     - name: Build
       env:
         OUTPUTDIR: "build/${{ github.event.inputs.version }}"
       run: .github/workflows/build.sh
     - name: Update versions
-      run: "ls -d v* | sort -V > VERSIONS"
+      run: "git -C content/spec tag -l --format='%(refname:strip=2) %(authordate:short)' | sort -V > VERSIONS"
       working-directory: build/
     - name: Update root
       run: "cp -f $(tail -1 VERSIONS)/* ."
