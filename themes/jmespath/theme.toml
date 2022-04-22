@@ -3,7 +3,7 @@
 
 name = "JMESPath"
 license = "MIT"
-licenselink = "https://github.com/jmespath-community/jmespath.site/blob/master/LICENSE"
+licenselink = "https://github.com/jmespath-community/jmespath.site/blob/main/LICENSE"
 description = ""
 homepage = "https://jmespath.site/"
 tags = []
