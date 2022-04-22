@@ -9,7 +9,7 @@ if [[ ! -f "/src/jp" ]]; then
 fi
 
 ## The static website pulls most of its contents
-## from the jmespath.spec site and corresponding wiki.
+## from the jmespath.spec repository and corresponding wiki.
 ## Clone those repositories here as a courtesy
 
 if [[ ! -d "/src/content/spec" ]]; then
@@ -25,6 +25,7 @@ fi
 
 rm /src/data/functions
 ln -s /src/content/spec/functions /src/data/functions
+git update-index --assume-unchanged /src/data/functions
 
 ## Start local server to process JMESPath expressions
 ## This is required during static site genration and
