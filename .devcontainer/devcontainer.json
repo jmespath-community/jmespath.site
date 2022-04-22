@@ -9,6 +9,15 @@
 	"workspaceMount": "source=${localWorkspaceFolder},target=/src,type=bind,consistency=cached",
 	"workspaceFolder": "/src",
 
+	// Mount SSH keys to support Git interactions
+	// When using default root user, the $HOME directory is /tmp
+	// Change the target mount if using a non-root user.
+	"mounts": [
+		// this supports both Mac OS|Linux and Windows hosts
+		// only one of the environment variable will expand
+		"source=${localEnv:HOME}${localEnv:USERPROFILE}/.ssh,target=/tmp/.ssh,type=bind,consistency=cached"
+	],
+
 	// Set *default* container specific settings.json values on container create.
 	"settings": { 
     	"terminal.integrated.defaultProfile.linux": "shell",
