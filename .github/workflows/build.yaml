@@ -39,8 +39,7 @@ jobs:
         OUTPUTDIR: "build/${{ github.event.inputs.version }}"
       run: .github/workflows/build.sh
     - name: Update versions
-      run: "git -C content/spec tag -l --format='%(refname:strip=2) %(authordate:short)' | sort -V > VERSIONS"
-      working-directory: build/
+      run: "git -C content/spec tag -l --format='%(refname:strip=2) %(authordate:short)' | sort -V > build/VERSIONS"
     - name: Update root
       run: "cp -f $(tail -1 VERSIONS | cut -d' ' -f1)/* ."
       working-directory: build/
