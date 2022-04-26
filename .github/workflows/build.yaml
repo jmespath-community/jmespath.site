@@ -26,10 +26,13 @@ jobs:
         repository: jmespath-community/jmespath.spec.wiki.git
         ref: master
         path: content/wiki
+    - name: Install ncat
+      run: 'sudo apt-get -y install ncat'
     - name: Setup Hugo
       uses: peaceiris/actions-hugo@v2
       with:
         hugo-version: 'latest'
+        extended: true
     - name: Dump tag message
       run: "git -C content/spec tag -l --format='%(contents)' ${{ github.event.inputs.version }} > TAG_MESSAGE"
     - name: Build
