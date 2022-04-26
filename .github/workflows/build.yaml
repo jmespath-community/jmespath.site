@@ -24,6 +24,7 @@ jobs:
     - uses: actions/checkout@v3
       with:
         repository: jmespath-community/jmespath.spec.wiki.git
+        ref: master
         path: content/wiki
     - name: Setup Hugo
       uses: peaceiris/actions-hugo@v2
