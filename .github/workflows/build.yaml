@@ -25,6 +25,8 @@ jobs:
       with:
         repository: https://github.com/jmespath-community/jmespath.spec.wiki.git
         path: content/wiki
+    - name: Install ncat
+      run: 'sudo apt-get -y install ncat'
     - name: Setup Hugo
       uses: peaceiris/actions-hugo@v2
       with:
