@@ -18,6 +18,8 @@ jobs:
       with:
         ref: gh-pages
         path: build/
+        token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+
     - name: Checkout spec
       uses: actions/checkout@v3
       with:
@@ -53,3 +55,4 @@ jobs:
       uses: EndBug/add-and-commit@v9.0.0
       with:
         cwd: build/
+        push: origin gh-pages --force
