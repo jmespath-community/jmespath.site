@@ -27,7 +27,7 @@ jobs:
       with:
         repository: jmespath-community/jmespath.spec.git
         ref: ${{ github.event.inputs.version }}
-        path: content/spec
+        path: spec
 
     - name: Checkout wiki
       uses: actions/checkout@v3
@@ -55,7 +55,7 @@ jobs:
 
     - name: Update versions
       run: "git -C content/spec tag -l --format='%(refname:strip=2) %(authordate:short)' | sort -V > build/VERSIONS"
-      
+
     - name: Update root
       run: "cp -fR $(tail -1 VERSIONS | cut -d' ' -f1)/* ."
       working-directory: build/
