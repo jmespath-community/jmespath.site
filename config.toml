@@ -6,7 +6,8 @@ theme = 'jmespath'
 disableKinds = ["page", "section", "taxonomy"]
 ignoreErrors = ["error-disable-taxonomy"]
 
-ignoreFiles = ["content/spec", "content/wiki"]
+[_build]
+publishResources = false
 
 [markup.goldmark.renderer]
 unsafe= true
