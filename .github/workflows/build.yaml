@@ -11,8 +11,10 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
+
     - name: Checkout site
       uses: actions/checkout@v3
+
     - name: Checkout site-ghpages
       uses: actions/checkout@v3
       with:
@@ -26,30 +28,38 @@ jobs:
         repository: jmespath-community/jmespath.spec.git
         ref: ${{ github.event.inputs.version }}
         path: content/spec
+
     - name: Checkout wiki
       uses: actions/checkout@v3
       with:
         repository: jmespath-community/jmespath.spec.wiki.git
         ref: master
         path: content/wiki
+
     - name: Install ncat
       run: 'sudo apt-get -y install ncat'
+
     - name: Setup Hugo
       uses: peaceiris/actions-hugo@v2
       with:
         hugo-version: 'latest'
         extended: true
+
     - name: Dump tag message
       run: "git -C content/spec tag -l --format='%(contents)' ${{ github.event.inputs.version }} > TAG_MESSAGE"
+
     - name: Build
       env:
         OUTPUTDIR: "build/${{ github.event.inputs.version }}"
       run: .github/workflows/build.sh
+
     - name: Update versions
       run: "git -C content/spec tag -l --format='%(refname:strip=2) %(authordate:short)' | sort -V > build/VERSIONS"
+      
     - name: Update root
       run: "cp -fR $(tail -1 VERSIONS | cut -d' ' -f1)/* ."
       working-directory: build/
+
     - name: Deploy
       if: github.ref == 'refs/heads/main'
       uses: EndBug/add-and-commit@v9.0.0
