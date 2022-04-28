@@ -3,6 +3,9 @@ languageCode = 'en-us'
 title = 'JMESPath'
 theme = 'jmespath'
 
+disableKinds = ["page", "section", "taxonomy"]
+ignoreErrors = ["error-disable-taxonomy"]
+
 [markup.goldmark.renderer]
 unsafe= true
 

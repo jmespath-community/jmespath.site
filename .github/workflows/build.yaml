@@ -11,17 +11,21 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
-    - uses: actions/checkout@v3
+    - name: Checkout site
+      uses: actions/checkout@v3
+    - name: Checkout site-ghpages
+      uses: actions/checkout@v3
       with:
         ref: gh-pages
         path: build/
-    - uses: actions/checkout@v3
+    - name: Checkout spec
+      uses: actions/checkout@v3
       with:
         repository: jmespath-community/jmespath.spec.git
         ref: ${{ github.event.inputs.version }}
         path: content/spec
-    - uses: actions/checkout@v3
+    - name: Checkout wiki
+      uses: actions/checkout@v3
       with:
         repository: jmespath-community/jmespath.spec.wiki.git
         ref: master
@@ -40,10 +44,9 @@ jobs:
         OUTPUTDIR: "build/${{ github.event.inputs.version }}"
       run: .github/workflows/build.sh
     - name: Update versions
-      run: "git -C content/spec tag -l --format='%(refname:strip=2) %(authordate:short)' | sort -V > VERSIONS"
-      working-directory: build/
+      run: "git -C content/spec tag -l --format='%(refname:strip=2) %(authordate:short)' | sort -V > build/VERSIONS"
     - name: Update root
-      run: "cp -f $(tail -1 VERSIONS)/* ."
+      run: "cp -f $(tail -1 VERSIONS | cut -d' ' -f1)/* ."
       working-directory: build/
     - name: Deploy
       if: github.ref == 'refs/heads/main'
