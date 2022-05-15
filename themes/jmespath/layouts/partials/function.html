@@ -75,7 +75,7 @@
         </thead>
         <tbody>
         {{- $inTests := false }}
-        {{ range .examples }}
+        {{ range sort .examples "context" }}
             {{ $context := jsonify .context | safeHTML -}}
             {{ if gt (len $context) 60 -}}{{if not $inTests}}<tr class="more" onclick="event.currentTarget.parentElement.classList.toggle('showall')"><td colspan="3">Show more..</td></tr>{{ end }}{{ $inTests = true }}{{ end -}}
             <tr {{ if $inTests }}class="test"{{ end }}><td>{{ $context }}</td><td>{{ $name }}({{ delimit .args ", " }})</td><td>{{ .returns | jsonify | safeHTML }}</td></tr>
