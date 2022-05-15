@@ -21,7 +21,7 @@
 {{ $scratch.Set "id" "" -}}
 {{ $scratch.Set "expressions" slice -}}
 {{ $scratch.Set "body" slice -}}
-{{ range split . "\n" -}}
+{{ range split . "\r\n" -}}
 {{ if not (and ($scratch.Get "inHead") (eq (substr . 0 1) ";")) -}}
 {{ $scratch.Set "inHead" false -}}
 {{ with $line := split . ";;" -}}

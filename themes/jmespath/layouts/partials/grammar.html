@@ -1,7 +1,7 @@
 {{ $scratch := newScratch -}}
 {{ $scratch.Set "inHead" true -}}
 {{ $scratch.Set "result" "" -}}
-{{ range split . "\n" -}}
+{{ range split . "\r\n" -}}
 {{ with index (split . ";;") 0 -}}
     {{ if not (and ($scratch.Get "inHead") (eq (substr . 0 1) ";")) -}}
         {{ $scratch.Set "inHead" false -}}
