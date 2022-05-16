@@ -13,14 +13,16 @@
                 const elem = document.getElementById("version")
                 const versions  = body.split("\n").filter(v=>v)
                 const latest = versions.pop()
-                elem.add(new Option(latest, latest.split(" ")[0]))
-                versions.reverse().forEach(v=>elem.add(new Option(v, `/${v.split(" ")[0]}`)))
+                elem.add(new Option(latest, `/${latest.split(" ")[0]}`), true, window.location.pathname.startsWith(`/${latest.split(" ")[0]}`))
+                versions.reverse().forEach(v=>elem.add(new Option(v, `/${v.split(" ")[0]}`, false, window.location.pathname.startsWith(`/${v.split(" ")[0]}`))))
             })
         }
         if (document.readyState === 'complete') _init_version();
         else window.addEventListener("load", _init_version)
     </script>
-    <select id="version" oninput="window.location.href = `${event.currentTarget.value}/#specification`"></select>
+    <select id="version" oninput="window.location.href = `${event.currentTarget.value}/#specification`">
+        <option value="/main">Preview</option>
+    </select>
     <ol>
         <li><a href="#tutorial">Tutorial</a></li>
         <li><a href="#examples">Examples</a></li>
