@@ -28,6 +28,7 @@ jobs:
         repository: jmespath-community/jmespath.spec.git
         ref: ${{ github.event.inputs.version }}
         path: spec
+        fetch-depth: 0 # Required to include tags to generate VERSIONS
 
     - name: Checkout wiki
       uses: actions/checkout@v3
@@ -61,7 +62,7 @@ jobs:
       working-directory: build/
 
     - name: Update root
-      run: "cp -fR $(cut -d' ' -f1 VERSIONS | grep -P '^v|^2015' | tail -1 )/* ."
+      run: "cp -fR ./$(cut -d' ' -f1 VERSIONS | grep -P '^v|^2015' | tail -1 )/* ."
       working-directory: build/
 
     - name: Deploy
