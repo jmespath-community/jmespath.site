@@ -2,9 +2,9 @@
 <!-- Created with Inkscape (http://www.inkscape.org/) -->
 
 <svg
-   width="57.479839mm"
-   height="13.107471mm"
-   viewBox="0 0 57.479839 13.107471"
+   width="54.739761mm"
+   height="13.447969mm"
+   viewBox="0 0 54.739761 13.447969"
    version="1.1"
    id="svg5"
    inkscape:version="1.1.2 (0a00cf5339, 2022-02-04, custom)"
@@ -24,33 +24,21 @@
      inkscape:pagecheckerboard="0"
      inkscape:document-units="mm"
      showgrid="false"
-     inkscape:zoom="3.8290921"
-     inkscape:cx="122.7445"
-     inkscape:cy="1.5669511"
+     inkscape:zoom="1.5248483"
+     inkscape:cx="123.29095"
+     inkscape:cy="-43.282993"
      inkscape:window-width="1920"
      inkscape:window-height="1015"
      inkscape:window-x="0"
      inkscape:window-y="37"
      inkscape:window-maximized="1"
-     inkscape:current-layer="jme"
+     inkscape:current-layer="text2056"
      fit-margin-top="0"
      fit-margin-left="0"
      fit-margin-right="0"
      fit-margin-bottom="0" />
   <defs
      id="defs2">
-    <rect
-       x="103.73397"
-       y="-71.362217"
-       width="207.97344"
-       height="60.219728"
-       id="rect7265" />
-    <rect
-       x="65.553436"
-       y="-101.03576"
-       width="244.78789"
-       height="73.445206"
-       id="rect1736" />
     <linearGradient
        inkscape:collect="always"
        id="linearGradient14217">
@@ -84,34 +72,12 @@
      inkscape:label="Layer 1"
      inkscape:groupmode="layer"
      id="layer1"
-     transform="translate(-37.948589,-64.05867)">
+     transform="translate(-37.948589,-63.718172)">
     <g
        aria-label="JMEPath"
        transform="scale(0.26458333)"
        id="text2056"
        style="font-size:48px;line-height:1.25;font-family:Chandas;-inkscape-font-specification:'Chandas, Normal';letter-spacing:0px;word-spacing:0px;white-space:pre;shape-inside:url(#rect2058)">
-      <g
-         aria-label="PATH"
-         transform="translate(176.55133,334.59534)"
-         id="text1734"
-         style="shape-inside:url(#rect1736)">
-        <path
-           d="m 69.513672,-92.353335 h 13.476562 q 6.023438,0 9.234375,2.976563 3.210938,2.953125 3.210938,8.4375 0,5.507812 -3.210938,8.484375 -3.210937,2.953125 -9.234375,2.953125 h -5.34375 v 12.140625 h -8.132812 z m 8.132812,6.539063 v 9.773437 h 4.476563 q 2.367187,0 3.65625,-1.265625 1.289062,-1.289062 1.289062,-3.632812 0,-2.34375 -1.289062,-3.609375 -1.289063,-1.265625 -3.65625,-1.265625 z"
-           style="font-weight:bold;font-stretch:semi-condensed;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans Bold Semi-Condensed'"
-           id="path5672" />
-        <path
-           d="m 115.87305,-63.736147 h -12.70313 l -2.01562,6.375 h -8.156253 l 11.671873,-34.992188 h 9.67969 l 11.67187,34.992188 h -8.17968 z m -10.6875,-6.492188 h 8.625 l -4.28907,-13.921875 z"
-           style="font-weight:bold;font-stretch:semi-condensed;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans Bold Semi-Condensed'"
-           id="path5674" />
-        <path
-           d="m 122.69336,-92.353335 h 29.01562 v 6.820313 H 141.2793 v 28.171875 h -8.13282 v -28.171875 h -10.45312 z"
-           style="font-weight:bold;font-stretch:semi-condensed;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans Bold Semi-Condensed'"
-           id="path5676" />
-        <path
-           d="m 155.9043,-92.353335 h 8.13281 v 13.335938 h 11.97656 v -13.335938 h 8.10938 v 34.992188 h -8.10938 v -14.835938 h -11.97656 v 14.835938 h -8.13281 z"
-           style="font-weight:bold;font-stretch:semi-condensed;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans Bold Semi-Condensed'"
-           id="path5678" />
-      </g>
       <g
          id="jme">
         <path
@@ -126,6 +92,26 @@
            d="m 194.19336,242.11151 h 22.125 v 3.98437 h -17.39063 v 10.35938 h 16.66407 v 3.98437 h -16.66407 v 12.67969 h 17.8125 v 3.98438 h -22.54687 z"
            style="font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans';fill:#4b4b4b;fill-opacity:1"
            id="path10569" />
+      </g>
+      <g
+         id="path"
+         transform="translate(-15.00018,0.18964)">
+        <path
+           d="m 261.77148,242.11151 h 13.47657 q 6.02343,0 9.23437,2.97656 3.21094,2.95313 3.21094,8.4375 0,5.50781 -3.21094,8.48438 -3.21094,2.95312 -9.23437,2.95312 h -5.34375 v 12.14063 h -8.13282 z m 8.13282,6.53906 v 9.77344 h 4.47656 q 2.36719,0 3.65625,-1.26563 1.28906,-1.28906 1.28906,-3.63281 0,-2.34375 -1.28906,-3.60937 -1.28906,-1.26563 -3.65625,-1.26563 z"
+           style="font-weight:bold;font-stretch:semi-condensed;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans Bold Semi-Condensed'"
+           id="path10571" />
+        <path
+           d="m 302.38867,265.2912 q -2.36719,0 -3.5625,0.89062 -1.19531,0.89063 -1.19531,2.625 0,1.59375 0.96094,2.50781 0.96093,0.89063 2.67187,0.89063 2.13281,0 3.58594,-1.6875 1.45312,-1.71094 1.45312,-4.26563 v -0.96093 z m 11.53125,-3.16407 v 14.97657 h -7.61719 v -3.89063 q -1.52343,2.39063 -3.42187,3.49219 -1.89844,1.07812 -4.61719,1.07812 -3.67969,0 -5.97656,-2.36718 -2.27344,-2.39063 -2.27344,-6.1875 0,-4.61719 2.85938,-6.77344 2.85937,-2.15625 8.97656,-2.15625 h 4.45312 v -0.65625 q 0,-1.99219 -1.42968,-2.90625 -1.40625,-0.9375 -4.38282,-0.9375 -2.4375,0 -4.52343,0.53906 -2.08594,0.53906 -3.89063,1.61719 v -6.39844 q 2.4375,-0.65625 4.875,-0.98437 2.46094,-0.35157 4.89844,-0.35157 6.39844,0 9.23437,2.8125 2.83594,2.78907 2.83594,9.09375 z"
+           style="font-weight:bold;font-stretch:semi-condensed;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans Bold Semi-Condensed'"
+           id="path10573" />
+        <path
+           d="m 329.17773,243.40057 v 7.45313 h 7.78125 v 6 h -7.78125 v 11.13281 q 0,1.82812 0.63282,2.48437 0.65625,0.63282 2.60156,0.63282 h 3.89062 v 6 h -6.46875 q -4.47656,0 -6.35156,-2.0625 -1.875,-2.08594 -1.875,-7.05469 V 256.8537 h -3.75 v -6 h 3.75 v -7.45313 z"
+           style="font-weight:bold;font-stretch:semi-condensed;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans Bold Semi-Condensed'"
+           id="path10575" />
+        <path
+           d="m 365.31836,261.11932 v 15.98438 h -7.59375 v -2.60157 -9.58593 q 0,-3.44532 -0.14063,-4.73438 -0.14062,-1.28906 -0.46875,-1.89844 -0.44531,-0.82031 -1.21875,-1.26562 -0.75,-0.46875 -1.71093,-0.46875 -2.36719,0 -3.72657,2.03906 -1.33593,2.01563 -1.33593,5.60156 v 12.91407 h -7.54688 v -36.46875 h 7.54688 v 14.0625 q 1.71093,-2.29688 3.63281,-3.375 1.92187,-1.10157 4.24219,-1.10157 4.07812,0 6.1875,2.78907 2.13281,2.78906 2.13281,8.10937 z"
+           style="font-weight:bold;font-stretch:semi-condensed;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans Bold Semi-Condensed'"
+           id="path10577" />
       </g>
       <path
          style="fill:url(#linearGradient14219);fill-opacity:1;stroke:none;stroke-width:0.664543px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
