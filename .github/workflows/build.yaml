@@ -61,7 +61,7 @@ jobs:
       working-directory: build/
 
     - name: Update root
-      run: "cp -fR $(cut -d' ' -f1 VERSIONS | grep -P '^v|^2015' | tail -1 )/* ."
+      run: "cp -fR ./$(cut -d' ' -f1 VERSIONS | grep -P '^v|^2015' | tail -1 )/* ."
       working-directory: build/
 
     - name: Deploy
