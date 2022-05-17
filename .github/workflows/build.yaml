@@ -55,10 +55,10 @@ jobs:
       run: .github/workflows/build.sh
 
     - name: Update versions
-      run: "cp build/VERSIONS VERSIONS.old; git -C spec tag -l --format='%(refname:strip=2) %(creatordate:short)' | sort -V > build/VERSIONS"
+      run: "cut -d' ' -f1 build/VERSIONS > VERSIONS.old; git -C spec tag -l --format='%(refname:strip=2) %(creatordate:short)' | sort -V > build/VERSIONS"
 
     - name: Remove old versions
-      run: "cut -d' ' -f1 VERSIONS ../VERSIONS.old | sort | uniq -u | xargs -l rm -rf"
+      run: "cut -d' ' -f1 VERSIONS | comm -23 ../VERSIONS.old - | xargs -l rm -rf"
       working-directory: build/
 
     - name: Update root
