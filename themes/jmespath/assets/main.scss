@@ -230,6 +230,9 @@ pre, textarea.data, .result, code {
   }
 
   .examples {
+    tbody tr:not(.more) {
+      font-family: 'Courier New', Courier, monospace;
+    }
     tbody:not(.showall) .test {
       display: none;
     }
