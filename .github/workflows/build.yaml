@@ -54,7 +54,7 @@ jobs:
       run: .github/workflows/build.sh
 
     - name: Update versions
-      run: "cp build/VERSIONS VERSIONS.old; git -C spec tag -l --format='%(refname:strip=2) %(authordate:short)' | sort -V > build/VERSIONS"
+      run: "cp build/VERSIONS VERSIONS.old; git -C spec tag -l --format='%(refname:strip=2) %(creatordate:short)' | sort -V > build/VERSIONS"
 
     - name: Remove old versions
       run: "cut -d' ' -f1 VERSIONS ../VERSIONS.old | sort | uniq -u | xargs -l rm -rf"
