@@ -22,7 +22,7 @@
                         elem.add(new Option(v, `/${v.split(" ")[0]}`))
                     }
                 }
-                elem.value = '/' + window.location.pathname.trimLeft('/').split('/', 1)[0]
+                elem.value = '/' + window.location.pathname.replace(/^\/*/, '').split('/', 1)[0]
             })
         }
         if (document.readyState === 'complete') _init_version();
