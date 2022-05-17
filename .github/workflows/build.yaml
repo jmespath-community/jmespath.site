@@ -28,6 +28,7 @@ jobs:
         repository: jmespath-community/jmespath.spec.git
         ref: ${{ github.event.inputs.version }}
         path: spec
+        fetch-depth: 0 # Required to include tags to generate VERSIONS
 
     - name: Checkout wiki
       uses: actions/checkout@v3
