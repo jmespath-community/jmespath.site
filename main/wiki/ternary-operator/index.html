@@ -1,0 +1,13 @@
+<!doctype html><html><head><meta charset=utf-8><title>JMESPath</title><link href=https://unpkg.com/sanitize.css rel=stylesheet><link rel=stylesheet href=https://jmespath.site/main.min.b63ba0d1118320d69a2612d3cc036a453f4c1eb03e35662e8ebd34b30353922e.css integrity="sha256-tjug0RGDINaaJhLTzANqRT9MHrA+NWYujr00swNTki4="><link rel=stylesheet href=https://jmespath.site/demo.min.9a8314c8ba82c1fec46ad930f6cfe86547c0237ae0064c1ee53b829948fd408f.css integrity="sha256-moMUyLqCwf7Eatkw9s/oZUfAI3rgBkwe5TuCmUj9QI8="><script src=https://cdnjs.cloudflare.com/ajax/libs/jmespath/0.16.0/jmespath.min.js integrity="sha512-w/sNKK/59oJUi6v+SjgfIijrkFN8Pfv5QFZSV4KvrNMJrlbVM3017ZGNCA2AwZ6PKJzTPxQaDs/TbPcVGnF+pQ==" crossorigin=anonymous referrerpolicy=no-referrer></script>
+<script src=https://jmespath.site/demo.8116da3b8bfb9827aff6793dc146d2909edaef4eb9ad0588771b03b91ae7a907.js integrity="sha256-gRbaO4v7mCev9nk9wUbSkJ7a7065rQWIdxsDuRrnqQc="></script></head><body><header></header><main><h2 id=wiki-problem-statement>Problem statement</h2><p>Most languages have support for simple conditions:</p><pre tabindex=0><code>if x then y else z
+</code></pre><p>Popular languages also support combining a condition
+to return a particular value for assignment, using
+the ternary operator:</p><pre tabindex=0><code>x ? y : z
+</code></pre><ul><li>Does JMESPath support the ternary operator?</li><li>How to assign based on a condition?</li></ul><h2 id=wiki-how-to>How to</h2><p>JMESPath supports logical operators with
+<a href=https://jmespath-unofficial.github.io/jmespath.site/specification.html#or-expressions target=_blank rel=noopener>Or Expression</a>
+<code>||</code> and
+<a href=https://jmespath-unofficial.github.io/jmespath.site/specification.html#and-expressions target=_blank rel=noopener>And Expressions</a>
+<code>&&</code>.</p><p>JMESPath has a peculiar concept of <em>falsy</em> values.
+A <em>falsy</em> value corresponds to any of the following
+conditions:</p><ul><li>Empty list: <code>[]</code></li><li>Empty object: <code>{}</code></li><li>Empty string: <code>""</code></li><li>Boolean False: <code>false</code></li><li>Null value: <code>null</code></li></ul><p>A <em>truthy</em> value corresponds to any value that is not false.</p><p>With that in mind, you can emulate the ternary operator like so:</p><pre tabindex=0><code>(x &amp;&amp; y) || z
+</code></pre></main><footer></footer></body></html>
