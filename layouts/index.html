@@ -9,6 +9,8 @@
 <nav class="main">
     <script>
         function _init_version() {
+            Array.from(document.getElementById("version").getElementsByTagName('option'))
+                .find(x=>x.getAttribute('value') === "/main").defaultSelected = window.location.pathname.startsWith('/main')
             fetch("/VERSIONS").then(r=>r.text()).then(body=>{
                 const elem = document.getElementById("version")
                 const versions  = body.split("\n").filter(v=>v)
