@@ -16,10 +16,10 @@
                 for (const v of versions.reverse()) {
                     const tag = v.split(' ')[0]
                     if (!foundfirst && (tag === "2015-09-05-9e8d0e3" || tag.startsWith('v'))) {
-                        elem.add(new Option(v, `/`))
+                        elem.add(new Option(tag, `/`))
                         foundfirst = true
                     } else {
-                        elem.add(new Option(v, `/${v.split(" ")[0]}`))
+                        elem.add(new Option(tag, `/${tag}`))
                     }
                 }
                 elem.value = '/' + window.location.pathname.replace(/^\/*/, '').split('/', 1)[0]
