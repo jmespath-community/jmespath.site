@@ -8,9 +8,11 @@ Enter an expression in the search box to see JMESPath in action.
 
 The expression is evaluated against the JSON data and the result is shown in the result pane.
 
-To learn more about JMESPath, check out the [Tutorial](#tutorial) and [Examples](#examples).
+To learn more about JMESPath, check out the [Tutorial](#tutorial) and [Examples](#examples)
 
-Have questions? [Come chat with us](https://gitter.im/jmespath/chat).
+Have questions? [Come chat with us](https://gitter.im/jmespath/chat)
+
+Have a feature request? [Contribute](https://github.com/jmespath-community/jmespath.spec/discussions)
 {{% /section %}}
 
 ```jmespath {.active }
