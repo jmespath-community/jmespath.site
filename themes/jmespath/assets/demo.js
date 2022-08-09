@@ -30,7 +30,11 @@ function demoInput(event) {
             // only scalars and/or empty structures.
             .replaceAll(
                 /^([ \t]+)(.*)([\[{]\n(?:\1[ \t]+(?:".*"|:[ \t]*|[-0-9.+a-z]+|\[\]|\{\})+,?\n)*\1[\]}])/gm,
-                (match, indent, name, value) => indent + name + value.replaceAll(/\n\s*/g, " ")
+                (match, indent, name, value) => {
+                    const singleLine = indent + name + value.replaceAll(/\n\s*/g, " ")
+                    // Impose an arbitrary maximum of 100 code points.
+                    return [...singleLine].length <= 100 ? singleLine : match
+                }
             )
     } catch (e) {
         result.value = e.message
