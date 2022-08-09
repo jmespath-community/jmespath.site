@@ -25,8 +25,21 @@ function demoInput(event) {
     const result = demo.getElementsByClassName("result").item(0)
     try {
         const data = JSON.parse(demo.getElementsByClassName("data").item(0).value)
-        result.textContent = JSON.stringify(jmespath.search(data, query.value), null, 2).replaceAll(",\n", ",")
+        result.value = JSON.stringify(jmespath.search(data, query.value), null, 2).replaceAll(",\n", ",")
     } catch (e) {
-        result.textContent = e.message
+        result.value = e.message
+    }
+
+    // Size height to fit content.
+    result.rows = result.value.split("\n").length;
+    result.scrollTop = 1;
+    while (result.scrollTop > 0) {
+        const oldHeight = result.clientHeight;
+        result.rows++;
+        if (result.clientHeight === oldHeight) {
+            // Height didn't change, so bail out.
+            break;
+        }
+        result.scrollTop = 1;
     }
 }
