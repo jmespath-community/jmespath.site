@@ -25,7 +25,13 @@ function demoInput(event) {
     const result = demo.getElementsByClassName("result").item(0)
     try {
         const data = JSON.parse(demo.getElementsByClassName("data").item(0).value)
-        result.value = JSON.stringify(jmespath.search(data, query.value), null, 2).replaceAll(",\n", ",")
+        result.value = JSON.stringify(jmespath.search(data, query.value), null, 2)
+            // Collapse to a single line any array/object that contains
+            // only scalars and/or empty structures.
+            .replaceAll(
+                /^([ \t]+)(.*)([\[{]\n(?:\1[ \t]+(?:".*"|:[ \t]*|[-0-9.+a-z]+|\[\]|\{\})+,?\n)*\1[\]}])/gm,
+                (match, indent, name, value) => indent + name + value.replaceAll(/\n\s*/g, " ")
+            )
     } catch (e) {
         result.value = e.message
     }
