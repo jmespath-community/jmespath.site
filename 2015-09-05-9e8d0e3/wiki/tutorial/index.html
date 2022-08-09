@@ -1,18 +1,21 @@
-<!doctype html><html><head><meta charset=utf-8><title>JMESPath</title><link href=https://unpkg.com/sanitize.css rel=stylesheet><link rel=stylesheet href=https://jmespath.site/main.min.b63ba0d1118320d69a2612d3cc036a453f4c1eb03e35662e8ebd34b30353922e.css integrity="sha256-tjug0RGDINaaJhLTzANqRT9MHrA+NWYujr00swNTki4="><link rel=stylesheet href=https://jmespath.site/demo.min.9a8314c8ba82c1fec46ad930f6cfe86547c0237ae0064c1ee53b829948fd408f.css integrity="sha256-moMUyLqCwf7Eatkw9s/oZUfAI3rgBkwe5TuCmUj9QI8="><script src=https://cdnjs.cloudflare.com/ajax/libs/jmespath/0.16.0/jmespath.min.js integrity="sha512-w/sNKK/59oJUi6v+SjgfIijrkFN8Pfv5QFZSV4KvrNMJrlbVM3017ZGNCA2AwZ6PKJzTPxQaDs/TbPcVGnF+pQ==" crossorigin=anonymous referrerpolicy=no-referrer></script>
-<script src=https://jmespath.site/demo.8116da3b8bfb9827aff6793dc146d2909edaef4eb9ad0588771b03b91ae7a907.js integrity="sha256-gRbaO4v7mCev9nk9wUbSkJ7a7065rQWIdxsDuRrnqQc="></script></head><body><header></header><main><p>JMESPath is a query language for JSON. You can extract and transform elements from a JSON
+<!doctype html><html><head><meta charset=utf-8><title>JMESPath</title><link href=https://unpkg.com/sanitize.css rel=stylesheet><link rel=stylesheet href=https://jmespath.site/main.min.91cbf3ca4c1cba014f52fb1cabc8b45c0907041c88f3270cff97db422897cb94.css integrity="sha256-kcvzykwcugFPUvscq8i0XAkHBByI8ycM/5fbQiiXy5Q="><link rel=stylesheet href=https://jmespath.site/demo.min.9a8314c8ba82c1fec46ad930f6cfe86547c0237ae0064c1ee53b829948fd408f.css integrity="sha256-moMUyLqCwf7Eatkw9s/oZUfAI3rgBkwe5TuCmUj9QI8="><script src=https://cdnjs.cloudflare.com/ajax/libs/jmespath/0.16.0/jmespath.min.js integrity="sha512-w/sNKK/59oJUi6v+SjgfIijrkFN8Pfv5QFZSV4KvrNMJrlbVM3017ZGNCA2AwZ6PKJzTPxQaDs/TbPcVGnF+pQ==" crossorigin=anonymous referrerpolicy=no-referrer></script>
+<script src=https://jmespath.site/demo.cd7f7fd47c2bb7315c1ecc1c52775d6338e7eed92a8d162d3d7d9867eab7ebd6.js integrity="sha256-zX9/1HwrtzFcHswcUnddYzjn7tkqjRYtPX2YZ+q369Y="></script></head><body><header></header><main><p>JMESPath is a query language for JSON. You can extract and transform elements from a JSON
 document. The examples below are interactive. You can change the
 JMESPath expressions and see the results update automatically.</p><p>For each of these examples, the JMESPath expression is applied to the
 input JSON on the left, and the result of evaluating the JMESPath
 expression is shown in the JSON document on the right-hand side.</p><h1 id=wiki-basic-expressions>Basic Expressions</h1><p>The simplest JMESPath expression is an <code>identifier</code>, which selects a key in an JSON object:</p><div class=demo onclick=demo(event)><input type=text class=query oninput=demoInput(event) value=a></input>
-<textarea class=data rows=10 oninput=demoInput(event)>{&#34;a&#34;: &#34;foo&#34;, &#34;b&#34;: &#34;bar&#34;, &#34;c&#34;: &#34;baz&#34;}</textarea><div class=result>"foo"</div></div><p>Try changing the expression above to <code>b</code>, and <code>c</code> and note the updated
+<textarea class=data rows=10 oninput=demoInput(event)>{&#34;a&#34;: &#34;foo&#34;, &#34;b&#34;: &#34;bar&#34;, &#34;c&#34;: &#34;baz&#34;}</textarea>
+<textarea class=result readonly>&#34;foo&#34;</textarea></div><p>Try changing the expression above to <code>b</code>, and <code>c</code> and note the updated
 result. Also note that if you refer to a key that does not exist, a
 value of <code>null</code> (or the language equivalent of <code>null</code>) is returned.</p><p>You can use a <code>subexpression</code> to return to nested values in a JSON object:</p><div class=demo onclick=demo(event)><input type=text class=query oninput=demoInput(event) value=a.b.c.d></input>
-<textarea class=data rows=10 oninput=demoInput(event)>{&#34;a&#34;: {&#34;b&#34;: {&#34;c&#34;: {&#34;d&#34;: &#34;value&#34;}}}}</textarea><div class=result>"value"</div></div><p>If you refer to a key that does not exist, a value of <code>null</code> is
+<textarea class=data rows=10 oninput=demoInput(event)>{&#34;a&#34;: {&#34;b&#34;: {&#34;c&#34;: {&#34;d&#34;: &#34;value&#34;}}}}</textarea>
+<textarea class=result readonly>&#34;value&#34;</textarea></div><p>If you refer to a key that does not exist, a value of <code>null</code> is
 returned. Attempting to subsequently access identifiers will continue to
 return a value of <code>null</code>. Try changing the expression to <code>b.c.d.e</code>
 above.</p><p><code>Index Expressions</code> allow you to select a specific element in a list. It should look similar
 to array access in common programming languages. Indexing is 0 based.</p><div class=demo onclick=demo(event)><input type=text class=query oninput=demoInput(event) value=[1]></input>
-<textarea class=data rows=10 oninput=demoInput(event)>[&#34;a&#34;, &#34;b&#34;, &#34;c&#34;, &#34;d&#34;, &#34;e&#34;, &#34;f&#34;]</textarea><div class=result>"b"</div></div><p>If you specify an index that&rsquo;s larger than the list, a value of <code>null</code>
+<textarea class=data rows=10 oninput=demoInput(event)>[&#34;a&#34;, &#34;b&#34;, &#34;c&#34;, &#34;d&#34;, &#34;e&#34;, &#34;f&#34;]</textarea>
+<textarea class=result readonly>&#34;b&#34;</textarea></div><p>If you specify an index that&rsquo;s larger than the list, a value of <code>null</code>
 is returned. You can also use negative indexing to index from the end of
 the list. <code>[-1]</code> refers to the last element in the list, <code>[-2]</code> refers
 to the penultimate element. Try it out in the example above.</p><p>You can combine identifiers, sub expressions, and index expressions to
@@ -30,42 +33,48 @@ access JSON elements.</p><div class=demo onclick=demo(event)><input type=text cl
       ]
     }
   }
-}</textarea><div class=result>1</div></div><h1 id=wiki-slicing>Slicing</h1><p>Slices allow you to select a contiguous subset of an array. If you&rsquo;ve
+}</textarea>
+<textarea class=result readonly>1</textarea></div><h1 id=wiki-slicing>Slicing</h1><p>Slices allow you to select a contiguous subset of an array. If you&rsquo;ve
 ever used slicing in python, then you already know how to use JMESPath
 slices. In its simplest form, you can specify the starting index and the
 ending index. The ending index is the first index which you do <em>not</em>
 want included in the slice. Let&rsquo;s take a look at some examples. First,
 given an array of integers from 0 to 9, let&rsquo;s select the first half of
 the array:</p><div class=demo onclick=demo(event)><input type=text class=query oninput=demoInput(event) value=[0:5]></input>
-<textarea class=data rows=10 oninput=demoInput(event)>[0, 1, 2, 3, 4, 5, 6, 7, 8, 9]</textarea><div class=result>[
-0, 1, 2, 3, 4
-]</div></div><p>This slice result contains the elements 0, 1, 2, 3, and 4. The element
+<textarea class=data rows=10 oninput=demoInput(event)>[0, 1, 2, 3, 4, 5, 6, 7, 8, 9]</textarea>
+<textarea class=result readonly>[
+  0, 1, 2, 3, 4
+]</textarea></div><p>This slice result contains the elements 0, 1, 2, 3, and 4. The element
 at index 5 is not included. If we want to select the second half of the
 array, we can use this expression:</p><div class=demo onclick=demo(event)><input type=text class=query oninput=demoInput(event) value=[5:10]></input>
-<textarea class=data rows=10 oninput=demoInput(event)>[0, 1, 2, 3, 4, 5, 6, 7, 8, 9]</textarea><div class=result>[
-5, 6, 7, 8, 9
-]</div></div><p>The two example above can be shortened. If the <code>start</code> or <code>stop</code> value
+<textarea class=data rows=10 oninput=demoInput(event)>[0, 1, 2, 3, 4, 5, 6, 7, 8, 9]</textarea>
+<textarea class=result readonly>[
+  5, 6, 7, 8, 9
+]</textarea></div><p>The two example above can be shortened. If the <code>start</code> or <code>stop</code> value
 is omitted it is assumed to be the start or the end of the array. For
 example:</p><div class=demo onclick=demo(event)><input type=text class=query oninput=demoInput(event) value=[:5]></input>
-<textarea class=data rows=10 oninput=demoInput(event)>[0, 1, 2, 3, 4, 5, 6, 7, 8, 9]</textarea><div class=result>[
-0, 1, 2, 3, 4
-]</div></div><p>Try modifying the example above to only include the last half of the
+<textarea class=data rows=10 oninput=demoInput(event)>[0, 1, 2, 3, 4, 5, 6, 7, 8, 9]</textarea>
+<textarea class=result readonly>[
+  0, 1, 2, 3, 4
+]</textarea></div><p>Try modifying the example above to only include the last half of the
 array elements without specifying the end value of <code>10</code>.</p><p>The general form of a slice is <code>[start:stop:step]</code>. So far we&rsquo;ve looked
 at the <code>[start:stop]</code> form. By default, the <code>step</code> value is <code>1</code>, which
 means to include every element in the range specified by the <code>start</code> and
 <code>stop</code> value. However, we can use the step value to skip over elements.
 For example, to select only the even elements from the array.</p><div class=demo onclick=demo(event)><input type=text class=query oninput=demoInput(event) value=[::2]></input>
-<textarea class=data rows=10 oninput=demoInput(event)>[0, 1, 2, 3, 4, 5, 6, 7, 8, 9]</textarea><div class=result>[
-0, 2, 4, 6, 8
-]</div></div><p>Also note in this example we&rsquo;re omitting the <code>start</code> as well as the
+<textarea class=data rows=10 oninput=demoInput(event)>[0, 1, 2, 3, 4, 5, 6, 7, 8, 9]</textarea>
+<textarea class=result readonly>[
+  0, 2, 4, 6, 8
+]</textarea></div><p>Also note in this example we&rsquo;re omitting the <code>start</code> as well as the
 <code>stop</code> value, which means to use <code>0</code> for the <code>start</code> value, and <code>10</code> for
 the <code>stop</code> value. In this example, the expression <code>[::2]</code> is equivalent
 to <code>[0:10:2]</code>.</p><p>The last thing to know about slices is that just like indexing a single
 value, all the values can be negative. If the <code>step</code> value is negative,
 then the slice is created in reverse order. For example:</p><div class=demo onclick=demo(event)><input type=text class=query oninput=demoInput(event) value=[::-1]></input>
-<textarea class=data rows=10 oninput=demoInput(event)>[0, 1, 2, 3, 4, 5, 6, 7, 8, 9]</textarea><div class=result>[
-9, 8, 7, 6, 5, 4, 3, 2, 1, 0
-]</div></div><p>The above expression creates a slice but in reverse order.</p><p>If you want all the details about how slices work, check out the
+<textarea class=data rows=10 oninput=demoInput(event)>[0, 1, 2, 3, 4, 5, 6, 7, 8, 9]</textarea>
+<textarea class=result readonly>[
+  9, 8, 7, 6, 5, 4, 3, 2, 1, 0
+]</textarea></div><p>The above expression creates a slice but in reverse order.</p><p>If you want all the details about how slices work, check out the
 <a href=https://jmespath.site/#spec-slices target=_blank rel=noopener><code>slices</code></a>
 in the specification.</p><h1 id=wiki-projections>Projections</h1><p>Projections are one of the key features of JMESPath. It allows you to
 apply an expression to a collection of elements. There are five kinds of
@@ -96,9 +105,10 @@ first names in our list.</p><div class=demo onclick=demo(event)><input type=text
   &#34;foo&#34;: {
     &#34;bar&#34;: &#34;baz&#34;
   }
-}</textarea><div class=result>[
-"James", "Jacob", "Jayden"
-]</div></div><p>In the example above, the <code>first</code> expression, which is just an
+}</textarea>
+<textarea class=result readonly>[
+  &#34;James&#34;, &#34;Jacob&#34;, &#34;Jayden&#34;
+]</textarea></div><p>In the example above, the <code>first</code> expression, which is just an
 identifier, is applied to each element in the <code>people</code> array. The
 results are collected into a JSON array and returned as the result of
 the expression. The expression can be more complex than a basic
@@ -144,9 +154,10 @@ which may not include all the elements in the original list:</p><div class=demo 
   &#34;foo&#34;: {
     &#34;bar&#34;: &#34;baz&#34;
   }
-}</textarea><div class=result>[
-"James", "Jacob"
-]</div></div><h2 id=wiki-object-projections>Object Projections</h2><p>Whereas a list projection is defined for a JSON array, an object
+}</textarea>
+<textarea class=result readonly>[
+  &#34;James&#34;, &#34;Jacob&#34;
+]</textarea></div><h2 id=wiki-object-projections>Object Projections</h2><p>Whereas a list projection is defined for a JSON array, an object
 projection is defined for a JSON object. You can create an object
 projection using the <code>*</code> syntax. This will create a list of the values
 of the JSON object, and project the right-hand side of the projection
@@ -163,9 +174,10 @@ onto the list of values.</p><div class=demo onclick=demo(event)><input type=text
       &#34;variadic&#34;: true
     }
   }
-}</textarea><div class=result>[
-2, 3
-]</div></div><p>In the example above the <code>*</code> creates a JSON array of the values
+}</textarea>
+<textarea class=result readonly>[
+  2, 3
+]</textarea></div><p>In the example above the <code>*</code> creates a JSON array of the values
 associated with the <code>ops</code> JSON object. The RHS of the projection,
 <code>numArgs</code>, is then applied to the JSON array, resulting in the final
 array of <code>[2, 3]</code>. Below is a sample walk-through of how an
@@ -209,13 +221,14 @@ for each each list element in the list. Here&rsquo;s an example of that:</p><div
       ]
     }
   ]
-}</textarea><div class=result>[
-[
-"running", "stopped"
-], [
-"terminated", "running"
-]
-]</div></div><p>The result of this expression is <code>[["running", "stopped"], ["terminated", "running"]]</code>, which is a list
+}</textarea>
+<textarea class=result readonly>[
+  [
+    &#34;running&#34;, &#34;stopped&#34;
+  ], [
+    &#34;terminated&#34;, &#34;running&#34;
+  ]
+]</textarea></div><p>The result of this expression is <code>[["running", "stopped"], ["terminated", "running"]]</code>, which is a list
 of lists. The outer list is from the projection of <code>reservations[*]</code>,
 and the inner list is a projection of <code>state</code> created from
 <code>instances[*]</code>:</p><pre><code>1st       r0                         r1
@@ -231,11 +244,12 @@ the expression above and see how the result changes.</p><p>While the <code>flatt
 <code>[]</code>, is that:</p><ul><li>It flattens sublists into the parent list (not recursively, just one
 level).</li><li>It creates a projection, so anything on the RHS of the flatten
 projection is projected onto the newly created flattened list.</li></ul><p>You can also just use <code>[]</code> on its own to flatten a list:</p><div class=demo onclick=demo(event)><input type=text class=query oninput=demoInput(event) value=[]></input>
-<textarea class=data rows=10 oninput=demoInput(event)>[[0, 1], 2, [3], 4, [5, [6, 7]]]</textarea><div class=result>[
-0, 1, 2, 3, 4, 5, [
-6, 7
-]
-]</div></div><p>If you flattened the result of the expression again, <code>[][]</code>, you&rsquo;d then
+<textarea class=data rows=10 oninput=demoInput(event)>[[0, 1], 2, [3], 4, [5, [6, 7]]]</textarea>
+<textarea class=result readonly>[
+  0, 1, 2, 3, 4, 5, [
+    6, 7
+  ]
+]</textarea></div><p>If you flattened the result of the expression again, <code>[][]</code>, you&rsquo;d then
 get a result of <code>[0, 1, 2, 3, 4, 5, 6, 7]</code>. Try it out in the example
 above.</p><h2 id=wiki-filter-projections>Filter Projections</h2><p>Up to this point we&rsquo;ve looked at:</p><ul><li>List/Slice projections</li><li>Object projections</li><li>Flatten projections</li></ul><p>Evaluating the RHS of a projection is a basic type of filter. If the
 result of the expression evaluated against an individual element results
@@ -263,9 +277,10 @@ return result
       &#34;state&#34;: &#34;running&#34;
     }
   ]
-}</textarea><div class=result>[
-"a", "b"
-]</div></div><p>Try changing <code>running</code> to <code>stopped</code> in the example above. You can also
+}</textarea>
+<textarea class=result readonly>[
+  &#34;a&#34;, &#34;b&#34;
+]</textarea></div><p>Try changing <code>running</code> to <code>stopped</code> in the example above. You can also
 remove the <code>.name</code> at the end of the expression if you just want the
 entire JSON object of each machine that has the specified state.</p><p>A filter expression is defined for an array and has the general form
 <code>LHS [? &lt;expression> &lt;comparator> &lt;expression>] RHS</code>. The
@@ -304,7 +319,8 @@ projection must stop. This is shown in the example below:</p><div class=demo onc
   &#34;foo&#34;: {
     &#34;bar&#34;: &#34;baz&#34;
   }
-}</textarea><div class=result>"James"</div></div><p>In the example above, the RHS of the list projection is <code>first</code>. When a
+}</textarea>
+<textarea class=result readonly>&#34;James&#34;</textarea></div><p>In the example above, the RHS of the list projection is <code>first</code>. When a
 pipe is encountered, the result up to that point is passed to the RHS of
 the pipe expression. The pipe expression is evaluated as:</p><pre><code>evaluate(people[*].first, inputData) -&gt; [&quot;James&quot;, &quot;Jacob&quot;, &quot;Jayden&quot;]
 evaluate([0], [&quot;James&quot;, &quot;Jacob&quot;, &quot;Jayden&quot;]) -&gt; &quot;James&quot;
@@ -337,15 +353,16 @@ and a multiselect hash creates a JSON object.</p><p>This is an example of a mult
       }
     }
   ]
-}</textarea><div class=result>[
-[
-"a", "up"
-], [
-"b", "down"
-], [
-"c", "up"
-]
-]</div></div><p>In the expression above, the <code>[name, state.name]</code> portion is a
+}</textarea>
+<textarea class=result readonly>[
+  [
+    &#34;a&#34;, &#34;up&#34;
+  ], [
+    &#34;b&#34;, &#34;down&#34;
+  ], [
+    &#34;c&#34;, &#34;up&#34;
+  ]
+]</textarea></div><p>In the expression above, the <code>[name, state.name]</code> portion is a
 multiselect list. It says to create a list of two element, the first
 element is the result of evaluating the <code>name</code> expression against the
 list element, and the second element is the result of evaluating
@@ -378,15 +395,16 @@ keys, <code>Name</code> and <code>State</code>, we could use this:</p><div class
       }
     }
   ]
-}</textarea><div class=result>[
-{
-"Name": "a", "State": "up"
-}, {
-"Name": "b", "State": "down"
-}, {
-"Name": "c", "State": "up"
-}
-]</div></div><h1 id=wiki-functions>Functions</h1><p>JMESPath supports function expressions, for example:</p><div class=demo onclick=demo(event)><input type=text class=query oninput=demoInput(event) value=length(people)></input>
+}</textarea>
+<textarea class=result readonly>[
+  {
+    &#34;Name&#34;: &#34;a&#34;, &#34;State&#34;: &#34;up&#34;
+  }, {
+    &#34;Name&#34;: &#34;b&#34;, &#34;State&#34;: &#34;down&#34;
+  }, {
+    &#34;Name&#34;: &#34;c&#34;, &#34;State&#34;: &#34;up&#34;
+  }
+]</textarea></div><h1 id=wiki-functions>Functions</h1><p>JMESPath supports function expressions, for example:</p><div class=demo onclick=demo(event)><input type=text class=query oninput=demoInput(event) value=length(people)></input>
 <textarea class=data rows=10 oninput=demoInput(event)>{
   &#34;people&#34;: [
     {
@@ -411,7 +429,8 @@ keys, <code>Name</code> and <code>State</code>, we could use this:</p><div class
       }
     }
   ]
-}</textarea><div class=result>3</div></div><p><a href=https://jmespath.site/#functions target=_blank rel=noopener>Functions</a>
+}</textarea>
+<textarea class=result readonly>3</textarea></div><p><a href=https://jmespath.site/#functions target=_blank rel=noopener>Functions</a>
 can be used to transform and filter data in powerful ways.</p><p>Below are a few examples of functions.</p><p>This example prints the name of the oldest person in the <code>people</code> array:</p><div class=demo onclick=demo(event)><input type=text class=query oninput=demoInput(event) value="max_by(people, &age).name"></input>
 <textarea class=data rows=10 oninput=demoInput(event)>{
   &#34;people&#34;: [
@@ -428,7 +447,8 @@ can be used to transform and filter data in powerful ways.</p><p>Below are a few
       &#34;age&#34;: 40
     }
   ]
-}</textarea><div class=result>"a"</div></div><p>Functions can also be combined with filter expressions. In the example
+}</textarea>
+<textarea class=result readonly>&#34;a&#34;</textarea></div><p>Functions can also be combined with filter expressions. In the example
 below, the JMESPath expressions finds all elements in <code>myarray</code> that
 contains the string <code>foo</code>.</p><div class=demo onclick=demo(event)><input type=text class=query oninput=demoInput(event) value="myarray[?contains(@, 'foo') == [true]]"></input>
 <textarea class=data rows=10 oninput=demoInput(event)>{
@@ -441,7 +461,8 @@ contains the string <code>foo</code>.</p><div class=demo onclick=demo(event)><in
     &#34;barbaz&#34;,
     &#34;barfoobaz&#34;
   ]
-}</textarea><div class=result>[]</div></div><p>The <code>@</code> character in the example above refers to the current element
+}</textarea>
+<textarea class=result readonly>[]</textarea></div><p>The <code>@</code> character in the example above refers to the current element
 being evaluated in <code>myarray</code>. The expression <code>contains(@, `foo`)</code>
 will return <code>true</code> if the current element in the <code>myarray</code> array
 contains the string <code>foo</code>.</p><p>While the <code>function expression</code> spec has all the details, there are a few things to keep in
