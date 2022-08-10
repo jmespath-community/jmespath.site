@@ -1,0 +1,17 @@
+{{/* https://gohugo.io/templates/render-hooks/#render-hooks-for-code-blocks */}}
+{{ $block := . }}
+{{ with split .Inner "\n" }}
+<div class="demo{{with index $block.Attributes "class" }} {{ . }}{{ end }}" onclick="demoPreview(event)"{{ range $k, $v := $block.Attributes}} {{$k}}="{{$v}}"{{ end }}>
+    <input type="text" class="query" oninput="demoInputPreview(event)" value="{{ index . 0 }}"></input>
+    <textarea class="data" rows="10" oninput="demoInputPreview(event)">{{ delimit (after 1 .) "\n" }}</textarea>
+    <textarea class="result" readonly="readonly">
+        {{- with resources.GetRemote "https://jmespath.azurewebsites.net/api/search?code=O0GXIhf81lAA4T93-EIxQ8gNUd65gNHr0lirXNuOuqAzAzFu2J3oGQ=="  (dict "body" $block.Inner ) -}}
+            {{ with .Err -}}
+                {{ errorf "error in demo %s: %s" $block.Position . -}}
+            {{ else -}}
+                {{- strings.TrimLeft "\n" .Content | strings.TrimRight "\n" | replaceRE ", *\n *" ", " -}}
+            {{- end -}}
+        {{- end -}}
+    </textarea>
+</div>
+{{ end }}

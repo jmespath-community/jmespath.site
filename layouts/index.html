@@ -62,6 +62,13 @@
 </article>
 {{- end -}}
 
+{{ with .Site.GetPage "wiki/Preview" -}}
+<article id="preview">
+    <h1>Preview Features</h1>
+    {{- .Content -}}
+</article>
+{{- end -}}
+
 {{ with .Site.GetPage "wiki/Libraries" -}}
 <article id="libraries">
     <h1>Libraries</h1>
