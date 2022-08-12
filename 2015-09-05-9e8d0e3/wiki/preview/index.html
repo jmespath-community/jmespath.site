@@ -38,6 +38,6 @@ will contain the items found in each row of the table.</p><p>So, the first array
 one item from the <code>people</code> row, one item from the <code>country</code> row and finally one item from the <code>fruits</code> row,
 resulting in <code>["John", "Germany", "Orange"]</code>.</p><p>The second array – corresponding to the second column of the table – contains <code>["Marc", "France", "Apple"]</code>.</p><h2 id=wiki-string-slices>String Slices</h2><p>Using <code>slice-expression</code> to slice strings is popular in modern programming languages. JMESPath Community supports slicing strings using the same syntax:</p><div class="demo active" onclick=demoPreview(event) class=active><input type=text class=query oninput=demoInputPreview(event) value="foo[:4]"></input>
 <textarea class=data rows=10 oninput=demoInputPreview(event)>{
-  foo: &#34;Hello, world!&#34;
+  &#34;foo&#34;: &#34;Hello, world!&#34;
 }</textarea>
 <textarea class=result readonly>&#34;Hell&#34;</textarea></div><p><strong>Note</strong>: <code>slice-expression</code> applied to JSON arrays result in a <em>projection</em>. Applying a <code>slice-expression</code> to a JSON string, however, produces a JSON string.</p></main><footer></footer></body></html>
