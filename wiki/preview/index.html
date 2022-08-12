@@ -11,4 +11,29 @@ to supports nested lexical scopes.</p><pre tabindex=0><code>any let(object scope
  ]
 }</textarea>
 <textarea class=result readonly>[&#34;Seattle&#34;,&#34;Bellevue&#34;,&#34;Olympia&#34;]</textarea></div><p>When evaluating the <code>states</code> identifier, JMESPath no longer has access to the root scope, where <code>first_choice</code> is defined. Therefore, under normal circumstances, the <code>filter-expression</code> <code>[?name === first_choice]</code> would evaluate the <code>first_choice</code> identifier and return an empty array.</p><p>Instead, <code>let()</code> defined the identifier <code>first_choice</code> has taking the value of the property with the same name in the input JSON document. It effectively created a scope that can be represented as the following JSON object:</p><div class=highlight><pre tabindex=0 style=background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-json data-lang=json><span style=display:flex><span>{ <span style=color:#062873;font-weight:700>&#34;first_choice&#34;</span>: <span style=color:#4070a0>&#34;WA&#34;</span> }
-</span></span></code></pre></div><p>Therefore, when evaluating the <code>filter-expression</code>, the <code>first_choice</code> identifier is indeed defined, and produces the correct result.</p></main><footer></footer></body></html>
+</span></span></code></pre></div><p>Therefore, when evaluating the <code>filter-expression</code>, the <code>first_choice</code> identifier is indeed defined, and produces the correct result.</p><h2 id=wiki-arithmetic-expressions>Arithmetic Expressions</h2><p>JMESPath Community now supports <a href=https://github.com/jmespath-community/jmespath.spec/discussions/25#discussioncomment-3277652 target=_blank rel=noopener><code>arithmetic-expression</code></a>
+syntax with the usual operators.</p><div class="demo active" onclick=demoPreview(event) class=active><input type=text class=query oninput=demoInputPreview(event) value="{ a: a, b: b, c: b × `2` } | a ÷ ( b − c)"></input>
+<textarea class=data rows=10 oninput=demoInputPreview(event)>{
+  &#34;a&#34;: 40,
+  &#34;b&#34;: 2
+}</textarea>
+<textarea class=result readonly>-20.0</textarea></div><h2 id=wiki-object-manipulation-functions>Object Manipulation Functions</h2><p>As a JSON query language, JMESPath Community now supports <a href=https://github.com/jmespath-community/jmespath.spec/discussions/47#discussioncomment-3308897 target=_blank rel=noopener>functions to manipulate JSON objects</a>
+.</p><p>The <code>items()</code> function allows you to <em>deconstruct</em> a JSON object to its key and values,
+whereas the <code>from_items()</code> function will combine two arrays into a single JSON object.</p><div class="demo active" onclick=demoPreview(event) class=active><input type=text class=query oninput=demoInputPreview(event) value="from_items(items(@))"></input>
+<textarea class=data rows=10 oninput=demoInputPreview(event)>{
+  &#34;foo&#34;: &#34;lorem&#34;,
+  &#34;bar&#34;: &#34;ipsum&#34;,
+  &#34;baz&#34;: &#34;dolor&#34;
+}</textarea>
+<textarea class=result readonly>{&#34;foo&#34;:&#34;lorem&#34;,&#34;bar&#34;:&#34;ipsum&#34;,&#34;baz&#34;:&#34;dolor&#34;}</textarea></div><p>The <code>zip()</code> function comes the Python language. It combines two or more arrays into a set of arrays,
+each of which contains the _i_th indexed item from each indivual array.</p><p>For better understanding, consider the following example:</p><div class="demo active" onclick=demoPreview(event) class=active><input type=text class=query oninput=demoInputPreview(event) value="zip(people, country, fruits)"></input>
+<textarea class=data rows=10 oninput=demoInputPreview(event)>{
+  &#34;fruits&#34;: [&#34;Orange&#34;, &#34;Apple&#34;, &#34;Strawberry&#34;],
+  &#34;people&#34;: [&#34;John&#34;, &#34;Marc&#34;, &#34;Paul&#34;],
+  &#34;country&#34;: [&#34;Germany&#34;, &#34;France&#34;, &#34;USA&#34; ]
+}</textarea>
+<textarea class=result readonly>[[&#34;John&#34;,&#34;Germany&#34;,&#34;Orange&#34;],[&#34;Marc&#34;,&#34;France&#34;,&#34;Apple&#34;],[&#34;Paul&#34;,&#34;USA&#34;,&#34;Strawberry&#34;]]</textarea></div><p>Think of the three <code>fruits</code>, <code>people</code> and <code>country</code> arrays as being <em>rows</em> in a table.
+Each array has a number of items that you can think of as being the <em>columns</em> in the table.</p><p>The <code>zip()</code> function will create as many arrays as there are full columns, each of which
+will contain the items found in each row of the table.</p><p>So, the first array – corresponding to the first column of the table – will contain
+one item from the <code>people</code> row, one item from the <code>country</code> row and finally one item from the <code>fruits</code> row,
+resulting in <code>["John", "Germany", "Orange"]</code>.</p><p>The second array – corresponding to the second column of the table – contains <code>["Marc", "France", "Apple"]</code>.</p></main><footer></footer></body></html>
