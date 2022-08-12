@@ -192,7 +192,7 @@ onto the list of values.</p><div class=demo onclick=demo(event)><input type=text
   }
 }</textarea>
 <textarea class=result readonly>[
-  2, 3
+  3, 2
 ]</textarea></div><p>In the example above the <code>*</code> creates a JSON array of the values
 associated with the <code>ops</code> JSON object. The RHS of the projection,
 <code>numArgs</code>, is then applied to the JSON array, resulting in the final
@@ -1011,7 +1011,7 @@ each of which contains the _i_th indexed item from each indivual array.</p><p>Fo
 Each array has a number of items that you can think of as being the <em>columns</em> in the table.</p><p>The <code>zip()</code> function will create as many arrays as there are full columns, each of which
 will contain the items found in each row of the table.</p><p>So, the first array – corresponding to the first column of the table – will contain
 one item from the <code>people</code> row, one item from the <code>country</code> row and finally one item from the <code>fruits</code> row,
-resulting in <code>["John", "Germany", "Orange"]</code>.</p><p>The second array – corresponding to the second column of the table – contains <code>["Marc", "France", "Apple"]</code>.</p><h1 id=wiki-string-slices>String Slices</h1><p>Using <code>slice-expression</code> to slice strings is popular in modern programming languages. JMESPath Community supports slicing strings using the same syntax:</p><div class="demo active" onclick=demoPreview(event) class=active><input type=text class=query oninput=demoInputPreview(event) value="foo[:4]"></input>
+resulting in <code>["John", "Germany", "Orange"]</code>.</p><p>The second array – corresponding to the second column of the table – contains <code>["Marc", "France", "Apple"]</code>.</p><h2 id=wiki-string-slices>String Slices</h2><p>Using <code>slice-expression</code> to slice strings is popular in modern programming languages. JMESPath Community supports slicing strings using the same syntax:</p><div class="demo active" onclick=demoPreview(event) class=active><input type=text class=query oninput=demoInputPreview(event) value="foo[:4]"></input>
 <textarea class=data rows=10 oninput=demoInputPreview(event)>{
   foo: &#34;Hello, world!&#34;
 }</textarea>
