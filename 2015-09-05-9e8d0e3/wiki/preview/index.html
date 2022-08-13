@@ -39,5 +39,16 @@ one item from the <code>people</code> row, one item from the <code>country</code
 resulting in <code>["John", "Germany", "Orange"]</code>.</p><p>The second array – corresponding to the second column of the table – contains <code>["Marc", "France", "Apple"]</code>.</p><h2 id=wiki-string-slices>String Slices</h2><p>Using <code>slice-expression</code> to slice strings is popular in modern programming languages. JMESPath Community supports slicing strings using the same syntax:</p><div class="demo active" onclick=demoPreview(event) class=active><input type=text class=query oninput=demoInputPreview(event) value="foo[:4]"></input>
 <textarea class=data rows=10 oninput=demoInputPreview(event)>{
   &#34;foo&#34;: &#34;Hello, world!&#34;
+  &#34;bar&#34;: [&#34;h&#34;, &#34;e&#34;, &#34;l&#34;, &#34;l&#34;, &#34;o&#34;, &#34; &#34;, &#34;w&#34;, &#34;o&#34;, &#34;r&#34;, &#34;l&#34;, &#34;d&#34;, &#34;!&#34;]
 }</textarea>
-<textarea class=result readonly>&#34;Hell&#34;</textarea></div><p><strong>Note</strong>: <code>slice-expression</code> applied to JSON arrays result in a <em>projection</em>. Applying a <code>slice-expression</code> to a JSON string, however, produces a JSON string.</p></main><footer></footer></body></html>
+<textarea class=result readonly></textarea></div><p><strong>Note</strong>: <code>slice-expression</code> applied to JSON arrays result in a <em>projection</em>. Applying a <code>slice-expression</code> to a JSON string, however, produces a JSON string.</p><h2 id=wiki-groups>Groups</h2><p>Using the <a href=https://github.com/jmespath-community/jmespath.spec/discussions/96#discussion-4282156 target=_blank rel=noopener><code>group_by()</code> function</a>
+, you can group collection of objects with specific criteria:</p><div class="demo active" onclick=demoPreview(event) class=active><input type=text class=query oninput=demoInputPreview(event) value="group_by(items, &spec.nodeName)"></input>
+<textarea class=data rows=10 oninput=demoInputPreview(event)>{
+  &#34;items&#34;: [
+    { &#34;spec&#34;: { &#34;nodeName&#34;: &#34;node_01&#34;, &#34;other&#34;: &#34;values_01&#34; } },
+    { &#34;spec&#34;: { &#34;nodeName&#34;: &#34;node_02&#34;, &#34;other&#34;: &#34;values_02&#34; } },
+    { &#34;spec&#34;: { &#34;nodeName&#34;: &#34;node_03&#34;, &#34;other&#34;: &#34;values_03&#34; } },
+    { &#34;spec&#34;: { &#34;nodeName&#34;: &#34;node_01&#34;, &#34;other&#34;: &#34;values_04&#34; } }
+  ]
+}</textarea>
+<textarea class=result readonly>{&#34;node_01&#34;:[{&#34;spec&#34;:{&#34;nodeName&#34;:&#34;node_01&#34;,&#34;other&#34;:&#34;values_01&#34;}},{&#34;spec&#34;:{&#34;nodeName&#34;:&#34;node_01&#34;,&#34;other&#34;:&#34;values_04&#34;}}],&#34;node_02&#34;:[{&#34;spec&#34;:{&#34;nodeName&#34;:&#34;node_02&#34;,&#34;other&#34;:&#34;values_02&#34;}}],&#34;node_03&#34;:[{&#34;spec&#34;:{&#34;nodeName&#34;:&#34;node_03&#34;,&#34;other&#34;:&#34;values_03&#34;}}]}</textarea></div></main><footer></footer></body></html>
