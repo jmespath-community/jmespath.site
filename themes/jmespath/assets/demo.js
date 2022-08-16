@@ -81,6 +81,7 @@ function resizeResultTextAreaToFit(demo) {
     const result = demo.getElementsByClassName("result").item(0)
 
     // Size height to fit content.
+    result.style.height = null;
     result.rows = result.value.split("\n").length;
     result.scrollTop = 1;
     while (result.scrollTop > 0) {

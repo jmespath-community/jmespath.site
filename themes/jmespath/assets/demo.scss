@@ -43,13 +43,23 @@
     border-radius: 2px;
     margin-top: 2px;
     margin-bottom: 1px;
-  }
-
-  .data, .result {
     flex: 1 1 auto;
     visibility: hidden;
     opacity: 0;
     transition: visibility 0.2s, opacity 0.2s;
+  }
+
+  .result::before {
+    content: "Result:";
+    top: -1.5em;
+    position: absolute;
+    font-weight: bold;
+  }
+
+  .result {
+    margin-top: 2em;
+    position: relative;
+    background-color: transparent;
   }
 
   &.active {
