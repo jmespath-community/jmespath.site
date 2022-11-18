@@ -135,6 +135,22 @@ header {
   }
 }
 
+.note {
+  background: #f4f8fa;
+  border-color: #5bc0de;
+  border-width: 0 0 0 3px;
+  border-style: solid;
+  padding: 10px;
+}
+
+.note::before {
+  content: "Note\a";
+  color: #5bc0de;
+  font-weight: normal;
+  font-size: 18px;
+  white-space: pre;
+}
+
 table {
   width: 100%;
   text-align: center;
