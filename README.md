@@ -55,3 +55,10 @@ Alternatively, you can avoid installing Hugo and run within Docker via:
 ```bash
 docker run --rm --net=host -v $(pwd):/src klakegg/hugo server
 ```
+
+When running from a GitHub CodeSpaces instance, please serve the development server using the following command:
+
+```bash
+ncat -lk -p 8000 -e ".github/workflows/jp_service.sh" &
+hugo server --port 1313 --appendPort=false --baseUrl=https://<codespaces-host>-1313.preview.app.github.dev
+```

@@ -43,4 +43,10 @@ ncat -lk -p 8000 -e ".github/workflows/jp_service.sh" &
 
 ## Serve static web site
 
-hugo server
+## Run the following command to serve locally
+## hugo server --port 1313
+
+## Run the following command to serve from CodeSpaces
+## Change the --baseUrl based upon your CodeSpace URL
+## s/\.github\.dev/-1313.preview.app.github.dev
+## hugo server --port 1313 --appendPort=false --baseUrl=https://springcomp-humble-waddle-rq6rx56w753xqrv-1313.preview.app.github.dev
