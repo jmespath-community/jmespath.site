@@ -28,4 +28,4 @@ ENV HUGO_VERSION 0.97.0
 RUN hugo --help >/dev/null \
  && hugo completion bash >/etc/bash_completion.d/hugo.sh
 
-CMD [ "/start.sh" ]
+CMD [ "sleep", "365d" ]

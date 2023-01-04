@@ -28,7 +28,7 @@ ln -s /src/content/spec/functions /src/data/functions
 git update-index --assume-unchanged /src/data/functions
 
 ## Start local server to process JMESPath expressions
-## This is required during static site genration and
+## This is required during static site generation and
 ## to power the live samples from the website.
 ## It can be called with a simple curl command:
 ## curl -X POST --location http://localhost:8000/json.txt  \
