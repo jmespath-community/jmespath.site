@@ -39,14 +39,25 @@ git update-index --assume-unchanged /src/data/functions
 ## EOF
 ##
 
-ncat -lk -p 8000 -e ".github/workflows/jp_service.sh" &
+function start_local_jmespath_server(){
+  port=$1
+
+  error="Ncat: Connection refused."
+  pattern=`echo ${error/\./\\\\.}`
+  refused=`ncat -z -v -w5 localhost $port 2>&1 | grep "$pattern"`
+
+  if [[ "${refused}" ]]; then
+    echo "Running local JMESPath HTTP server on ::8000…"
+    ncat -lk -p $port -e ".github/workflows/jp_service.sh" &
+  fi
+}
+
+start_local_jmespath_server 8000
 
 ## Serve static web site
 
-## Run the following command to serve locally
-## hugo server --port 1313
-
-## Run the following command to serve from CodeSpaces
-## Change the --baseUrl based upon your CodeSpace URL
-## s/\.github\.dev/-1313.preview.app.github.dev
-## hugo server --port 1313 --appendPort=false --baseUrl=https://springcomp-humble-waddle-rq6rx56w753xqrv-1313.preview.app.github.dev
+if [[ -z "${CODESPACE_NAME}" ]]; then
+  hugo server --port 1313 --watch=false
+else
+  hugo server --port 1313 --watch=false --appendPort=false --baseUrl="https://$CODESPACE_NAME-1313.$GITHUB_CODESPACES_PORT_FORWARDING_DOMAIN"
+fi
