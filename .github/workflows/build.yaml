@@ -44,10 +44,10 @@ jobs:
     - name: 📃 Checkout site gh-pages branch
       uses: actions/checkout@v3
       with:
-        repository: jmespath-community/jmespath.site
+        repository: git@github.com:jmespath-community/jmespath.site.git
         ref: gh-pages
         path: build/
-        token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+        token: ${{ secrets.GITHUB_TOKEN }}
 
     - name: 📃 Generate site pages
       run: |
