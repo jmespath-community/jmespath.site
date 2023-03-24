@@ -44,9 +44,9 @@ jobs:
     - name: 📃 Checkout site gh-pages branch
       uses: actions/checkout@v3
       with:
+        repository: jmespath-community/jmespath.site
         ref: gh-pages
         path: build/
-        username: springcomp
         token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
 
     - name: 📃 Generate site pages
