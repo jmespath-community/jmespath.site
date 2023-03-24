@@ -67,7 +67,7 @@ jobs:
 
     - name: ✉ Deploy
       if: github.ref == 'refs/heads/main'
-      uses: EndBug/add-and-commit@v9.0.0
-      with:
-        cwd: build/
-        push: origin gh-pages --force
+      run: |
+        git -C build/ add .
+        git -C build/ commit -m "Commit from GitHub Actions (Build)"
+        git -C build/ push origin gh-pages --force
