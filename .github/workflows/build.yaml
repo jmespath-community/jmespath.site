@@ -41,11 +41,12 @@ jobs:
 
     ## update home page
 
-    - name: 📃 Checkout site-ghpages
+    - name: 📃 Checkout site gh-pages branch
       uses: actions/checkout@v3
       with:
         ref: gh-pages
         path: build/
+        username: springcomp
         token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
 
     - name: 📃 Generate site pages
