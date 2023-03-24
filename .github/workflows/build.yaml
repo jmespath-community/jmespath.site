@@ -44,7 +44,6 @@ jobs:
     - name: 📃 Checkout site gh-pages branch
       uses: actions/checkout@v3
       with:
-        repository: git@github.com:jmespath-community/jmespath.site.git
         ref: gh-pages
         path: build/
         token: ${{ secrets.GITHUB_TOKEN }}
