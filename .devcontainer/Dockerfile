@@ -2,7 +2,7 @@ FROM klakegg/hugo:0.107.0-ext-ubuntu-ci
 
 RUN apt-get update \
  && apt-get install -y curl nmap ncat \
- && curl -L https://github.com/jmespath/jp/releases/download/0.2.1/jp-linux-amd64 --output /usr/local/bin/jp \
+ && curl -L https://github.com/jmespath-community/jp/releases/download/v1.1.0/jp-linux-amd64 --output /usr/local/bin/jp \
  && chmod +x /usr/local/bin/jp \
  && ln -s /usr/local/bin/jp /src/jp
 

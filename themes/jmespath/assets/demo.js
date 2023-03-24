@@ -5,10 +5,6 @@
  */
 
 function demo(event) {
-    doDemo(event, query => demoInputPreview({ currentTarget: query }));
-}
-
-function demoPreview(event) {
     doDemo(event, query => demoInput({ currentTarget: query }));
 }
 
@@ -23,36 +19,6 @@ function doDemo(event, fun) {
     if (active && !result.innerHTML.trim()) {
         fun({ currentTarget: query })
     }
-}
-
-function jp_preview(data, expression) {
-    const search = function (resolve, reject) {
-        fetch('https://jmespath.azurewebsites.net/api/search?code=O0GXIhf81lAA4T93-EIxQ8gNUd65gNHr0lirXNuOuqAzAzFu2J3oGQ==', {
-            method: 'POST',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'text/plain'
-            },
-            body: `${expression}\n${JSON.stringify(data)}`
-        })
-            .then(response => {
-                const json = response.json();
-                json.then(data => {
-                    const parsed = JSON.parse(data);
-                    console.log("Parsing…");
-                    console.log(parsed);
-                    resolve(parsed);
-                })
-                    .catch(_ => {
-                        resolve(null);
-                    });
-            })
-            .catch(_ => {
-                resolve(null);
-            });
-    }
-
-    return new Promise(search);
 }
 
 function jp(data, expression) {
@@ -107,38 +73,6 @@ function demoInput(event) {
         const searched = jp(json, query.value);
         result.value = formatJson(searched);
     })
-}
-
-let timeout = null;
-
-/**
- * Input handler for JMESPath demos. Re-evaluates the query and data.
- * using remote HTTP hosted preview implementation
- * @param event Input event
- */
-function demoInputPreview(event) {
-
-    (function(capturedEvent) {
-        const demo = capturedEvent.currentTarget.parentElement;
-
-        // prevent overloading the HTTP-hosted JMESPath preview implementation
-        // by debouncing input every second.
-
-        clearTimeout(timeout);
-        timeout = setTimeout(() => {
-
-            demoInputImpl(demo, (json, query, result) => {
-                // compute JMESPath expression using remote HTTP server
-                jp_preview(json, query.value)
-                    .then(searched => {
-                        const formatted = formatJson(searched);
-                        result.value = formatted;
-                    })
-                    .catch(_ => result.value = null);
-            })
-
-        }, 750);
-    })(event);
 }
 
 /**
