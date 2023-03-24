@@ -1,71 +1,71 @@
-name: Build
+name: 🧤 Build
 on:
-  workflow_dispatch:
-    inputs:
-      version:
-        description: Spec repo version tag
-        required: true
-        type: string
+  push:
+    branches:
+      - main
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
 
-    - name: Checkout site
+    ## checkout prerequisites
+
+    - name: 📚 Checkout site
       uses: actions/checkout@v3
 
-    - name: Checkout site-ghpages
-      uses: actions/checkout@v3
-      with:
-        ref: gh-pages
-        path: build/
-        token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
-
-    - name: Checkout spec
+    - name: 📚 Checkout spec
       uses: actions/checkout@v3
       with:
         repository: jmespath-community/jmespath.spec.git
         ref: ${{ github.event.inputs.version }}
         path: spec
-        fetch-depth: 0 # Required to include tags to generate VERSIONS
 
-    - name: Checkout wiki
+    - name: 📚 Checkout wiki
       uses: actions/checkout@v3
       with:
         repository: jmespath-community/jmespath.spec.wiki.git
         ref: master
         path: content/wiki
 
-    - name: Install ncat
+    ## install supporting software
+
+    - name: 📘 Install ncat
       run: 'sudo apt-get -y install ncat'
 
-    - name: Setup Hugo
+    - name: 📘 Setup Hugo
       uses: peaceiris/actions-hugo@v2
       with:
         hugo-version: 'latest'
         extended: true
 
-    - name: Dump tag message
-      run: "git -C spec tag -l --format='%(contents)' ${{ github.event.inputs.version }} > TAG_MESSAGE"
+    ## update home page
 
-    - name: Build
+    - name: 📃 Checkout site-ghpages
+      uses: actions/checkout@v3
+      with:
+        ref: gh-pages
+        path: build/
+        token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+
+    - name: 📃 Generate site pages
+      run: |
+        cd build/ && find . -maxdepth 1 -type f -exec git rm {} \; && cd ..
+
+        git -C build/ rm -r wiki/
+        git -C build/ checkout HEAD -- .nojekyll
+        git -C build/ checkout HEAD -- CNAME
+        git -C build/ checkout HEAD -- VERSIONS
+
+        [ -e content/wiki/_Sidebar.md ] && rm content/wiki/_Sidebar.md
+
+        .github/workflows/build.sh
       env:
         OUTPUTDIR: "build/${{ github.event.inputs.version }}"
-      run: .github/workflows/build.sh
 
-    - name: Update versions
-      run: "cut -d' ' -f1 build/VERSIONS > VERSIONS.old; git -C spec tag -l --format='%(refname:strip=2) %(creatordate:short)' | sort -V > build/VERSIONS"
+    ## publish home pages
 
-    - name: Remove old versions
-      run: "cut -d' ' -f1 VERSIONS | comm -23 ../VERSIONS.old - | xargs -l rm -rf"
-      working-directory: build/
-
-    - name: Update root
-      run: "cp -fR ./$(cut -d' ' -f1 VERSIONS | grep -P '^v|^2015' | tail -1 )/* ."
-      working-directory: build/
-
-    - name: Deploy
+    - name: ✉ Deploy
       if: github.ref == 'refs/heads/main'
       uses: EndBug/add-and-commit@v9.0.0
       with:
