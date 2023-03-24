@@ -68,6 +68,9 @@ jobs:
     - name: ✉ Deploy
       if: github.ref == 'refs/heads/main'
       run: |
+        git -C build/ config --local user.name Springcomp
+        git -C build/ config --local user.email springcomp@users.noreply.github.com
+
         git -C build/ add .
         git -C build/ commit -m "Commit from GitHub Actions (Build)"
         git -C build/ push origin gh-pages --force
