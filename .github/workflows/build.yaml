@@ -18,7 +18,7 @@ jobs:
       uses: actions/checkout@v3
       with:
         repository: jmespath-community/jmespath.spec.git
-        ref: ${{ github.event.inputs.version }}
+        ref: main
         path: spec
 
     - name: 📚 Checkout wiki
