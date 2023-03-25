@@ -361,7 +361,7 @@ operations, we could have taken the filtered list, selected the first
 element, and then extracted the value associated with the <code>general</code> key.
 That expression would be:</p><pre><code>people[?general.id==`100`] | [0].general
 </code></pre><p>Both versions are equally valid.</p><h1 id=wiki-using-functions>Using Functions</h1><p>JMESPath functions give you a lot of power and flexibility when working with JMESPath expressions.
-Below are some common expressions and functions used in JMESPath.</p><h2 id=wiki-sort_by>sort_by</h2><div class=demo onclick=demo(event)><input type=text class=query oninput=demoInput(event) value="sort_by(Contents, &Date)[*].{Key: Key, Size: Size}"></input>
+Below are some common expressions and functions used in JMESPath.</p><h2 id=wiki-sort_by>sort_by</h2><div class=demo onclick=demo(event)><input type=text class=query oninput=demoInput(event) value="sort_by(Contents, &amp;Date)[*].{Key: Key, Size: Size}"></input>
 <textarea class=data rows=10 oninput=demoInput(event)>{
   &#34;Contents&#34;: [
     {
@@ -418,7 +418,7 @@ second argument describes the key that should be used to sort the array.</p><p>T
 argument starts with <code>&</code>, which creates an expression type. Think of
 this conceptually as a reference to an expression that can be evaluated
 later. If you are familiar with lambda and anonymous functions,
-expression types are similar. The reason we use <code>&Date</code> instead of
+expression types are similar. The reason we use <code>&amp;Date</code> instead of
 <code>Date</code> is because if the expression is <code>Date</code>, it would be evaluated
 before calling the function, and given there&rsquo;s no <code>Date</code> key in the
 outer hash, the second argument would evaluate to <code>null</code>. Check out

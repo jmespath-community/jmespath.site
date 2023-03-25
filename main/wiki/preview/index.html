@@ -2,7 +2,7 @@
 <script src=https://jmespath.site/demo.340f4852640bc4f5848e413b1bb1a8effb133ca876334acd26cff69285728722.js integrity="sha256-NA9IUmQLxPWEjkE7G7Go7/sTPKh2M0rNJs/2koVyhyI="></script></head><body><header></header><main><h1 id=wiki-lexical-scopes>Lexical Scopes</h1><p>JMESPath Community introduces the <a href=https://github.com/jmespath-community/jmespath.spec/discussions/24 target=_blank rel=noopener><code>let()</code></a>
 function
 to supports nested lexical scopes.</p><pre tabindex=0><code>any let(object scope, expression-&gt;any expr)
-</code></pre><p>The first argument is a JSON object that introduces a new lexical scope.</p><p>The second argument is an <code>expression-type</code> that is evaluated against the current context – <em>i.e</em> the current result of JMESPath evaluation context, that can be referred to by the <code>@</code> node. The <code>expression-type</code> also has access to the stack of nested scopes.</p><p>Consider the following example:</p><div class="demo active" onclick=demo(event) class=active><input type=text class=query oninput=demoInput(event) value="let( {first_choice: first_choice}, &states[?name==first_choice].cities[] )"></input>
+</code></pre><p>The first argument is a JSON object that introduces a new lexical scope.</p><p>The second argument is an <code>expression-type</code> that is evaluated against the current context – <em>i.e</em> the current result of JMESPath evaluation context, that can be referred to by the <code>@</code> node. The <code>expression-type</code> also has access to the stack of nested scopes.</p><p>Consider the following example:</p><div class="demo active" onclick=demo(event) class=active><input type=text class=query oninput=demoInput(event) value="let( {first_choice: first_choice}, &amp;states[?name==first_choice].cities[] )"></input>
 <textarea class=data rows=10 oninput=demoInput(event)>{&#34;first_choice&#34;: &#34;WA&#34;,
  &#34;states&#34;: [
    {&#34;name&#34;: &#34;WA&#34;, &#34;cities&#34;: [&#34;Seattle&#34;, &#34;Bellevue&#34;, &#34;Olympia&#34;]},
@@ -54,7 +54,7 @@ resulting in <code>["John", "Germany", "Orange"]</code>.</p><p>The second array 
   &#34;bar&#34;: [&#34;h&#34;, &#34;e&#34;, &#34;l&#34;, &#34;l&#34;, &#34;o&#34;, &#34; &#34;, &#34;w&#34;, &#34;o&#34;, &#34;r&#34;, &#34;l&#34;, &#34;d&#34;, &#34;!&#34;]
 }</textarea>
 <textarea class=result readonly>&#34;Hell&#34;</textarea></div><p><strong>Note</strong>: <code>slice-expression</code> applied to JSON arrays result in a <em>projection</em>. Applying a <code>slice-expression</code> to a JSON string, however, produces a JSON string.</p><h2 id=wiki-groups>Groups</h2><p>Using the <a href=https://github.com/jmespath-community/jmespath.spec/discussions/96#discussion-4282156 target=_blank rel=noopener><code>group_by()</code> function</a>
-, you can group collection of objects with specific criteria:</p><div class="demo active" onclick=demo(event) class=active><input type=text class=query oninput=demoInput(event) value="group_by(items, &spec.nodeName)"></input>
+, you can group collection of objects with specific criteria:</p><div class="demo active" onclick=demo(event) class=active><input type=text class=query oninput=demoInput(event) value="group_by(items, &amp;spec.nodeName)"></input>
 <textarea class=data rows=10 oninput=demoInput(event)>{
   &#34;items&#34;: [
     { &#34;spec&#34;: { &#34;nodeName&#34;: &#34;node_01&#34;, &#34;other&#34;: &#34;values_01&#34; } },

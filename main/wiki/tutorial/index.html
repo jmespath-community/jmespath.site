@@ -431,7 +431,7 @@ keys, <code>Name</code> and <code>State</code>, we could use this:</p><div class
   ]
 }</textarea>
 <textarea class=result readonly>3</textarea></div><p><a href=https://jmespath.site/#functions target=_blank rel=noopener>Functions</a>
-can be used to transform and filter data in powerful ways.</p><p>Below are a few examples of functions.</p><p>This example prints the name of the oldest person in the <code>people</code> array:</p><div class=demo onclick=demo(event)><input type=text class=query oninput=demoInput(event) value="max_by(people, &age).name"></input>
+can be used to transform and filter data in powerful ways.</p><p>Below are a few examples of functions.</p><p>This example prints the name of the oldest person in the <code>people</code> array:</p><div class=demo onclick=demo(event)><input type=text class=query oninput=demoInput(event) value="max_by(people, &amp;age).name"></input>
 <textarea class=data rows=10 oninput=demoInput(event)>{
   &#34;people&#34;: [
     {
