@@ -13,8 +13,8 @@ This site is a static website based on the Hugo static site generator. The custo
 can be included in markdown, and an interactive JMESPath editor to demo examples. 
 See [themes/jmespath/README.md](themes/jmespath/README.md) for more information about how to use or edit the theme.
 
-The [main template](layouts/index.html) expects the `jmespath.spec.git` and `jmespath.spec.wiki.git` repos to be cloned into `content/spec`
-and `content/wiki` respectively before building. These are not tracked as git submodules as there is no specific commit
+The [main template](layouts/index.html) expects the `jmespath.spec.git` and `jmespath.spec.wiki.git` repos to be cloned into `spec/`
+and `content/wiki/` respectively before building. These are not tracked as git submodules as there is no specific commit
 to track within those repos for any build of this site. This template is responsible for rendering the entire page, calling out to partials provided by the theme.
 Hugo uses this template to render `content/_index.md`.
 
