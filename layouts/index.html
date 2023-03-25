@@ -12,15 +12,9 @@
             fetch("/VERSIONS").then(r=>r.text()).then(body=>{
                 const elem = document.getElementById("version")
                 const versions  = body.split("\n").filter(v=>v)
-                let foundfirst = false
                 for (const v of versions.reverse()) {
                     const tag = v.split(' ')[0]
-                    if (!foundfirst && (tag === "2015-09-05-9e8d0e3" || tag.startsWith('v'))) {
-                        elem.add(new Option(tag, `/`))
-                        foundfirst = true
-                    } else {
-                        elem.add(new Option(tag, `/${tag}`))
-                    }
+                    elem.add(new Option(tag, `/${tag}`))
                 }
                 elem.value = '/' + window.location.pathname.replace(/^\/*/, '').split('/', 1)[0]
             })
@@ -28,8 +22,8 @@
         if (document.readyState === 'complete') _init_version();
         else window.addEventListener("load", _init_version)
     </script>
-    <select id="version" oninput="window.location.href = `${event.currentTarget.value === '/' ? '' : event.currentTarget.value}/#specification`">
-        <option value="/main">Preview</option>
+    <select id="version" oninput="window.location.href = `${event.currentTarget.value}`">
+        <option value="/main">Latest</option>
     </select>
     <ol>
         <li><a href="#tutorial">Tutorial</a></li>
