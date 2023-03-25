@@ -49,19 +49,10 @@ jobs:
         token: ${{ secrets.GITHUB_TOKEN }}
 
     - name: 📃 Generate site pages
-      run: |
-        cd build/ && find . -maxdepth 1 -type f -exec git rm {} \; && cd ..
-
-        git -C build/ rm -r wiki/
-        git -C build/ checkout HEAD -- .nojekyll
-        git -C build/ checkout HEAD -- CNAME
-        git -C build/ checkout HEAD -- VERSIONS
-
-        [ -e content/wiki/_Sidebar.md ] && rm content/wiki/_Sidebar.md
-
-        .github/workflows/build.sh
+      run:
+        .github/workflows/gh-pages.sh "${{ github.ref_name }}"
       env:
-        OUTPUTDIR: "build/${{ github.event.inputs.version }}"
+        OUTPUTDIR: "build/${{ github.ref_name }}"
 
     ## publish home pages
 

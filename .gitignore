@@ -1,8 +1,8 @@
-content/spec/
 content/wiki/
 build/
 public/
 resources/
+spec/
 
 \.hugo_build\.lock
 
