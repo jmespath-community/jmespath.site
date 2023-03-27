@@ -10,7 +10,7 @@
 <link rel="stylesheet" href="{{ $democss.Permalink }}" integrity="{{ $democss.Data.Integrity }}">
 
 <!-- Scripts -->
-<script src="https://jmespath9d9a.blob.core.windows.net/public/jmespath.umd.min.js" integrity="sha512-fgC74Wjv+u96WdNqBcSWpiroEZ9DId/ATTXuuT9JJ8dRLQZH/InhppSZUq94sXo93U8vFkhPunod3gqwgyX3pA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script type="text/javascript" src="https://jmespath.blob.core.windows.net/lib/v1.1.0/jmespath.umd.min.js" integrity="sha384-t7065c25LTxBEFgHVZMrh6eQmEPcySOYMfPn75zeZV+lP7fwYtEELuFFgFc42rkZ" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
 {{ $demojs := resources.Get "demo.js" |  resources.Fingerprint }}
 <script src="{{ $demojs.Permalink}}" integrity="{{ $demojs.Data.Integrity }}"></script>
