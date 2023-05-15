@@ -1,4 +1,4 @@
-<!doctype html><html><head><meta charset=utf-8><title>JMESPath</title><link href=https://unpkg.com/sanitize.css rel=stylesheet><link rel=stylesheet href=https://jmespath.site/main.min.6e37f92ea129dfb8ac2ae07fbbcb6c818d56949be122a248177c60771215ada4.css integrity="sha256-bjf5LqEp37isKuB/u8tsgY1WlJvhIqJIF3xgdxIVraQ="><link rel=stylesheet href=https://jmespath.site/demo.min.1eff893cd3b6264167cd7b59682cf6bda28ccfad8a2ef8ab923d12aa5f6aaf6f.css integrity="sha256-Hv+JPNO2JkFnzXtZaCz2vaKMz62KLvirkj0Sql9qr28="><script type=text/javascript src=https://jmespath.blob.core.windows.net/lib/v1.1.1/jmespath.umd.min.js integrity=sha384-bcLP3bFr3ybbxlIU71k7lUPzxANVY6Z1dq4Ue3AuoNsiyBF00fCWwAHeOGDUloFs crossorigin=anonymous referrerpolicy=no-referrer></script>
+<!doctype html><html><head><meta charset=utf-8><title>JMESPath</title><link href=https://unpkg.com/sanitize.css rel=stylesheet><link rel=stylesheet href=https://jmespath.site/main.min.6e37f92ea129dfb8ac2ae07fbbcb6c818d56949be122a248177c60771215ada4.css integrity="sha256-bjf5LqEp37isKuB/u8tsgY1WlJvhIqJIF3xgdxIVraQ="><link rel=stylesheet href=https://jmespath.site/demo.min.1eff893cd3b6264167cd7b59682cf6bda28ccfad8a2ef8ab923d12aa5f6aaf6f.css integrity="sha256-Hv+JPNO2JkFnzXtZaCz2vaKMz62KLvirkj0Sql9qr28="><script type=text/javascript src=https://jmespath.blob.core.windows.net/lib/v1.1.3/jmespath.umd.min.js integrity=sha384-KzTAbBrAddBOX0gCk9cZNsYH1n5ot1g+hVqmZs1FNN7Qk2xs2orwcMVsnzvyP+8I crossorigin=anonymous referrerpolicy=no-referrer></script>
 <script src=https://jmespath.site/demo.340f4852640bc4f5848e413b1bb1a8effb133ca876334acd26cff69285728722.js integrity="sha256-NA9IUmQLxPWEjkE7G7Go7/sTPKh2M0rNJs/2koVyhyI="></script></head><body><header></header><main><h1 id=wiki-filters-and-multiselect-lists>Filters and Multiselect Lists</h1><p>One of the most common usage scenarios for JMESPath is being able to
 take a complex JSON document and simplify it down. The main features at
 work here are filters and multiselects. In this example below, we&rsquo;re
@@ -361,7 +361,7 @@ operations, we could have taken the filtered list, selected the first
 element, and then extracted the value associated with the <code>general</code> key.
 That expression would be:</p><pre><code>people[?general.id==`100`] | [0].general
 </code></pre><p>Both versions are equally valid.</p><h1 id=wiki-using-functions>Using Functions</h1><p>JMESPath functions give you a lot of power and flexibility when working with JMESPath expressions.
-Below are some common expressions and functions used in JMESPath.</p><h2 id=wiki-sort_by>sort_by</h2><div class=demo onclick=demo(event)><input type=text class=query oninput=demoInput(event) value="sort_by(Contents, &Date)[*].{Key: Key, Size: Size}"></input>
+Below are some common expressions and functions used in JMESPath.</p><h2 id=wiki-sort_by>sort_by</h2><div class=demo onclick=demo(event)><input type=text class=query oninput=demoInput(event) value="sort_by(Contents, &amp;Date)[*].{Key: Key, Size: Size}"></input>
 <textarea class=data rows=10 oninput=demoInput(event)>{
   &#34;Contents&#34;: [
     {
@@ -418,7 +418,7 @@ second argument describes the key that should be used to sort the array.</p><p>T
 argument starts with <code>&</code>, which creates an expression type. Think of
 this conceptually as a reference to an expression that can be evaluated
 later. If you are familiar with lambda and anonymous functions,
-expression types are similar. The reason we use <code>&Date</code> instead of
+expression types are similar. The reason we use <code>&amp;Date</code> instead of
 <code>Date</code> is because if the expression is <code>Date</code>, it would be evaluated
 before calling the function, and given there&rsquo;s no <code>Date</code> key in the
 outer hash, the second argument would evaluate to <code>null</code>. Check out
