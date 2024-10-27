@@ -1,14 +1,183 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>JMESPath</title><link>https://jmespath.site/</link><description>Recent content on JMESPath</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><atom:link href="https://jmespath.site/index.xml" rel="self" type="application/rss+xml"/><item><title/><link>https://jmespath.site/wiki/discarding-nulls/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://jmespath.site/wiki/discarding-nulls/</guid><description>Problem statement Discarding null values is a surprisingly frequently requested feature from JMESPath. The canonical answer is to use the merge() function and let external deserializers discard / ignore those values.
-That said, the items(), from_items() and zip() functions let you build primitives to achieve this.
-How to Given:
-{ &amp;#34;a&amp;#34;: 1, &amp;#34;b&amp;#34;: &amp;#34;&amp;#34;, &amp;#34;c&amp;#34;: null } The following expressions can be useful:
-from_items( items(@) [? @[1]!=`null` ] ) returns `` { &amp;ldquo;a&amp;rdquo;: 1, &amp;ldquo;b&amp;rdquo;: &amp;quot;&amp;quot; } from_items( items(@) [?</description></item><item><title/><link>https://jmespath.site/wiki/examples/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://jmespath.site/wiki/examples/</guid><description>Filters and Multiselect Lists One of the most common usage scenarios for JMESPath is being able to take a complex JSON document and simplify it down. The main features at work here are filters and multiselects. In this example below, we&amp;rsquo;re taking the array of people and, for any element with an age key whose value is greater than 20, we&amp;rsquo;re creating a sub list of the name and age values.</description></item><item><title/><link>https://jmespath.site/wiki/frequently-used-patterns/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://jmespath.site/wiki/frequently-used-patterns/</guid><description>Common requests To achieve this… …write JMESPath expression Description discard null from_items( items(@) [?@[1]] ) Discarding null or empty values x ? y : z (x &amp;amp;&amp;amp; y) || z Ternary operator How to Ternary operator Discarding null or empty values</description></item><item><title/><link>https://jmespath.site/wiki/home/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://jmespath.site/wiki/home/</guid><description>Welcome to the JMESPath wiki!
-Tutorial : Introduction to JMESPath and its features Examples : Examples of how to use basic functionality and syntax Frequently Used Patterns : common JMESPath challenges, tips and tricks. Libraries : Libraries implementing JMESPath for various programming languages</description></item><item><title/><link>https://jmespath.site/wiki/libraries/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://jmespath.site/wiki/libraries/</guid><description>The JMESPath specification is implemented in various languages. Each list below shows JMESPath libraries as well as the compliance level. The compliance level is based on which compliance tests the library can pass and as reported by their respective authors.
-Fully compliant: means compliant with respect to the original version of JMESPath. JMESPath Community: means compliant with respect to the new JMESPath Community specifications. Language Name Compliance Level C++ jmespath.cpp Fully compliant .</description></item><item><title/><link>https://jmespath.site/wiki/preview/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://jmespath.site/wiki/preview/</guid><description>Lexical Scopes JMESPath Community introduces the let-expression function to supports nested lexical scopes.
-let $foo = bar in {a: myvar, b: $foo} The first argument is a JSON object that introduces a new lexical scope.
-The second argument is an expression-type that is evaluated against the current context – i.e the current result of JMESPath evaluation context, that can be referred to by the @ node. The expression-type also has access to the stack of nested scopes.</description></item><item><title/><link>https://jmespath.site/wiki/ternary-operator/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://jmespath.site/wiki/ternary-operator/</guid><description>Problem statement Most languages have support for simple conditions:
-if x then y else z Popular languages also support combining a condition to return a particular value for assignment, using the ternary operator:
-x ? y : z Does JMESPath support the ternary operator? How to assign based on a condition? How to JMESPath supports logical operators with Or Expression || and And Expressions &amp;amp;&amp;amp;.
-JMESPath has a peculiar concept of falsy values.</description></item><item><title/><link>https://jmespath.site/wiki/tutorial/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://jmespath.site/wiki/tutorial/</guid><description>JMESPath is a query language for JSON. You can extract and transform elements from a JSON document. The examples below are interactive. You can change the JMESPath expressions and see the results update automatically.
-For each of these examples, the JMESPath expression is applied to the input JSON on the left, and the result of evaluating the JMESPath expression is shown in the JSON document on the right-hand side.
-Basic Expressions The simplest JMESPath expression is an identifier, which selects a key in an JSON object:</description></item></channel></rss>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>JMESPath</title><link>https://jmespath.site/</link><description>Recent content on JMESPath</description><generator>Hugo</generator><language>en-us</language><atom:link href="https://jmespath.site/index.xml" rel="self" type="application/rss+xml"/><item><title/><link>https://jmespath.site/wiki/discarding-nulls/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://jmespath.site/wiki/discarding-nulls/</guid><description>&lt;h2 id="wiki-problem-statement">Problem statement&lt;/h2>
+&lt;p>Discarding &lt;code>null&lt;/code> values is a surprisingly frequently requested feature from JMESPath.
+The canonical answer is to use the &lt;code>merge()&lt;/code> function and let external deserializers discard / ignore those values.&lt;/p>
+&lt;p>That said, the &lt;code>items()&lt;/code>, &lt;code>from_items()&lt;/code> and &lt;code>zip()&lt;/code> functions let you build primitives to achieve this.&lt;/p>
+&lt;h2 id="wiki-how-to">How to&lt;/h2>
+&lt;p>Given:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-json" data-lang="json">&lt;span style="display:flex;">&lt;span>{ &lt;span style="color:#062873;font-weight:bold">&amp;#34;a&amp;#34;&lt;/span>: &lt;span style="color:#40a070">1&lt;/span>, &lt;span style="color:#062873;font-weight:bold">&amp;#34;b&amp;#34;&lt;/span>: &lt;span style="color:#4070a0">&amp;#34;&amp;#34;&lt;/span>, &lt;span style="color:#062873;font-weight:bold">&amp;#34;c&amp;#34;&lt;/span>: &lt;span style="color:#007020;font-weight:bold">null&lt;/span> }
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The following expressions can be useful:&lt;/p>
+&lt;ul>
+&lt;li>&lt;code>from_items( items(@) [? @[1]!=`null` ] )&lt;/code> returns &lt;code>{ &amp;quot;a&amp;quot;: 1, &amp;quot;b&amp;quot;: &amp;quot;&amp;quot; }&lt;/code>&lt;/li>
+&lt;li>&lt;code>from_items( items(@) [? @[1]!='' ] )&lt;/code> returns &lt;code>{ &amp;quot;a&amp;quot;: 1, &amp;quot;c&amp;quot;: null }&lt;/code>&lt;/li>
+&lt;li>&lt;code>from_items( items(@) [? @[1] ] )&lt;/code> returns &lt;code>{ &amp;quot;a&amp;quot;: 1 }&lt;/code>&lt;/li>
+&lt;/ul>
+&lt;h3 id="wiki-more-complex-objects">More complex objects&lt;/h3>
+&lt;p>The previous primitives can be used in more complex scenarios where the discarded values are in nested object structures.&lt;/p></description></item><item><title/><link>https://jmespath.site/wiki/examples/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://jmespath.site/wiki/examples/</guid><description>&lt;h1 id="wiki-filters-and-multiselect-lists">Filters and Multiselect Lists&lt;/h1>
+&lt;p>One of the most common usage scenarios for JMESPath is being able to
+take a complex JSON document and simplify it down. The main features at
+work here are filters and multiselects. In this example below, we&amp;rsquo;re
+taking the array of people and, for any element with an age key whose
+value is greater than 20, we&amp;rsquo;re creating a sub list of the name and age
+values.&lt;/p></description></item><item><title/><link>https://jmespath.site/wiki/frequently-used-patterns/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://jmespath.site/wiki/frequently-used-patterns/</guid><description>&lt;h2 id="wiki-common-requests">Common requests&lt;/h2>
+&lt;table>
+ &lt;thead>
+ &lt;tr>
+ &lt;th>To achieve this…&lt;/th>
+ &lt;th>…write JMESPath expression&lt;/th>
+ &lt;th>Description&lt;/th>
+ &lt;/tr>
+ &lt;/thead>
+ &lt;tbody>
+ &lt;tr>
+ &lt;td>discard &lt;code>null&lt;/code>&lt;/td>
+ &lt;td>&lt;code>from_items( items(@) [?@[1]] )&lt;/code>&lt;/td>
+ &lt;td>&lt;a href="./discarding-nulls">Discarding null or empty values&lt;/a>
+&lt;/td>
+ &lt;/tr>
+ &lt;tr>
+ &lt;td>&lt;code>x ? y : z&lt;/code>&lt;/td>
+ &lt;td>&lt;code>(x &amp;amp;&amp;amp; y) || z&lt;/code>&lt;/td>
+ &lt;td>&lt;a href="./ternary-operator">Ternary operator&lt;/a>
+&lt;/td>
+ &lt;/tr>
+ &lt;/tbody>
+&lt;/table>
+&lt;h2 id="wiki-how-to">How to&lt;/h2>
+&lt;ul>
+&lt;li>&lt;a href="./ternary-operator">Ternary operator&lt;/a>
+&lt;/li>
+&lt;li>&lt;a href="./discarding-nulls">Discarding null or empty values&lt;/a>
+&lt;/li>
+&lt;/ul></description></item><item><title/><link>https://jmespath.site/wiki/home/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://jmespath.site/wiki/home/</guid><description>&lt;p>Welcome to the JMESPath wiki!&lt;/p>
+&lt;ul>
+&lt;li>&lt;a href="tutorial">Tutorial&lt;/a>
+: Introduction to JMESPath and its features&lt;/li>
+&lt;li>&lt;a href="examples">Examples&lt;/a>
+: Examples of how to use basic functionality and syntax&lt;/li>
+&lt;li>&lt;a href="frequently-used-patterns">Frequently Used Patterns&lt;/a>
+: common JMESPath challenges, tips and tricks.&lt;/li>
+&lt;li>&lt;a href="libraries">Libraries&lt;/a>
+: Libraries implementing JMESPath for various programming languages&lt;/li>
+&lt;/ul></description></item><item><title/><link>https://jmespath.site/wiki/libraries/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://jmespath.site/wiki/libraries/</guid><description>&lt;p>The JMESPath specification is implemented in various languages. Each list below shows JMESPath libraries as well as the
+compliance level. The compliance level is based on which compliance tests the library can pass and as reported by their respective authors.&lt;/p>
+&lt;ul>
+&lt;li>&lt;em>Fully compliant&lt;/em>: means compliant with respect to the &lt;a href="https://jmespath.org" target="_blank" rel="noopener">original version&lt;/a>
+ of JMESPath.&lt;/li>
+&lt;li>&lt;em>JMESPath Community&lt;/em>: means compliant with respect to the new JMESPath Community specifications.&lt;/li>
+&lt;/ul>
+&lt;table>
+ &lt;thead>
+ &lt;tr>
+ &lt;th>Language&lt;/th>
+ &lt;th>Name&lt;/th>
+ &lt;th>Compliance Level&lt;/th>
+ &lt;/tr>
+ &lt;/thead>
+ &lt;tbody>
+ &lt;tr>
+ &lt;td>C++&lt;/td>
+ &lt;td>&lt;a href="https://github.com/robertmrk/jmespath.cpp" target="_blank" rel="noopener">jmespath.cpp&lt;/a>
+&lt;/td>
+ &lt;td>Fully compliant&lt;/td>
+ &lt;/tr>
+ &lt;tr>
+ &lt;td>.NET&lt;/td>
+ &lt;td>&lt;a href="https://github.com/jdevillard/JmesPath.Net" target="_blank" rel="noopener">jmespath.net&lt;/a>
+&lt;/td>
+ &lt;td>&lt;img src="https://img.shields.io/badge/JMESPath%20Community-100%25-yellowgreen" alt="">&lt;/td>
+ &lt;/tr>
+ &lt;tr>
+ &lt;td>Elixir&lt;/td>
+ &lt;td>&lt;a href="https://github.com/stephan83/ex-jmes" target="_blank" rel="noopener">ex-jmes&lt;/a>
+&lt;/td>
+ &lt;td>Fully compliant&lt;/td>
+ &lt;/tr>
+ &lt;tr>
+ &lt;td>Go&lt;/td>
+ &lt;td>&lt;a href="https://github.com/jmespath-community/go-jmespath" target="_blank" rel="noopener">go-jmespath&lt;/a>
+&lt;/td>
+ &lt;td>&lt;img src="https://img.shields.io/badge/JMESPath%20Community-100%25-yellowgreen" alt="">&lt;/td>
+ &lt;/tr>
+ &lt;tr>
+ &lt;td>Java&lt;/td>
+ &lt;td>&lt;a href="https://github.com/burtcorp/jmespath-java" target="_blank" rel="noopener">jmespath-java&lt;/a>
+&lt;/td>
+ &lt;td>Fully compliant&lt;/td>
+ &lt;/tr>
+ &lt;tr>
+ &lt;td>Lua&lt;/td>
+ &lt;td>&lt;a href="https://github.com/jmespath/jmespath.lua" target="_blank" rel="noopener">jmespath.lua&lt;/a>
+&lt;/td>
+ &lt;td>Fully compliant&lt;/td>
+ &lt;/tr>
+ &lt;tr>
+ &lt;td>Javascript&lt;/td>
+ &lt;td>&lt;a href="https://github.com/jmespath/jmespath.js" target="_blank" rel="noopener">jmespath.js&lt;/a>
+&lt;/td>
+ &lt;td>Fully compliant&lt;/td>
+ &lt;/tr>
+ &lt;tr>
+ &lt;td>PHP&lt;/td>
+ &lt;td>&lt;a href="https://github.com/jmespath/jmespath.php" target="_blank" rel="noopener">jmespath.php&lt;/a>
+&lt;/td>
+ &lt;td>Fully compliant&lt;/td>
+ &lt;/tr>
+ &lt;tr>
+ &lt;td>Python&lt;/td>
+ &lt;td>&lt;a href="https://github.com/jmespath-community/python-jmespath" target="_blank" rel="noopener">python-jmespath&lt;/a>
+&lt;/td>
+ &lt;td>&lt;img src="https://img.shields.io/badge/JMESPath%20Community-100%25-yellowgreen" alt="">&lt;/td>
+ &lt;/tr>
+ &lt;tr>
+ &lt;td>Ruby&lt;/td>
+ &lt;td>&lt;a href="https://github.com/trevorrowe/jmespath.rb" target="_blank" rel="noopener">jmespath.rb&lt;/a>
+&lt;/td>
+ &lt;td>Fully compliant&lt;/td>
+ &lt;/tr>
+ &lt;tr>
+ &lt;td>Rust&lt;/td>
+ &lt;td>&lt;a href="https://github.com/mtdowling/jmespath.rs" target="_blank" rel="noopener">jmespath.rs&lt;/a>
+&lt;/td>
+ &lt;td>Fully compliant&lt;/td>
+ &lt;/tr>
+ &lt;tr>
+ &lt;td>TypeScript&lt;/td>
+ &lt;td>&lt;a href="https://github.com/jmespath-community/typescript-jmespath" target="_blank" rel="noopener">typescript-jmespath&lt;/a>
+&lt;/td>
+ &lt;td>&lt;img src="https://img.shields.io/badge/JMESPath%20Community-100%25-yellowgreen" alt="">&lt;/td>
+ &lt;/tr>
+ &lt;/tbody>
+&lt;/table>
+&lt;p>In addition to the JMESPath libraries above, there are a number of miscellaneous JMESPath tools.&lt;/p></description></item><item><title/><link>https://jmespath.site/wiki/preview/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://jmespath.site/wiki/preview/</guid><description>&lt;h1 id="wiki-lexical-scopes">Lexical Scopes&lt;/h1>
+&lt;p>JMESPath Community introduces the &lt;a href="https://github.com/jmespath-community/jmespath.spec/blob/main/jep-011a-lexical-scope.md" target="_blank" rel="noopener">&lt;code>let-expression&lt;/code>&lt;/a>
+ function
+to supports nested lexical scopes.&lt;/p>
+&lt;pre tabindex="0">&lt;code>let $foo = bar in {a: myvar, b: $foo}
+&lt;/code>&lt;/pre>&lt;p>The first argument is a JSON object that introduces a new lexical scope.&lt;/p>
+&lt;p>The second argument is an &lt;code>expression-type&lt;/code> that is evaluated against the current context – &lt;em>i.e&lt;/em> the current result of JMESPath evaluation context, that can be referred to by the &lt;code>@&lt;/code> node. The &lt;code>expression-type&lt;/code> also has access to the stack of nested scopes.&lt;/p></description></item><item><title/><link>https://jmespath.site/wiki/ternary-operator/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://jmespath.site/wiki/ternary-operator/</guid><description>&lt;h2 id="wiki-problem-statement">Problem statement&lt;/h2>
+&lt;p>Most languages have support for simple conditions:&lt;/p>
+&lt;pre tabindex="0">&lt;code>if x then y else z
+&lt;/code>&lt;/pre>&lt;p>Popular languages also support combining a condition
+to return a particular value for assignment, using
+the ternary operator:&lt;/p>
+&lt;pre tabindex="0">&lt;code>x ? y : z
+&lt;/code>&lt;/pre>&lt;ul>
+&lt;li>Does JMESPath support the ternary operator?&lt;/li>
+&lt;li>How to assign based on a condition?&lt;/li>
+&lt;/ul>
+&lt;h2 id="wiki-how-to">How to&lt;/h2>
+&lt;p>JMESPath supports logical operators with
+&lt;a href="https://jmespath.site/#spec-or-expressions" target="_blank" rel="noopener">Or Expression&lt;/a>
+ &lt;code>||&lt;/code> and
+&lt;a href="https://jmespath.site/#spec-and-expressions" target="_blank" rel="noopener">And Expressions&lt;/a>
+ &lt;code>&amp;amp;&amp;amp;&lt;/code>.&lt;/p>
+&lt;p>JMESPath has a peculiar concept of &lt;em>falsy&lt;/em> values.
+A &lt;em>falsy&lt;/em> value corresponds to any of the following
+conditions:&lt;/p></description></item><item><title/><link>https://jmespath.site/wiki/tutorial/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://jmespath.site/wiki/tutorial/</guid><description>&lt;p>JMESPath is a query language for JSON. You can extract and transform elements from a JSON
+document. The examples below are interactive. You can change the
+JMESPath expressions and see the results update automatically.&lt;/p>
+&lt;p>For each of these examples, the JMESPath expression is applied to the
+input JSON on the left, and the result of evaluating the JMESPath
+expression is shown in the JSON document on the right-hand side.&lt;/p>
+&lt;h1 id="wiki-basic-expressions">Basic Expressions&lt;/h1>
+&lt;p>The simplest JMESPath expression is an &lt;code>identifier&lt;/code>, which selects a key in an JSON object:&lt;/p></description></item></channel></rss>

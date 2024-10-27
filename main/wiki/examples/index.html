@@ -1,10 +1,10 @@
-<!doctype html><html><head><meta charset=utf-8><title>JMESPath</title><link href=https://unpkg.com/sanitize.css rel=stylesheet><link rel=stylesheet href=https://jmespath.site/main.min.6e37f92ea129dfb8ac2ae07fbbcb6c818d56949be122a248177c60771215ada4.css integrity="sha256-bjf5LqEp37isKuB/u8tsgY1WlJvhIqJIF3xgdxIVraQ="><link rel=stylesheet href=https://jmespath.site/demo.min.1eff893cd3b6264167cd7b59682cf6bda28ccfad8a2ef8ab923d12aa5f6aaf6f.css integrity="sha256-Hv+JPNO2JkFnzXtZaCz2vaKMz62KLvirkj0Sql9qr28="><script type=text/javascript src=https://jmespath.blob.core.windows.net/lib/v1.1.3/jmespath.umd.min.js integrity=sha384-KzTAbBrAddBOX0gCk9cZNsYH1n5ot1g+hVqmZs1FNN7Qk2xs2orwcMVsnzvyP+8I crossorigin=anonymous referrerpolicy=no-referrer></script>
-<script src=https://jmespath.site/demo.340f4852640bc4f5848e413b1bb1a8effb133ca876334acd26cff69285728722.js integrity="sha256-NA9IUmQLxPWEjkE7G7Go7/sTPKh2M0rNJs/2koVyhyI="></script></head><body><header></header><main><h1 id=wiki-filters-and-multiselect-lists>Filters and Multiselect Lists</h1><p>One of the most common usage scenarios for JMESPath is being able to
+<!doctype html><html><head><meta charset=utf-8><title>JMESPath</title>
+<link href=https://unpkg.com/sanitize.css rel=stylesheet><link rel=stylesheet href=https://jmespath.site/main.min.6e37f92ea129dfb8ac2ae07fbbcb6c818d56949be122a248177c60771215ada4.css integrity="sha256-bjf5LqEp37isKuB/u8tsgY1WlJvhIqJIF3xgdxIVraQ="><link rel=stylesheet href=https://jmespath.site/demo.min.1eff893cd3b6264167cd7b59682cf6bda28ccfad8a2ef8ab923d12aa5f6aaf6f.css integrity="sha256-Hv+JPNO2JkFnzXtZaCz2vaKMz62KLvirkj0Sql9qr28="><script type=text/javascript src=https://jmespath.blob.core.windows.net/lib/v1.1.4/jmespath.umd.min.js integrity=sha384-j6O40Ai4K7WYsLIPv7PVGVN4i8M+DP244ldsCxzfKQAUOuVR+S5ZR3mZr0z6OOGt crossorigin=anonymous referrerpolicy=no-referrer></script><script src=https://jmespath.site/demo.340f4852640bc4f5848e413b1bb1a8effb133ca876334acd26cff69285728722.js integrity="sha256-NA9IUmQLxPWEjkE7G7Go7/sTPKh2M0rNJs/2koVyhyI="></script></head><body><header></header><main><h1 id=wiki-filters-and-multiselect-lists>Filters and Multiselect Lists</h1><p>One of the most common usage scenarios for JMESPath is being able to
 take a complex JSON document and simplify it down. The main features at
 work here are filters and multiselects. In this example below, we&rsquo;re
 taking the array of people and, for any element with an age key whose
 value is greater than 20, we&rsquo;re creating a sub list of the name and age
-values.</p><div class=demo onclick=demo(event)><input type=text class=query oninput=demoInput(event) value="people[?age > [20]].[name, age]"></input>
+values.</p><div class=demo onclick=demo(event)><input type=text class=query oninput=demoInput(event) value="people[?age > `20`].[name, age]"></input>
 <textarea class=data rows=10 oninput=demoInput(event)>{
   &#34;people&#34;: [
     {
@@ -24,11 +24,17 @@ values.</p><div class=demo onclick=demo(event)><input type=text class=query onin
     }
   ]
 }</textarea>
-<textarea class=result readonly>[]</textarea></div><h1 id=wiki-filters-and-multiselect-hashes>Filters and Multiselect Hashes</h1><p>In the previous example we were taking an array of hashes, and
+<textarea class=result readonly>[
+  [
+    &#34;Fred&#34;, 25
+  ], [
+    &#34;George&#34;, 30
+  ]
+]</textarea></div><h1 id=wiki-filters-and-multiselect-hashes>Filters and Multiselect Hashes</h1><p>In the previous example we were taking an array of hashes, and
 simplifying down to an array of two element arrays containing a name and
 an age. We&rsquo;re also only including list elements where the <code>age</code> key is
 greater than <code>20</code>. If instead we want to create the same hash structure
-but only include the <code>age</code> and <code>name</code> key, we can instead say:</p><div class=demo onclick=demo(event)><input type=text class=query oninput=demoInput(event) value="people[?age > [20]].{name: name, age: age}"></input>
+but only include the <code>age</code> and <code>name</code> key, we can instead say:</p><div class=demo onclick=demo(event)><input type=text class=query oninput=demoInput(event) value="people[?age > `20`].{name: name, age: age}"></input>
 <textarea class=data rows=10 oninput=demoInput(event)>{
   &#34;people&#34;: [
     {
@@ -48,7 +54,13 @@ but only include the <code>age</code> and <code>name</code> key, we can instead 
     }
   ]
 }</textarea>
-<textarea class=result readonly>[]</textarea></div><p>The last half of the above expression contains key value pairs which
+<textarea class=result readonly>[
+  {
+    &#34;age&#34;: 25, &#34;name&#34;: &#34;Fred&#34;
+  }, {
+    &#34;age&#34;: 30, &#34;name&#34;: &#34;George&#34;
+  }
+]</textarea></div><p>The last half of the above expression contains key value pairs which
 have the general form <code>keyname: &lt;expression></code>. In the above expression
 we&rsquo;re just using a field as an expression, but they can be more
 advanced expressions. For example:</p><div class=demo onclick=demo(event)><input type=text class=query oninput=demoInput(event) value="people[*].{name: name, tags: tags[0]}"></input>
