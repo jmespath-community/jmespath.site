@@ -1,73 +1,65 @@
-JMESPath Site
-=================
+# Overview
 
-Project overview
-----------------
-JMESPath language documentation website built with Astro and Starlight. This repository contains the site source (app/) and GitHub Actions workflows to validate and deploy the site. The project migrated from Hugo to Astro; CI now runs format, lint, type checks, and builds before deployment to GitHub Pages at jmespath.site.
+The [jmespath.site](https://jmepath.site) source code.
 
-Prerequisites
--------------
-- Node.js v18+ (recommend 20.x)
+## Prerequisites
+
+- Node.js v18+ (recommend 22.x)
 - pnpm (latest) — install with: `npm install -g pnpm@latest`
 - Git (familiarity recommended)
 
-Quick start
------------
-1. Clone the repo:
+## Quick start
 
-   git clone https://github.com/jmespath-community/jmespath.site.git
-2. Enter the project app folder:
+Clone the repo, and install dependencies:
 
-   cd app/
-3. Install dependencies:
+```sh
+git clone https://github.com/jmespath-community/jmespath.site.git
 
-   pnpm install
-4. Start dev server:
+pnpm -C app/ install
+```
 
-   pnpm run dev
+Install required [`jp`](https://github.com/jmespath-community/jp/releases/download/v1.1.0/jp-linux-amd64) binary to pre-compute live examples:
 
-5. Open the site at http://localhost:3000 (Astro default)
+```sh
+curl -sSL https://github.com/jmespath-community/jp/releases/download/v1.1.0/jp-linux-amd64 -o app/jp
+chmod +x app/jp
+```
 
-Development commands
---------------------
-- pnpm run dev — Start dev server with hot reload
-- pnpm run build — Build static site (outputs to app/dist/)
-- pnpm run preview — Preview production build locally
-- pnpm run format — Check formatting (dry-run)
-- pnpm run format:write — Fix formatting
-- pnpm run lint — Run biome/linters
-- pnpm run lint:fix — Try to auto-fix lint issues
-- pnpm run check — Run Astro/TypeScript checks
-- pnpm run test — Run tests (if present)
+Build and run the local server:
 
-Project structure
------------------
-- app/ — Astro/Starlight project root
-  - app/src/ — Pages, components, and data
-  - app/public/ — Static assets
-  - app/dist/ — Production build output (generated)
-- .github/workflows/ — CI/CD workflows (build, gh-pages)
-- .agentic/ — agent artifacts and PRD
+```sh
+pnpm -C app/ build
+pnpm -C app run dev
+```
 
-Deployment
-----------
-Commits to main trigger the build workflow that runs format, lint, checks, and build. Successful main builds then deploy to the gh-pages branch and publish to jmespath.site. Manual triggers (workflow_dispatch) are available for emergencies.
+1. Open the site at <http://localhost:3000> (Astro default)
 
-Contributing
-------------
+## Development commands
+
+- `pnpm run dev` — Start dev server with hot reload
+- `pnpm run build` — Build static site (outputs to app/dist/)
+- `pnpm run preview` — Preview production build locally
+- `pnpm run format` — Check formatting (dry-run)
+- `pnpm run format`:write — Fix formatting
+- `pnpm run lint` — Run biome/linters
+- `pnpm run lint:fix` — Try to auto-fix lint issues
+- `pnpm run check` — Run Astro/TypeScript checks
+- `pnpm run test` — Run tests (if present)
+
+## Contributing
+
 1. Create a branch for your changes
 2. Run formatting and lint checks locally:
 
-   pnpm run format:write && pnpm run lint:fix && pnpm run check
-3. Commit and push; open a PR. CI will validate format, lint, and type checks before merging.
+```sh
+pnpm run format:write && pnpm run lint:fix && pnpm run check
+```
 
-Troubleshooting
----------------
+1. Commit and push; open a PR. CI will validate format, lint, and type checks before merging.
+
+## Troubleshooting
+
 - "pnpm: command not found" — install pnpm globally: `npm install -g pnpm@latest`
 - "Port 3000 already in use" — Astro will usually pick the next free port; check the terminal or specify PORT env var
 - "Build fails with TypeScript error" — run `pnpm run check` to inspect errors
 - Dependencies missing — run `pnpm install` from app/
-
-License
--------
-See the LICENSE file in the repository root for license details.

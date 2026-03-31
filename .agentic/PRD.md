@@ -10,7 +10,7 @@
 
 - [x] **US-001**: Update build workflow for Astro/Starlight (Model: `claude-sonnet-4.6`)
 - [x] **US-002**: Create GitHub Pages deployment workflow using Option B (Model: `claude-sonnet-4.6`)
-- [ ] **US-003**: Create comprehensive README documentation (Model: `gpt-5-mini`)
+- [x] **US-003**: Create comprehensive README documentation (Model: `gpt-5-mini`)
 - [ ] **US-004**: Archive or clean up old Hugo-specific scripts (Model: `claude-haiku-4.5`)
 
 ---
@@ -254,16 +254,16 @@ The README.md should include the following sections:
 **Acceptance Criteria**:
 
 - [x] README.md exists at repository root
-- [ ] Contains clear project overview and purpose
-- [ ] Lists Node.js and pnpm prerequisites
-- [ ] Includes quick-start section with clone and setup steps
-- [ ] Documents all major pnpm scripts with brief descriptions
-- [ ] Explains development workflow and best practices
-- [ ] Includes project structure overview
-- [ ] Explains automatic CI/CD and deployment process
-- [ ] Provides troubleshooting section for common issues
-- [ ] Uses clear formatting (headings, code blocks, lists)
-- [ ] Free of broken links and outdated information
+- [x] Contains clear project overview and purpose
+- [x] Lists Node.js and pnpm prerequisites
+- [x] Includes quick-start section with clone and setup steps
+- [x] Documents all major pnpm scripts with brief descriptions
+- [x] Explains development workflow and best practices
+- [x] Includes project structure overview
+- [x] Explains automatic CI/CD and deployment process
+- [x] Provides troubleshooting section for common issues
+- [x] Uses clear formatting (headings, code blocks, lists)
+- [x] Free of broken links and outdated information
 - [ ] Tested by following instructions from scratch (on different machine if possible)
 
 **Definition of Done**:
