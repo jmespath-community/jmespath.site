@@ -22,3 +22,8 @@
 - **Gotcha**: `.gitignore` contains `.github/` pattern — new workflow files must be force-added with `git add -f`
 - **Gotcha**: `.agentic/` is also in `.gitignore` — PRD.md updates need `git add -f` too
 - Node.js updated to 22 (matching build.yaml which was already updated to 22 in a previous manual commit)
+
+## US-003: Create Comprehensive README Documentation
+
+- Created README.md at repository root with project overview, prerequisites, quick start, development commands, project structure, deployment instructions, contributing notes, troubleshooting, and license reference
+- Verified commands reflect pnpm usage and app/ subdirectory

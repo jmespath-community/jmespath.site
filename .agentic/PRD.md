@@ -253,7 +253,7 @@ The README.md should include the following sections:
 
 **Acceptance Criteria**:
 
-- [ ] README.md exists at repository root
+- [x] README.md exists at repository root
 - [ ] Contains clear project overview and purpose
 - [ ] Lists Node.js and pnpm prerequisites
 - [ ] Includes quick-start section with clone and setup steps
