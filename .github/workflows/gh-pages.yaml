@@ -1,0 +1,87 @@
+name: 🚀 Deploy to GitHub Pages
+on:
+  workflow_run:
+    workflows: ["🧤 Build"]
+    branches:
+      - main
+    types:
+      - completed
+  workflow_dispatch: {}
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    if: ${{ github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success' }}
+    permissions:
+      contents: write
+    steps:
+      ## checkout & setup
+
+      - name: 📚 Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: 📦 Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - name: 🟢 Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+          cache-dependency-path: app/pnpm-lock.yaml
+
+      - name: 📥 Install dependencies
+        run: pnpm -C app/ install
+
+      - name: 🔧 Download jp binary
+        run: |
+          curl -sSL https://github.com/jmespath-community/jp/releases/download/v1.1.0/jp-linux-amd64 -o app/jp
+          chmod +x app/jp
+
+      ## build
+
+      - name: 🏗️ Build site
+        run: pnpm -C app/ run build
+
+      ## deploy
+
+      - name: 🚀 Deploy to gh-pages branch
+        run: |
+          git config user.name "Springcomp"
+          git config user.email "springcomp@users.noreply.github.com"
+
+          TEMP_DIR=$(mktemp -d)
+
+          # Add gh-pages branch as a worktree
+          git fetch origin gh-pages
+          git worktree add "$TEMP_DIR" gh-pages
+
+          # Preserve CNAME file content before clearing
+          CNAME_CONTENT=""
+          if [ -f "$TEMP_DIR/CNAME" ]; then
+            CNAME_CONTENT=$(cat "$TEMP_DIR/CNAME")
+          fi
+
+          # Remove all tracked files from the worktree
+          git -C "$TEMP_DIR" rm -rf .
+
+          # Copy fresh build artifacts
+          cp -r app/dist/. "$TEMP_DIR/"
+
+          # Restore CNAME to ensure custom domain remains active
+          if [ -n "$CNAME_CONTENT" ]; then
+            printf '%s' "$CNAME_CONTENT" > "$TEMP_DIR/CNAME"
+          fi
+
+          # Commit and push
+          git -C "$TEMP_DIR" add -A
+          if git -C "$TEMP_DIR" commit -m "🚀 Deploy: update site from $(git rev-parse --short HEAD)"; then
+            git -C "$TEMP_DIR" push origin gh-pages
+          else
+            echo "ℹ️ Nothing to deploy — site is already up-to-date"
+          fi

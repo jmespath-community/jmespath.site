@@ -1,0 +1,6531 @@
+[
+	{
+		"name": "abs",
+		"topic": "math",
+		"args": {
+			"required": [
+				{
+					"name": "value",
+					"type": ["number"],
+					"desc": "positive or negative number"
+				}
+			],
+			"optional": []
+		},
+		"returns": {
+			"type": "number",
+			"desc": "positive magnitude of input value"
+		},
+		"desc": "Returns the absolute value of the provided argument.  The signature indicates\nthat a number is returned, and that the input argument `$value` **must**\nresolve to a number, otherwise an `invalid-type` error is triggered.\n\nBelow is a worked example.  Given:\n\n```\n{\"foo\": -1, \"bar\": \"2\"}\n```\n\nEvaluating `abs(foo)` works as follows:\n\n\n1. Evaluate the input argument against the current data:\n\n```\nsearch(foo, {\"foo\": -1, \"bar\": \"2\"}) -> -1\n```\n\n\n2. Validate the type of the resolved argument.  In this case\n`-1` is of type `number` so it passes the type check.\n\n\n3. Call the function with the resolved argument:\n\n```\nabs(-1) -> 1\n```\n\n\n4. The value of `1` is the resolved value of the function expression\n`abs(foo)`.\n\nBelow is the same steps for evaluating `abs(bar)`:\n\n\n1. Evaluate the input argument against the current data:\n\n```\nsearch(bar, {\"foo\": -1, \"bar\": \"2\"}) -> \"2\"\n```\n\n\n2. Validate the type of the resolved argument.  In this case\n`\"2\"` is of type `string` so we immediately indicate that\nan `invalid-type` error occurred.\n\nAs a final example, here is the steps for evaluating `abs(to_number(bar))`:\n\n\n1. Evaluate the input argument against the current data:\n\n```\nsearch(to_number(bar), {\"foo\": -1, \"bar\": \"2\"})\n```\n\n\n2. In order to evaluate the above expression, we need to evaluate\n`to_number(bar)`:\n\n```\nsearch(bar, {\"foo\": -1, \"bar\": \"2\"}) -> \"2\"\n# Validate \"2\" passes the type check for to_number, which it does.\nto_number(\"2\") -> 2\n```\n\nNote that to_number is defined below.\n\n\n3. Now we can evaluate the original expression:\n\n```\nsearch(to_number(bar), {\"foo\": -1, \"bar\": \"2\"}) -> 2\n```\n\n\n4. Call the function with the final resolved value:\n\n```\nabs(2) -> 2\n```\n\n\n5. The value of `2` is the resolved value of the function expression\n`abs(to_number(bar))`.\n",
+		"examples": [
+			{
+				"key": "test0",
+				"context": null,
+				"args": [1],
+				"returns": 1
+			},
+			{
+				"key": "test1",
+				"context": null,
+				"args": [-1],
+				"returns": 1
+			},
+			{
+				"key": "test2",
+				"context": null,
+				"args": ["abc"],
+				"error": "invalid-type"
+			},
+			{
+				"key": "test3",
+				"context": {
+					"foo": -1,
+					"zero": 0,
+					"numbers": [-1, 3, 4, 5],
+					"array": [-1, 3, 4, 5, "a", "100"],
+					"strings": ["a", "b", "c"],
+					"decimals": [1.01, 1.2, -1.5],
+					"str": "Str",
+					"false": false,
+					"empty_list": [],
+					"empty_hash": {},
+					"objects": {
+						"foo": "bar",
+						"bar": "baz"
+					},
+					"null_key": null
+				},
+				"args": ["foo"],
+				"returns": 1
+			},
+			{
+				"key": "test4",
+				"context": {
+					"foo": -1,
+					"zero": 0,
+					"numbers": [-1, 3, 4, 5],
+					"array": [-1, 3, 4, 5, "a", "100"],
+					"strings": ["a", "b", "c"],
+					"decimals": [1.01, 1.2, -1.5],
+					"str": "Str",
+					"false": false,
+					"empty_list": [],
+					"empty_hash": {},
+					"objects": {
+						"foo": "bar",
+						"bar": "baz"
+					},
+					"null_key": null
+				},
+				"args": ["str"],
+				"error": "invalid-type"
+			},
+			{
+				"key": "test5",
+				"context": {
+					"foo": -1,
+					"zero": 0,
+					"numbers": [-1, 3, 4, 5],
+					"array": [-1, 3, 4, 5, "a", "100"],
+					"strings": ["a", "b", "c"],
+					"decimals": [1.01, 1.2, -1.5],
+					"str": "Str",
+					"false": false,
+					"empty_list": [],
+					"empty_hash": {},
+					"objects": {
+						"foo": "bar",
+						"bar": "baz"
+					},
+					"null_key": null
+				},
+				"args": ["array[1]"],
+				"returns": 3
+			},
+			{
+				"key": "test6",
+				"context": {
+					"foo": -1,
+					"zero": 0,
+					"numbers": [-1, 3, 4, 5],
+					"array": [-1, 3, 4, 5, "a", "100"],
+					"strings": ["a", "b", "c"],
+					"decimals": [1.01, 1.2, -1.5],
+					"str": "Str",
+					"false": false,
+					"empty_list": [],
+					"empty_hash": {},
+					"objects": {
+						"foo": "bar",
+						"bar": "baz"
+					},
+					"null_key": null
+				},
+				"args": [false],
+				"error": "invalid-type"
+			},
+			{
+				"key": "test7",
+				"context": {
+					"foo": -1,
+					"zero": 0,
+					"numbers": [-1, 3, 4, 5],
+					"array": [-1, 3, 4, 5, "a", "100"],
+					"strings": ["a", "b", "c"],
+					"decimals": [1.01, 1.2, -1.5],
+					"str": "Str",
+					"false": false,
+					"empty_list": [],
+					"empty_hash": {},
+					"objects": {
+						"foo": "bar",
+						"bar": "baz"
+					},
+					"null_key": null
+				},
+				"args": [-24],
+				"returns": 24
+			},
+			{
+				"key": "test8",
+				"context": {
+					"foo": -1,
+					"zero": 0,
+					"numbers": [-1, 3, 4, 5],
+					"array": [-1, 3, 4, 5, "a", "100"],
+					"strings": ["a", "b", "c"],
+					"decimals": [1.01, 1.2, -1.5],
+					"str": "Str",
+					"false": false,
+					"empty_list": [],
+					"empty_hash": {},
+					"objects": {
+						"foo": "bar",
+						"bar": "baz"
+					},
+					"null_key": null
+				},
+				"args": [1, 2],
+				"error": "invalid-arity"
+			},
+			{
+				"key": "test9",
+				"context": {
+					"foo": -1,
+					"zero": 0,
+					"numbers": [-1, 3, 4, 5],
+					"array": [-1, 3, 4, 5, "a", "100"],
+					"strings": ["a", "b", "c"],
+					"decimals": [1.01, 1.2, -1.5],
+					"str": "Str",
+					"false": false,
+					"empty_list": [],
+					"empty_hash": {},
+					"objects": {
+						"foo": "bar",
+						"bar": "baz"
+					},
+					"null_key": null
+				},
+				"args": [""],
+				"error": "invalid-arity"
+			}
+		]
+	},
+	{
+		"name": "avg",
+		"topic": "math",
+		"args": {
+			"required": [
+				{
+					"name": "elements",
+					"type": ["array[number]"],
+					"desc": "array of numbers to calculate average from"
+				}
+			],
+			"optional": []
+		},
+		"returns": {
+			"type": ["number", "null"],
+			"desc": "average value of passed elements"
+		},
+		"desc": "Returns the average of the elements in the provided array.\n\nAn empty array will produce a return value of null.\n",
+		"examples": [
+			{
+				"key": "test0",
+				"context": [10, 15, 20],
+				"args": ["@"],
+				"returns": 15
+			},
+			{
+				"key": "test1",
+				"context": [10, false, 20],
+				"args": ["@"],
+				"error": "invalid-type"
+			},
+			{
+				"key": "test2",
+				"context": [false],
+				"args": ["@"],
+				"error": "invalid-type"
+			},
+			{
+				"key": "test3",
+				"context": false,
+				"args": ["@"],
+				"error": "invalid-type"
+			},
+			{
+				"key": "test4",
+				"context": {
+					"foo": -1,
+					"zero": 0,
+					"numbers": [-1, 3, 4, 5],
+					"array": [-1, 3, 4, 5, "a", "100"],
+					"strings": ["a", "b", "c"],
+					"decimals": [1.01, 1.2, -1.5],
+					"str": "Str",
+					"false": false,
+					"empty_list": [],
+					"empty_hash": {},
+					"objects": {
+						"foo": "bar",
+						"bar": "baz"
+					},
+					"null_key": null
+				},
+				"args": ["numbers"],
+				"returns": 2.75
+			},
+			{
+				"key": "test5",
+				"context": {
+					"foo": -1,
+					"zero": 0,
+					"numbers": [-1, 3, 4, 5],
+					"array": [-1, 3, 4, 5, "a", "100"],
+					"strings": ["a", "b", "c"],
+					"decimals": [1.01, 1.2, -1.5],
+					"str": "Str",
+					"false": false,
+					"empty_list": [],
+					"empty_hash": {},
+					"objects": {
+						"foo": "bar",
+						"bar": "baz"
+					},
+					"null_key": null
+				},
+				"args": ["array"],
+				"error": "invalid-type"
+			},
+			{
+				"key": "test6",
+				"context": {
+					"foo": -1,
+					"zero": 0,
+					"numbers": [-1, 3, 4, 5],
+					"array": [-1, 3, 4, 5, "a", "100"],
+					"strings": ["a", "b", "c"],
+					"decimals": [1.01, 1.2, -1.5],
+					"str": "Str",
+					"false": false,
+					"empty_list": [],
+					"empty_hash": {},
+					"objects": {
+						"foo": "bar",
+						"bar": "baz"
+					},
+					"null_key": null
+				},
+				"args": ["abc"],
+				"error": "invalid-type"
+			},
+			{
+				"key": "test7",
+				"context": {
+					"foo": -1,
+					"zero": 0,
+					"numbers": [-1, 3, 4, 5],
+					"array": [-1, 3, 4, 5, "a", "100"],
+					"strings": ["a", "b", "c"],
+					"decimals": [1.01, 1.2, -1.5],
+					"str": "Str",
+					"false": false,
+					"empty_list": [],
+					"empty_hash": {},
+					"objects": {
+						"foo": "bar",
+						"bar": "baz"
+					},
+					"null_key": null
+				},
+				"args": ["foo"],
+				"error": "invalid-type"
+			},
+			{
+				"key": "test8",
+				"context": {
+					"foo": -1,
+					"zero": 0,
+					"numbers": [-1, 3, 4, 5],
+					"array": [-1, 3, 4, 5, "a", "100"],
+					"strings": ["a", "b", "c"],
+					"decimals": [1.01, 1.2, -1.5],
+					"str": "Str",
+					"false": false,
+					"empty_list": [],
+					"empty_hash": {},
+					"objects": {
+						"foo": "bar",
+						"bar": "baz"
+					},
+					"null_key": null
+				},
+				"args": ["@"],
+				"error": "invalid-type"
+			},
+			{
+				"key": "test9",
+				"context": {
+					"foo": -1,
+					"zero": 0,
+					"numbers": [-1, 3, 4, 5],
+					"array": [-1, 3, 4, 5, "a", "100"],
+					"strings": ["a", "b", "c"],
+					"decimals": [1.01, 1.2, -1.5],
+					"str": "Str",
+					"false": false,
+					"empty_list": [],
+					"empty_hash": {},
+					"objects": {
+						"foo": "bar",
+						"bar": "baz"
+					},
+					"null_key": null
+				},
+				"args": ["strings"],
+				"error": "invalid-type"
+			},
+			{
+				"key": "test10",
+				"context": {
+					"foo": -1,
+					"zero": 0,
+					"numbers": [-1, 3, 4, 5],
+					"array": [-1, 3, 4, 5, "a", "100"],
+					"strings": ["a", "b", "c"],
+					"decimals": [1.01, 1.2, -1.5],
+					"str": "Str",
+					"false": false,
+					"empty_list": [],
+					"empty_hash": {},
+					"objects": {
+						"foo": "bar",
+						"bar": "baz"
+					},
+					"null_key": null
+				},
+				"args": ["empty_list"],
+				"returns": null
+			}
+		]
+	},
+	{
+		"name": "ceil",
+		"topic": "math",
+		"args": {
+			"required": [
+				{
+					"name": "value",
+					"type": ["number"],
+					"desc": ""
+				}
+			],
+			"optional": []
+		},
+		"returns": {
+			"type": "number",
+			"desc": ""
+		},
+		"desc": "Returns the next highest integer value by rounding up if necessary.\n",
+		"examples": [
+			{
+				"key": "test0",
+				"context": null,
+				"args": [1.001],
+				"returns": 2
+			},
+			{
+				"key": "test1",
+				"context": null,
+				"args": [1.9],
+				"returns": 2
+			},
+			{
+				"key": "test2",
+				"context": null,
+				"args": [1],
+				"returns": 1
+			},
+			{
+				"key": "test3",
+				"context": null,
+				"args": ["abc"],
+				"error": "invalid-type"
+			},
+			{
+				"key": "test4",
+				"context": {
+					"foo": -1,
+					"zero": 0,
+					"numbers": [-1, 3, 4, 5],
+					"array": [-1, 3, 4, 5, "a", "100"],
+					"strings": ["a", "b", "c"],
+					"decimals": [1.01, 1.2, -1.5],
+					"str": "Str",
+					"false": false,
+					"empty_list": [],
+					"empty_hash": {},
+					"objects": {
+						"foo": "bar",
+						"bar": "baz"
+					},
+					"null_key": null
+				},
+				"args": [1.2],
+				"returns": 2
+			},
+			{
+				"key": "test5",
+				"context": {
+					"foo": -1,
+					"zero": 0,
+					"numbers": [-1, 3, 4, 5],
+					"array": [-1, 3, 4, 5, "a", "100"],
+					"strings": ["a", "b", "c"],
+					"decimals": [1.01, 1.2, -1.5],
+					"str": "Str",
+					"false": false,
+					"empty_list": [],
+					"empty_hash": {},
+					"objects": {
+						"foo": "bar",
+						"bar": "baz"
+					},
+					"null_key": null
+				},
+				"args": ["decimals[0]"],
+				"returns": 2
+			},
+			{
+				"key": "test6",
+				"context": {
+					"foo": -1,
+					"zero": 0,
+					"numbers": [-1, 3, 4, 5],
+					"array": [-1, 3, 4, 5, "a", "100"],
+					"strings": ["a", "b", "c"],
+					"decimals": [1.01, 1.2, -1.5],
+					"str": "Str",
+					"false": false,
+					"empty_list": [],
+					"empty_hash": {},
+					"objects": {
+						"foo": "bar",
+						"bar": "baz"
+					},
+					"null_key": null
+				},
+				"args": ["decimals[1]"],
+				"returns": 2
+			},
+			{
+				"key": "test7",
+				"context": {
+					"foo": -1,
+					"zero": 0,
+					"numbers": [-1, 3, 4, 5],
+					"array": [-1, 3, 4, 5, "a", "100"],
+					"strings": ["a", "b", "c"],
+					"decimals": [1.01, 1.2, -1.5],
+					"str": "Str",
+					"false": false,
+					"empty_list": [],
+					"empty_hash": {},
+					"objects": {
+						"foo": "bar",
+						"bar": "baz"
+					},
+					"null_key": null
+				},
+				"args": ["decimals[2]"],
+				"returns": -1
+			},
+			{
+				"key": "test8",
+				"context": {
+					"foo": -1,
+					"zero": 0,
+					"numbers": [-1, 3, 4, 5],
+					"array": [-1, 3, 4, 5, "a", "100"],
+					"strings": ["a", "b", "c"],
+					"decimals": [1.01, 1.2, -1.5],
+					"str": "Str",
+					"false": false,
+					"empty_list": [],
+					"empty_hash": {},
+					"objects": {
+						"foo": "bar",
+						"bar": "baz"
+					},
+					"null_key": null
+				},
+				"args": ["'string'"],
+				"error": "invalid-type"
+			}
+		]
+	},
+	{
+		"name": "contains",
+		"topic": "collections",
+		"args": {
+			"required": [
+				{
+					"name": "subject",
+					"type": ["array", "string"],
+					"desc": ""
+				},
+				{
+					"name": "search",
+					"type": ["any"],
+					"desc": ""
+				}
+			],
+			"optional": []
+		},
+		"returns": {
+			"type": "boolean",
+			"desc": ""
+		},
+		"desc": "Returns `true` if the given `$subject` contains the provided `$search`\nvalue.\n\nIf `$subject` is an array, this function returns true if one of the elements\nin the array is equal to the provided `$search` value.\n\nIf the provided `$subject` is a string, this function returns true if\nthere exists within the `$subject` string at least one occurrence\nof an equal `$search` string. If the `$search` value is not a string,\nthe function MUST return `false`.\n",
+		"examples": [
+			{
+				"key": "test0",
+				"context": null,
+				"args": ["'foobar'", "'foo'"],
+				"returns": true
+			},
+			{
+				"key": "test1",
+				"context": null,
+				"args": ["'foobar'", "'not'"],
+				"returns": false
+			},
+			{
+				"key": "test2",
+				"context": null,
+				"args": ["'foobar'", "'bar'"],
+				"returns": true
+			},
+			{
+				"key": "test3",
+				"context": null,
+				"args": [false, "'bar'"],
+				"error": "invalid-type"
+			},
+			{
+				"key": "test4",
+				"context": null,
+				"args": ["'foobar'", "'123'"],
+				"returns": false
+			},
+			{
+				"key": "test5",
+				"context": ["a", "b"],
+				"args": ["@", "'a'"],
+				"returns": true
+			},
+			{
+				"key": "test6",
+				"context": ["a"],
+				"args": ["@", "'a'"],
+				"returns": true
+			},
+			{
+				"key": "test7",
+				"context": ["a"],
+				"args": ["@", "'b'"],
+				"returns": false
+			},
+			{
+				"key": "test8",
+				"context": ["foo", "bar"],
+				"args": ["@", "'foo'"],
+				"returns": true
+			},
+			{
+				"key": "test9",
+				"context": ["foo", "bar"],
+				"args": ["@", "'b'"],
+				"returns": false
+			},
+			{
+				"key": "test10",
+				"context": {
+					"foo": -1,
+					"zero": 0,
+					"numbers": [-1, 3, 4, 5],
+					"array": [-1, 3, 4, 5, "a", "100"],
+					"strings": ["a", "b", "c"],
+					"decimals": [1.01, 1.2, -1.5],
+					"str": "Str",
+					"false": false,
+					"empty_list": [],
+					"empty_hash": {},
+					"objects": {
+						"foo": "bar",
+						"bar": "baz"
+					},
+					"null_key": null
+				},
+				"args": ["'abc'", "'a'"],
+				"returns": true
+			},
+			{
+				"key": "test11",
+				"context": {
+					"foo": -1,
+					"zero": 0,
+					"numbers": [-1, 3, 4, 5],
+					"array": [-1, 3, 4, 5, "a", "100"],
+					"strings": ["a", "b", "c"],
+					"decimals": [1.01, 1.2, -1.5],
+					"str": "Str",
+					"false": false,
+					"empty_list": [],
+					"empty_hash": {},
+					"objects": {
+						"foo": "bar",
+						"bar": "baz"
+					},
+					"null_key": null
+				},
+				"args": ["'abc'", "'d'"],
+				"returns": false
+			},
+			{
+				"key": "test12",
+				"context": {
+					"foo": -1,
+					"zero": 0,
+					"numbers": [-1, 3, 4, 5],
+					"array": [-1, 3, 4, 5, "a", "100"],
+					"strings": ["a", "b", "c"],
+					"decimals": [1.01, 1.2, -1.5],
+					"str": "Str",
+					"false": false,
+					"empty_list": [],
+					"empty_hash": {},
+					"objects": {
+						"foo": "bar",
+						"bar": "baz"
+					},
+					"null_key": null
+				},
+				"args": [false, "'d'"],
+				"error": "invalid-type"
+			},
+			{
+				"key": "test13",
+				"context": {
+					"foo": -1,
+					"zero": 0,
+					"numbers": [-1, 3, 4, 5],
+					"array": [-1, 3, 4, 5, "a", "100"],
+					"strings": ["a", "b", "c"],
+					"decimals": [1.01, 1.2, -1.5],
+					"str": "Str",
+					"false": false,
+					"empty_list": [],
+					"empty_hash": {},
+					"objects": {
+						"foo": "bar",
+						"bar": "baz"
+					},
+					"null_key": null
+				},
+				"args": ["strings", "'a'"],
+				"returns": true
+			},
+			{
+				"key": "test14",
+				"context": {
+					"foo": -1,
+					"zero": 0,
+					"numbers": [-1, 3, 4, 5],
+					"array": [-1, 3, 4, 5, "a", "100"],
+					"strings": ["a", "b", "c"],
+					"decimals": [1.01, 1.2, -1.5],
+					"str": "Str",
+					"false": false,
+					"empty_list": [],
+					"empty_hash": {},
+					"objects": {
+						"foo": "bar",
+						"bar": "baz"
+					},
+					"null_key": null
+				},
+				"args": ["decimals", 1.2],
+				"returns": true
+			},
+			{
+				"key": "test15",
+				"context": {
+					"foo": -1,
+					"zero": 0,
+					"numbers": [-1, 3, 4, 5],
+					"array": [-1, 3, 4, 5, "a", "100"],
+					"strings": ["a", "b", "c"],
+					"decimals": [1.01, 1.2, -1.5],
+					"str": "Str",
+					"false": false,
+					"empty_list": [],
+					"empty_hash": {},
+					"objects": {
+						"foo": "bar",
+						"bar": "baz"
+					},
+					"null_key": null
+				},
+				"args": ["decimals", false],
+				"returns": false
+			}
+		]
+	},
+	{
+		"name": "ends_with",
+		"topic": "strings",
+		"args": {
+			"required": [
+				{
+					"name": "subject",
+					"type": ["string"],
+					"desc": ""
+				},
+				{
+					"name": "prefix",
+					"type": ["string"],
+					"desc": ""
+				}
+			],
+			"optional": []
+		},
+		"returns": {
+			"type": "boolean",
+			"desc": ""
+		},
+		"desc": "Returns `true` if the `$subject` ends with the `$prefix`, otherwise this\nfunction returns `false`.\n",
+		"examples": [
+			{
+				"key": "test0",
+				"context": "foobarbaz",
+				"args": ["@", "'baz'"],
+				"returns": true
+			},
+			{
+				"key": "test1",
+				"context": "foobarbaz",
+				"args": ["@", "'foo'"],
+				"returns": false
+			},
+			{
+				"key": "test2",
+				"context": "foobarbaz",
+				"args": ["@", "'z'"],
+				"returns": true
+			},
+			{
+				"key": "test3",
+				"context": {
+					"foo": -1,
+					"zero": 0,
+					"numbers": [-1, 3, 4, 5],
+					"array": [-1, 3, 4, 5, "a", "100"],
+					"strings": ["a", "b", "c"],
+					"decimals": [1.01, 1.2, -1.5],
+					"str": "Str",
+					"false": false,
+					"empty_list": [],
+					"empty_hash": {},
+					"objects": {
+						"foo": "bar",
+						"bar": "baz"
+					},
+					"null_key": null
+				},
+				"args": ["str", "'r'"],
+				"returns": true
+			},
+			{
+				"key": "test4",
+				"context": {
+					"foo": -1,
+					"zero": 0,
+					"numbers": [-1, 3, 4, 5],
+					"array": [-1, 3, 4, 5, "a", "100"],
+					"strings": ["a", "b", "c"],
+					"decimals": [1.01, 1.2, -1.5],
+					"str": "Str",
+					"false": false,
+					"empty_list": [],
+					"empty_hash": {},
+					"objects": {
+						"foo": "bar",
+						"bar": "baz"
+					},
+					"null_key": null
+				},
+				"args": ["str", "'tr'"],
+				"returns": true
+			},
+			{
+				"key": "test5",
+				"context": {
+					"foo": -1,
+					"zero": 0,
+					"numbers": [-1, 3, 4, 5],
+					"array": [-1, 3, 4, 5, "a", "100"],
+					"strings": ["a", "b", "c"],
+					"decimals": [1.01, 1.2, -1.5],
+					"str": "Str",
+					"false": false,
+					"empty_list": [],
+					"empty_hash": {},
+					"objects": {
+						"foo": "bar",
+						"bar": "baz"
+					},
+					"null_key": null
+				},
+				"args": ["str", "'Str'"],
+				"returns": true
+			},
+			{
+				"key": "test6",
+				"context": {
+					"foo": -1,
+					"zero": 0,
+					"numbers": [-1, 3, 4, 5],
+					"array": [-1, 3, 4, 5, "a", "100"],
+					"strings": ["a", "b", "c"],
+					"decimals": [1.01, 1.2, -1.5],
+					"str": "Str",
+					"false": false,
+					"empty_list": [],
+					"empty_hash": {},
+					"objects": {
+						"foo": "bar",
+						"bar": "baz"
+					},
+					"null_key": null
+				},
+				"args": ["str", "'SStr'"],
+				"returns": false
+			},
+			{
+				"key": "test7",
+				"context": {
+					"foo": -1,
+					"zero": 0,
+					"numbers": [-1, 3, 4, 5],
+					"array": [-1, 3, 4, 5, "a", "100"],
+					"strings": ["a", "b", "c"],
+					"decimals": [1.01, 1.2, -1.5],
+					"str": "Str",
+					"false": false,
+					"empty_list": [],
+					"empty_hash": {},
+					"objects": {
+						"foo": "bar",
+						"bar": "baz"
+					},
+					"null_key": null
+				},
+				"args": ["str", "'foo'"],
+				"returns": false
+			},
+			{
+				"key": "test8",
+				"context": {
+					"foo": -1,
+					"zero": 0,
+					"numbers": [-1, 3, 4, 5],
+					"array": [-1, 3, 4, 5, "a", "100"],
+					"strings": ["a", "b", "c"],
+					"decimals": [1.01, 1.2, -1.5],
+					"str": "Str",
+					"false": false,
+					"empty_list": [],
+					"empty_hash": {},
+					"objects": {
+						"foo": "bar",
+						"bar": "baz"
+					},
+					"null_key": null
+				},
+				"args": ["str", 0],
+				"error": "invalid-type"
+			}
+		]
+	},
+	{
+		"name": "find_first",
+		"topic": "strings",
+		"args": {
+			"required": [
+				{
+					"name": "subject",
+					"type": ["string"],
+					"desc": "Subject string"
+				},
+				{
+					"name": "sub",
+					"type": ["string"],
+					"desc": "Substring"
+				}
+			],
+			"optional": [
+				{
+					"name": "start",
+					"type": ["number"],
+					"desc": "Position in the subject string where searching should start."
+				},
+				{
+					"name": "end",
+					"type": ["number"],
+					"desc": "Position in the subject string where searching should end."
+				}
+			]
+		},
+		"returns": {
+			"type": "number",
+			"desc": ""
+		},
+		"desc": "Given the `subject` string, `find_first()` returns the zero-based index of the first occurence where the `sub` substring appears in `subject` or `null` if it does not appear.\nIf either the `$subject` or the `$sub` argument is an empty string, `find_first()` return `null`.\n\nThe `start` and `end` parameters are optional and allow restricting the range within `subject` in which `sub` must be found.\n\n* If `start` is omitted, it defaults to `0` (which is the start of the `subject` string).\n* If `end` is omitted, it defaults to `length(subject) - 1` (which is is the end of the `subject` string).\n\nIf not omitted, the `$start` and `$end` arguments are expected to be integers. Othewise, an error MUST be raised.\n\nContrary to similar functions found in most popular programming languages, the `find_first()` function does not return `-1` if no occurrence of the substring can be found. Instead, it returns `null` for consistency reasons with how JMESPath behaves.\n",
+		"examples": [
+			{
+				"key": "find_first",
+				"context": "subject string",
+				"args": ["@", "string"],
+				"returns": 8
+			},
+			{
+				"key": "find_first_start",
+				"context": "subject string",
+				"args": ["@", "string", "`0`"],
+				"returns": 8
+			},
+			{
+				"key": "find_first_start_end",
+				"context": "subject string",
+				"args": ["@", "string", "`0`", "`14`"],
+				"returns": 8
+			},
+			{
+				"key": "find_first_start_before_end_after",
+				"context": "subject string",
+				"args": ["@", "string", "`-99`", "`100`"],
+				"returns": 8
+			},
+			{
+				"key": "find_first_ends_prematurely",
+				"context": "subject string",
+				"args": ["@", "string", "`0`", "`13`"],
+				"returns": null
+			},
+			{
+				"key": "find_first_start_boundary",
+				"context": "subject string",
+				"args": ["@", "string", "`8`"],
+				"returns": 8
+			},
+			{
+				"key": "find_first_incomplete",
+				"context": "subject string",
+				"args": ["@", "string", "`9`"],
+				"returns": null
+			},
+			{
+				"key": "find_first_first_occurrence",
+				"context": "subject string",
+				"args": ["@", "s", "`0`"],
+				"returns": 0
+			},
+			{
+				"key": "find_first_second_occurrence",
+				"context": "subject string",
+				"args": ["@", "s", "`1`"],
+				"returns": 8
+			}
+		]
+	},
+	{
+		"name": "find_last",
+		"topic": "strings",
+		"args": {
+			"required": [
+				{
+					"name": "subject",
+					"type": ["string"],
+					"desc": "Subject string"
+				},
+				{
+					"name": "sub",
+					"type": ["string"],
+					"desc": "Substring"
+				}
+			],
+			"optional": [
+				{
+					"name": "start",
+					"type": ["number"],
+					"desc": "Position in the subject string where searching should start."
+				},
+				{
+					"name": "end",
+					"type": ["number"],
+					"desc": "Position in the subject string where searching should end."
+				}
+			]
+		},
+		"returns": {
+			"type": "number",
+			"desc": ""
+		},
+		"desc": "Given the `$subject` string, `find_last()` returns the zero-based index of the last occurence where the `$sub` substring appears in `$subject` or `null` if it does not appear. If either the `$subject` or the `$sub` argument is an empty string, `find_last()` returns `null`.\n\nThe `$start` and `$end` parameters are optional and allow restricting to the slice `[$start:$end]` the range within `$subject` in which `$sub` must be found.\n\n- If `$start` is omitted, it defaults to `0` (which is the start of the `$subject` string).\n- If `$end` is omitted, it defaults to `length(subject)` (which is past the end of the `$subject` string).\n\nIf not omitted, the `$start` or `$end` arguments are expected to be integers. Otherwise, an error MUST be raised.\n\nContrary to similar functions found in most popular programming languages, the `find_last()` function does not return `-1` if no occurrence of the substring can be found. Instead, it returns `null` for consistency reasons with how JMESPath behaves.\n",
+		"examples": [
+			{
+				"key": "find_last",
+				"context": "subject string",
+				"args": ["@", "string"],
+				"returns": 8
+			},
+			{
+				"key": "find_last_start",
+				"context": "subject string",
+				"args": ["@", "string", "`8`"],
+				"returns": 8
+			},
+			{
+				"key": "find_last_start_ends_prematurely",
+				"context": "subject string",
+				"args": ["@", "string", "`8`", "`9`"],
+				"returns": null
+			},
+			{
+				"key": "find_last_start_after_occurrence",
+				"context": "subject string",
+				"args": ["@", "string", "`9`"],
+				"returns": null
+			},
+			{
+				"key": "find_last_second_occurrence",
+				"context": "subject string",
+				"args": ["@", "s", "`1`"],
+				"returns": 8
+			},
+			{
+				"key": "find_last_first_occurrence",
+				"context": "subject string",
+				"args": ["@", "s", "`0`", "`7`"],
+				"returns": 0
+			}
+		]
+	},
+	{
+		"name": "floor",
+		"topic": "math",
+		"args": {
+			"required": [
+				{
+					"name": "value",
+					"type": ["number"],
+					"desc": ""
+				}
+			],
+			"optional": []
+		},
+		"returns": {
+			"type": "number",
+			"desc": ""
+		},
+		"desc": "Returns the next lowest integer value by rounding down if necessary.\n",
+		"examples": [
+			{
+				"key": "test0",
+				"context": null,
+				"args": [1.001],
+				"returns": 1
+			},
+			{
+				"key": "test1",
+				"context": null,
+				"args": [1.9],
+				"returns": 1
+			},
+			{
+				"key": "test2",
+				"context": null,
+				"args": [1],
+				"returns": 1
+			},
+			{
+				"key": "test3",
+				"context": {
+					"foo": -1,
+					"zero": 0,
+					"numbers": [-1, 3, 4, 5],
+					"array": [-1, 3, 4, 5, "a", "100"],
+					"strings": ["a", "b", "c"],
+					"decimals": [1.01, 1.2, -1.5],
+					"str": "Str",
+					"false": false,
+					"empty_list": [],
+					"empty_hash": {},
+					"objects": {
+						"foo": "bar",
+						"bar": "baz"
+					},
+					"null_key": null
+				},
+				"args": [1.2],
+				"returns": 1
+			},
+			{
+				"key": "test4",
+				"context": {
+					"foo": -1,
+					"zero": 0,
+					"numbers": [-1, 3, 4, 5],
+					"array": [-1, 3, 4, 5, "a", "100"],
+					"strings": ["a", "b", "c"],
+					"decimals": [1.01, 1.2, -1.5],
+					"str": "Str",
+					"false": false,
+					"empty_list": [],
+					"empty_hash": {},
+					"objects": {
+						"foo": "bar",
+						"bar": "baz"
+					},
+					"null_key": null
+				},
+				"args": ["string"],
+				"error": "invalid-type"
+			},
+			{
+				"key": "test5",
+				"context": {
+					"foo": -1,
+					"zero": 0,
+					"numbers": [-1, 3, 4, 5],
+					"array": [-1, 3, 4, 5, "a", "100"],
+					"strings": ["a", "b", "c"],
+					"decimals": [1.01, 1.2, -1.5],
+					"str": "Str",
+					"false": false,
+					"empty_list": [],
+					"empty_hash": {},
+					"objects": {
+						"foo": "bar",
+						"bar": "baz"
+					},
+					"null_key": null
+				},
+				"args": ["decimals[0]"],
+				"returns": 1
+			},
+			{
+				"key": "test6",
+				"context": {
+					"foo": -1,
+					"zero": 0,
+					"numbers": [-1, 3, 4, 5],
+					"array": [-1, 3, 4, 5, "a", "100"],
+					"strings": ["a", "b", "c"],
+					"decimals": [1.01, 1.2, -1.5],
+					"str": "Str",
+					"false": false,
+					"empty_list": [],
+					"empty_hash": {},
+					"objects": {
+						"foo": "bar",
+						"bar": "baz"
+					},
+					"null_key": null
+				},
+				"args": ["foo"],
+				"returns": -1
+			},
+			{
+				"key": "test7",
+				"context": {
+					"foo": -1,
+					"zero": 0,
+					"numbers": [-1, 3, 4, 5],
+					"array": [-1, 3, 4, 5, "a", "100"],
+					"strings": ["a", "b", "c"],
+					"decimals": [1.01, 1.2, -1.5],
+					"str": "Str",
+					"false": false,
+					"empty_list": [],
+					"empty_hash": {},
+					"objects": {
+						"foo": "bar",
+						"bar": "baz"
+					},
+					"null_key": null
+				},
+				"args": ["str"],
+				"error": "invalid-type"
+			}
+		]
+	},
+	{
+		"name": "from_items",
+		"topic": "misc",
+		"args": {
+			"required": [
+				{
+					"name": "arg",
+					"type": ["array[any]"],
+					"desc": ""
+				}
+			],
+			"optional": []
+		},
+		"returns": {
+			"type": ["object"],
+			"desc": ""
+		},
+		"desc": "Returns an object from the provided array of key value pairs.\nThis function is the inversed of the `items()` function.\n",
+		"examples": [
+			{
+				"key": "from_items",
+				"context": [["one", 1], ["two", 2]],
+				"args": ["@"],
+				"returns": {
+					"one": 1,
+					"two": 2
+				}
+			},
+			{
+				"key": "from_items_duplicate_entry",
+				"context": [["one", 1], ["two", 2], ["one", 3]],
+				"args": ["@"],
+				"returns": {
+					"one": 3,
+					"two": 2
+				}
+			}
+		]
+	},
+	{
+		"name": "group_by",
+		"topic": "collections",
+		"args": {
+			"required": [
+				{
+					"name": "elements",
+					"type": ["array[object]"],
+					"desc": ""
+				},
+				{
+					"name": "expr",
+					"type": ["expression->string"],
+					"desc": ""
+				}
+			],
+			"optional": []
+		},
+		"returns": {
+			"type": "object",
+			"desc": ""
+		},
+		"desc": "Groups an array of objects `$elements` using an expression `$expr` as the group key.\nThe `$expr` expression is applied to each element in the array `$elements` and the \nresulting value is used as a group key.\n\nThe result is an object whose keys are the unique set of string keys and whose respective values are an array of objects array matching the group criteria.\n\nObjects that do not match the group criteria are discarded from the output.\nThis includes objects for which applying the `$expr` expression evaluates to `null`.\n\nIf the result of applying the `$expr` expression against the current array element\nresults in type other than `string` or `null`, an `invalid-type` error MUST be raised.\n",
+		"examples": [
+			{
+				"key": "group_by",
+				"context": {
+					"items": [
+						{
+							"spec": {
+								"nodeName": "node_01",
+								"other": "values_01"
+							}
+						},
+						{
+							"spec": {
+								"nodeName": "node_02",
+								"other": "values_02"
+							}
+						},
+						{
+							"spec": {
+								"nodeName": "node_03",
+								"other": "values_03"
+							}
+						},
+						{
+							"spec": {
+								"nodeName": "node_01",
+								"other": "values_04"
+							}
+						}
+					]
+				},
+				"args": ["items", "&nodeName"],
+				"returns": {
+					"nodeName": {
+						"node_01": [
+							{
+								"spec": {
+									"nodeName": "node_01",
+									"other": "values_01"
+								}
+							},
+							{
+								"spec": {
+									"nodeName": "node_01",
+									"other": "values_04"
+								}
+							}
+						],
+						"node_02": [
+							{
+								"spec": {
+									"nodeName": "node_02",
+									"other": "values_02"
+								}
+							}
+						],
+						"node_03": [
+							{
+								"spec": {
+									"nodeName": "node_03",
+									"other": "values_03"
+								}
+							}
+						]
+					}
+				}
+			},
+			{
+				"key": "group_by_discards_null_keyed_objects",
+				"context": {
+					"array": [
+						{
+							"b": true,
+							"name": "one"
+						},
+						{
+							"b": false,
+							"name": "two"
+						},
+						{
+							"b": false
+						}
+					]
+				},
+				"args": ["array", "&name"],
+				"returns": [
+					{
+						"age": 10,
+						"age_str": "10",
+						"bool": true,
+						"name": 3
+					},
+					{
+						"age": 20,
+						"age_str": "20",
+						"bool": true,
+						"name": "a",
+						"extra": "foo"
+					},
+					{
+						"age": 30,
+						"age_str": "30",
+						"bool": true,
+						"name": "c"
+					},
+					{
+						"age": 40,
+						"age_str": "40",
+						"bool": false,
+						"name": "b",
+						"extra": "bar"
+					},
+					{
+						"age": 50,
+						"age_str": "50",
+						"bool": false,
+						"name": "d"
+					}
+				]
+			},
+			{
+				"key": "group_by_errs_invalid_type",
+				"context": {
+					"array": [
+						{
+							"b": true,
+							"name": "one"
+						},
+						{
+							"b": false,
+							"name": "two"
+						},
+						{
+							"b": false
+						}
+					]
+				},
+				"args": ["array", "&b"],
+				"error": "invalid-type"
+			}
+		]
+	},
+	{
+		"name": "items",
+		"topic": "misc",
+		"args": {
+			"required": [
+				{
+					"name": "obj",
+					"type": ["object"],
+					"desc": ""
+				}
+			],
+			"optional": []
+		},
+		"returns": {
+			"type": ["array[any]"],
+			"desc": ""
+		},
+		"desc": "Returns an array of key-value pairs for the provided input object.\nEach pair is a 2-item array with the first item being the key and\nthe second item being the value.\nThis function is the inversed of the `from_items()` function.\n\nNote that because JSON hashes are inheritently unordered,\nthe key value pairs of the provided object $obj are inheritently unordered.\nImplementations are not required to return values in any specific order.\n",
+		"examples": [
+			{
+				"key": "basic",
+				"context": {
+					"a": "first",
+					"b": "second"
+				},
+				"args": ["@"],
+				"returns": [["a", "first"], ["b", "second"]]
+			}
+		]
+	},
+	{
+		"name": "join",
+		"topic": "collections",
+		"args": {
+			"required": [
+				{
+					"name": "glue",
+					"type": ["string"],
+					"desc": ""
+				},
+				{
+					"name": "stringsarray",
+					"type": ["array[string]"],
+					"desc": ""
+				}
+			],
+			"optional": []
+		},
+		"returns": {
+			"type": "string",
+			"desc": ""
+		},
+		"desc": "Returns all of the elements from the provided `$stringsarray` array joined\ntogether using the `$glue` argument as a separator between each.\n",
+		"examples": [
+			{
+				"key": "test0",
+				"context": ["a", "b"],
+				"args": ["', '", "@"],
+				"returns": "a, b"
+			},
+			{
+				"key": "test1",
+				"context": ["a", "b"],
+				"args": ["''", "@"],
+				"returns": "ab"
+			},
+			{
+				"key": "test2",
+				"context": ["a", false, "b"],
+				"args": ["', '", "@"],
+				"error": "invalid-type"
+			},
+			{
+				"key": "test3",
+				"context": [false],
+				"args": ["', '", "@"],
+				"error": "invalid-type"
+			},
+			{
+				"key": "test4",
+				"context": {
+					"foo": -1,
+					"zero": 0,
+					"numbers": [-1, 3, 4, 5],
+					"array": [-1, 3, 4, 5, "a", "100"],
+					"strings": ["a", "b", "c"],
+					"decimals": [1.01, 1.2, -1.5],
+					"str": "Str",
+					"false": false,
+					"empty_list": [],
+					"empty_hash": {},
+					"objects": {
+						"foo": "bar",
+						"bar": "baz"
+					},
+					"null_key": null
+				},
+				"args": ["', '", "strings"],
+				"returns": "a, b, c"
+			},
+			{
+				"key": "test5",
+				"context": {
+					"foo": -1,
+					"zero": 0,
+					"numbers": [-1, 3, 4, 5],
+					"array": [-1, 3, 4, 5, "a", "100"],
+					"strings": ["a", "b", "c"],
+					"decimals": [1.01, 1.2, -1.5],
+					"str": "Str",
+					"false": false,
+					"empty_list": [],
+					"empty_hash": {},
+					"objects": {
+						"foo": "bar",
+						"bar": "baz"
+					},
+					"null_key": null
+				},
+				"args": ["', '", ["'a'", "'b'"]],
+				"returns": "a, b"
+			},
+			{
+				"key": "test6",
+				"context": {
+					"foo": -1,
+					"zero": 0,
+					"numbers": [-1, 3, 4, 5],
+					"array": [-1, 3, 4, 5, "a", "100"],
+					"strings": ["a", "b", "c"],
+					"decimals": [1.01, 1.2, -1.5],
+					"str": "Str",
+					"false": false,
+					"empty_list": [],
+					"empty_hash": {},
+					"objects": {
+						"foo": "bar",
+						"bar": "baz"
+					},
+					"null_key": null
+				},
+				"args": ["', '", ["'a'", 0]],
+				"error": "invalid-type"
+			},
+			{
+				"key": "test7",
+				"context": {
+					"foo": -1,
+					"zero": 0,
+					"numbers": [-1, 3, 4, 5],
+					"array": [-1, 3, 4, 5, "a", "100"],
+					"strings": ["a", "b", "c"],
+					"decimals": [1.01, 1.2, -1.5],
+					"str": "Str",
+					"false": false,
+					"empty_list": [],
+					"empty_hash": {},
+					"objects": {
+						"foo": "bar",
+						"bar": "baz"
+					},
+					"null_key": null
+				},
+				"args": ["', '", "str"],
+				"error": "invalid-type"
+			},
+			{
+				"key": "test8",
+				"context": {
+					"foo": -1,
+					"zero": 0,
+					"numbers": [-1, 3, 4, 5],
+					"array": [-1, 3, 4, 5, "a", "100"],
+					"strings": ["a", "b", "c"],
+					"decimals": [1.01, 1.2, -1.5],
+					"str": "Str",
+					"false": false,
+					"empty_list": [],
+					"empty_hash": {},
+					"objects": {
+						"foo": "bar",
+						"bar": "baz"
+					},
+					"null_key": null
+				},
+				"args": ["'|'", "strings"],
+				"returns": "a|b|c"
+			},
+			{
+				"key": "test9",
+				"context": {
+					"foo": -1,
+					"zero": 0,
+					"numbers": [-1, 3, 4, 5],
+					"array": [-1, 3, 4, 5, "a", "100"],
+					"strings": ["a", "b", "c"],
+					"decimals": [1.01, 1.2, -1.5],
+					"str": "Str",
+					"false": false,
+					"empty_list": [],
+					"empty_hash": {},
+					"objects": {
+						"foo": "bar",
+						"bar": "baz"
+					},
+					"null_key": null
+				},
+				"args": [2, "strings"],
+				"error": "invalid-type"
+			},
+			{
+				"key": "test10",
+				"context": {
+					"foo": -1,
+					"zero": 0,
+					"numbers": [-1, 3, 4, 5],
+					"array": [-1, 3, 4, 5, "a", "100"],
+					"strings": ["a", "b", "c"],
+					"decimals": [1.01, 1.2, -1.5],
+					"str": "Str",
+					"false": false,
+					"empty_list": [],
+					"empty_hash": {},
+					"objects": {
+						"foo": "bar",
+						"bar": "baz"
+					},
+					"null_key": null
+				},
+				"args": ["'|'", "decimals"],
+				"error": "invalid-type"
+			},
+			{
+				"key": "test11",
+				"context": {
+					"foo": -1,
+					"zero": 0,
+					"numbers": [-1, 3, 4, 5],
+					"array": [-1, 3, 4, 5, "a", "100"],
+					"strings": ["a", "b", "c"],
+					"decimals": [1.01, 1.2, -1.5],
+					"str": "Str",
+					"false": false,
+					"empty_list": [],
+					"empty_hash": {},
+					"objects": {
+						"foo": "bar",
+						"bar": "baz"
+					},
+					"null_key": null
+				},
+				"args": ["'|'", "decimals[].to_string(@)"],
+				"returns": "1.01|1.2|-1.5"
+			},
+			{
+				"key": "test12",
+				"context": {
+					"foo": -1,
+					"zero": 0,
+					"numbers": [-1, 3, 4, 5],
+					"array": [-1, 3, 4, 5, "a", "100"],
+					"strings": ["a", "b", "c"],
+					"decimals": [1.01, 1.2, -1.5],
+					"str": "Str",
+					"false": false,
+					"empty_list": [],
+					"empty_hash": {},
+					"objects": {
+						"foo": "bar",
+						"bar": "baz"
+					},
+					"null_key": null
+				},
+				"args": ["'|'", "empty_list"],
+				"returns": ""
+			}
+		]
+	},
+	{
+		"name": "keys",
+		"topic": "collections",
+		"args": {
+			"required": [
+				{
+					"name": "obj",
+					"type": ["object"],
+					"desc": ""
+				}
+			],
+			"optional": []
+		},
+		"returns": {
+			"type": "array",
+			"desc": ""
+		},
+		"desc": "Returns an array containing the keys of the provided object.\nNote that because JSON hashes are inheritently unordered, the\nkeys associated with the provided object `obj` are inheritently\nunordered.  Implementations are not required to return keys in\nany specific order.\n",
+		"examples": [
+			{
+				"key": "test0",
+				"context": {
+					"foo": "baz",
+					"bar": "bam"
+				},
+				"args": ["@"],
+				"returns": ["foo", "bar"]
+			},
+			{
+				"key": "test1",
+				"context": {},
+				"args": ["@"],
+				"returns": []
+			},
+			{
+				"key": "test2",
+				"context": false,
+				"args": ["@"],
+				"error": "invalid-type"
+			},
+			{
+				"key": "test3",
+				"context": ["b", "a", "c"],
+				"args": ["@"],
+				"error": "invalid-type"
+			},
+			{
+				"key": "test4",
+				"context": {
+					"foo": -1,
+					"zero": 0,
+					"numbers": [-1, 3, 4, 5],
+					"array": [-1, 3, 4, 5, "a", "100"],
+					"strings": ["a", "b", "c"],
+					"decimals": [1.01, 1.2, -1.5],
+					"str": "Str",
+					"false": false,
+					"empty_list": [],
+					"empty_hash": {},
+					"objects": {
+						"foo": "bar",
+						"bar": "baz"
+					},
+					"null_key": null
+				},
+				"args": ["foo"],
+				"error": "invalid-type"
+			},
+			{
+				"key": "test5",
+				"context": {
+					"foo": -1,
+					"zero": 0,
+					"numbers": [-1, 3, 4, 5],
+					"array": [-1, 3, 4, 5, "a", "100"],
+					"strings": ["a", "b", "c"],
+					"decimals": [1.01, 1.2, -1.5],
+					"str": "Str",
+					"false": false,
+					"empty_list": [],
+					"empty_hash": {},
+					"objects": {
+						"foo": "bar",
+						"bar": "baz"
+					},
+					"null_key": null
+				},
+				"args": ["strings"],
+				"error": "invalid-type"
+			},
+			{
+				"key": "test6",
+				"context": {
+					"foo": -1,
+					"zero": 0,
+					"numbers": [-1, 3, 4, 5],
+					"array": [-1, 3, 4, 5, "a", "100"],
+					"strings": ["a", "b", "c"],
+					"decimals": [1.01, 1.2, -1.5],
+					"str": "Str",
+					"false": false,
+					"empty_list": [],
+					"empty_hash": {},
+					"objects": {
+						"foo": "bar",
+						"bar": "baz"
+					},
+					"null_key": null
+				},
+				"args": [false],
+				"error": "invalid-type"
+			},
+			{
+				"key": "test7",
+				"context": {
+					"foo": -1,
+					"zero": 0,
+					"numbers": [-1, 3, 4, 5],
+					"array": [-1, 3, 4, 5, "a", "100"],
+					"strings": ["a", "b", "c"],
+					"decimals": [1.01, 1.2, -1.5],
+					"str": "Str",
+					"false": false,
+					"empty_list": [],
+					"empty_hash": {},
+					"objects": {
+						"foo": "bar",
+						"bar": "baz"
+					},
+					"null_key": null
+				},
+				"args": ["empty_hash"],
+				"returns": []
+			}
+		]
+	},
+	{
+		"name": "length",
+		"topic": "collections",
+		"args": {
+			"required": [
+				{
+					"name": "subject",
+					"type": ["string", "array", "object"],
+					"desc": ""
+				}
+			],
+			"optional": []
+		},
+		"returns": {
+			"type": "number",
+			"desc": ""
+		},
+		"desc": "Returns the length of the given argument using the following types rules:\n\n\n1. string: returns the number of code points in the string\n\n\n2. array: returns the number of elements in the array\n\n\n3. object: returns the number of key-value pairs in the object\n",
+		"examples": [
+			{
+				"key": "test0",
+				"context": null,
+				"args": ["'abc'"],
+				"returns": 3
+			},
+			{
+				"key": "test1",
+				"context": [1, 2, 3, 4, 5, 6, 7],
+				"args": ["@"],
+				"returns": 7
+			},
+			{
+				"key": "test2",
+				"context": null,
+				"args": ["not_there"],
+				"error": "invalid-type"
+			},
+			{
+				"key": "test3",
+				"context": ["a", "b", "c"],
+				"args": ["@"],
+				"returns": 3
+			},
+			{
+				"key": "test4",
+				"context": [],
+				"args": ["@"],
+				"returns": 0
+			},
+			{
+				"key": "test5",
+				"context": {},
+				"args": ["@"],
+				"returns": 0
+			},
+			{
+				"key": "test6",
+				"context": {
+					"foo": "bar",
+					"baz": "bam"
+				},
+				"args": ["@"],
+				"returns": 2
+			},
+			{
+				"key": "test7",
+				"context": {
+					"foo": -1,
+					"zero": 0,
+					"numbers": [-1, 3, 4, 5],
+					"array": [-1, 3, 4, 5, "a", "100"],
+					"strings": ["a", "b", "c"],
+					"decimals": [1.01, 1.2, -1.5],
+					"str": "Str",
+					"false": false,
+					"empty_list": [],
+					"empty_hash": {},
+					"objects": {
+						"foo": "bar",
+						"bar": "baz"
+					},
+					"null_key": null
+				},
+				"args": ["'abc'"],
+				"returns": 3
+			},
+			{
+				"key": "test8",
+				"context": {
+					"foo": -1,
+					"zero": 0,
+					"numbers": [-1, 3, 4, 5],
+					"array": [-1, 3, 4, 5, "a", "100"],
+					"strings": ["a", "b", "c"],
+					"decimals": [1.01, 1.2, -1.5],
+					"str": "Str",
+					"false": false,
+					"empty_list": [],
+					"empty_hash": {},
+					"objects": {
+						"foo": "bar",
+						"bar": "baz"
+					},
+					"null_key": null
+				},
+				"args": ["'✓foo'"],
+				"returns": 4
+			},
+			{
+				"key": "test9",
+				"context": {
+					"foo": -1,
+					"zero": 0,
+					"numbers": [-1, 3, 4, 5],
+					"array": [-1, 3, 4, 5, "a", "100"],
+					"strings": ["a", "b", "c"],
+					"decimals": [1.01, 1.2, -1.5],
+					"str": "Str",
+					"false": false,
+					"empty_list": [],
+					"empty_hash": {},
+					"objects": {
+						"foo": "bar",
+						"bar": "baz"
+					},
+					"null_key": null
+				},
+				"args": ["''"],
+				"returns": 0
+			},
+			{
+				"key": "test10",
+				"context": {
+					"foo": -1,
+					"zero": 0,
+					"numbers": [-1, 3, 4, 5],
+					"array": [-1, 3, 4, 5, "a", "100"],
+					"strings": ["a", "b", "c"],
+					"decimals": [1.01, 1.2, -1.5],
+					"str": "Str",
+					"false": false,
+					"empty_list": [],
+					"empty_hash": {},
+					"objects": {
+						"foo": "bar",
+						"bar": "baz"
+					},
+					"null_key": null
+				},
+				"args": ["@"],
+				"returns": 12
+			},
+			{
+				"key": "test11",
+				"context": {
+					"foo": -1,
+					"zero": 0,
+					"numbers": [-1, 3, 4, 5],
+					"array": [-1, 3, 4, 5, "a", "100"],
+					"strings": ["a", "b", "c"],
+					"decimals": [1.01, 1.2, -1.5],
+					"str": "Str",
+					"false": false,
+					"empty_list": [],
+					"empty_hash": {},
+					"objects": {
+						"foo": "bar",
+						"bar": "baz"
+					},
+					"null_key": null
+				},
+				"args": ["strings[0]"],
+				"returns": 1
+			},
+			{
+				"key": "test12",
+				"context": {
+					"foo": -1,
+					"zero": 0,
+					"numbers": [-1, 3, 4, 5],
+					"array": [-1, 3, 4, 5, "a", "100"],
+					"strings": ["a", "b", "c"],
+					"decimals": [1.01, 1.2, -1.5],
+					"str": "Str",
+					"false": false,
+					"empty_list": [],
+					"empty_hash": {},
+					"objects": {
+						"foo": "bar",
+						"bar": "baz"
+					},
+					"null_key": null
+				},
+				"args": ["str"],
+				"returns": 3
+			},
+			{
+				"key": "test13",
+				"context": {
+					"foo": -1,
+					"zero": 0,
+					"numbers": [-1, 3, 4, 5],
+					"array": [-1, 3, 4, 5, "a", "100"],
+					"strings": ["a", "b", "c"],
+					"decimals": [1.01, 1.2, -1.5],
+					"str": "Str",
+					"false": false,
+					"empty_list": [],
+					"empty_hash": {},
+					"objects": {
+						"foo": "bar",
+						"bar": "baz"
+					},
+					"null_key": null
+				},
+				"args": ["array"],
+				"returns": 6
+			},
+			{
+				"key": "test14",
+				"context": {
+					"foo": -1,
+					"zero": 0,
+					"numbers": [-1, 3, 4, 5],
+					"array": [-1, 3, 4, 5, "a", "100"],
+					"strings": ["a", "b", "c"],
+					"decimals": [1.01, 1.2, -1.5],
+					"str": "Str",
+					"false": false,
+					"empty_list": [],
+					"empty_hash": {},
+					"objects": {
+						"foo": "bar",
+						"bar": "baz"
+					},
+					"null_key": null
+				},
+				"args": ["objects"],
+				"returns": 2
+			},
+			{
+				"key": "test15",
+				"context": {
+					"foo": -1,
+					"zero": 0,
+					"numbers": [-1, 3, 4, 5],
+					"array": [-1, 3, 4, 5, "a", "100"],
+					"strings": ["a", "b", "c"],
+					"decimals": [1.01, 1.2, -1.5],
+					"str": "Str",
+					"false": false,
+					"empty_list": [],
+					"empty_hash": {},
+					"objects": {
+						"foo": "bar",
+						"bar": "baz"
+					},
+					"null_key": null
+				},
+				"args": [false],
+				"error": "invalid-type"
+			},
+			{
+				"key": "test16",
+				"context": {
+					"foo": -1,
+					"zero": 0,
+					"numbers": [-1, 3, 4, 5],
+					"array": [-1, 3, 4, 5, "a", "100"],
+					"strings": ["a", "b", "c"],
+					"decimals": [1.01, 1.2, -1.5],
+					"str": "Str",
+					"false": false,
+					"empty_list": [],
+					"empty_hash": {},
+					"objects": {
+						"foo": "bar",
+						"bar": "baz"
+					},
+					"null_key": null
+				},
+				"args": ["foo"],
+				"error": "invalid-type"
+			}
+		]
+	},
+	{
+		"name": "lower",
+		"topic": "strings",
+		"args": {
+			"required": [
+				{
+					"name": "subject",
+					"type": ["string"],
+					"desc": "Subject string"
+				}
+			]
+		},
+		"returns": {
+			"type": "string",
+			"desc": ""
+		},
+		"desc": "Returns the lowercase subject string.\n",
+		"examples": [
+			{
+				"key": "lower",
+				"context": "STRING",
+				"args": ["@"],
+				"returns": "string"
+			}
+		]
+	},
+	{
+		"name": "map",
+		"topic": "collections",
+		"args": {
+			"required": [
+				{
+					"name": "expr",
+					"type": ["expression"],
+					"desc": ""
+				},
+				{
+					"name": "elements",
+					"type": ["array[any]"],
+					"desc": ""
+				}
+			],
+			"optional": []
+		},
+		"returns": {
+			"type": "array[any]",
+			"desc": ""
+		},
+		"desc": "Apply the `expr` to every element in the `elements` array\nand return the array of results.  An `elements` of length\nN will produce a return array of length N.\n\nUnlike a projection, (`[\\*].bar`), `map()` will include\nthe result of applying the `expr` for every element in the\n`elements` array, even if the result if `null`.\n",
+		"examples": [
+			{
+				"key": "test0",
+				"context": {
+					"array": [
+						{
+							"foo": "a"
+						},
+						{
+							"foo": "b"
+						},
+						{},
+						[],
+						{
+							"foo": "f"
+						}
+					]
+				},
+				"args": ["&foo", "array"],
+				"returns": ["a", "b", null, null, "f"]
+			},
+			{
+				"key": "test1",
+				"context": [[1, 2, 3, [4]], [5, 6, 7, [8, 9]]],
+				"args": ["&[]", "@"],
+				"returns": [[1, 2, 3, 4], [5, 6, 7, 8, 9]]
+			},
+			{
+				"key": "test2",
+				"context": {
+					"people": [
+						{
+							"a": 10,
+							"b": 1,
+							"c": "z"
+						},
+						{
+							"a": 10,
+							"b": 2,
+							"c": null
+						},
+						{
+							"a": 10,
+							"b": 3
+						},
+						{
+							"a": 10,
+							"b": 4,
+							"c": "z"
+						},
+						{
+							"a": 10,
+							"b": 5,
+							"c": null
+						},
+						{
+							"a": 10,
+							"b": 6
+						},
+						{
+							"a": 10,
+							"b": 7,
+							"c": "z"
+						},
+						{
+							"a": 10,
+							"b": 8,
+							"c": null
+						},
+						{
+							"a": 10,
+							"b": 9
+						}
+					],
+					"empty": []
+				},
+				"args": ["&a", "people"],
+				"returns": [10, 10, 10, 10, 10, 10, 10, 10, 10]
+			},
+			{
+				"key": "test3",
+				"context": {
+					"people": [
+						{
+							"a": 10,
+							"b": 1,
+							"c": "z"
+						},
+						{
+							"a": 10,
+							"b": 2,
+							"c": null
+						},
+						{
+							"a": 10,
+							"b": 3
+						},
+						{
+							"a": 10,
+							"b": 4,
+							"c": "z"
+						},
+						{
+							"a": 10,
+							"b": 5,
+							"c": null
+						},
+						{
+							"a": 10,
+							"b": 6
+						},
+						{
+							"a": 10,
+							"b": 7,
+							"c": "z"
+						},
+						{
+							"a": 10,
+							"b": 8,
+							"c": null
+						},
+						{
+							"a": 10,
+							"b": 9
+						}
+					],
+					"empty": []
+				},
+				"args": ["&c", "people"],
+				"returns": ["z", null, null, "z", null, null, "z", null, null]
+			},
+			{
+				"key": "test4",
+				"context": {
+					"people": [
+						{
+							"a": 10,
+							"b": 1,
+							"c": "z"
+						},
+						{
+							"a": 10,
+							"b": 2,
+							"c": null
+						},
+						{
+							"a": 10,
+							"b": 3
+						},
+						{
+							"a": 10,
+							"b": 4,
+							"c": "z"
+						},
+						{
+							"a": 10,
+							"b": 5,
+							"c": null
+						},
+						{
+							"a": 10,
+							"b": 6
+						},
+						{
+							"a": 10,
+							"b": 7,
+							"c": "z"
+						},
+						{
+							"a": 10,
+							"b": 8,
+							"c": null
+						},
+						{
+							"a": 10,
+							"b": 9
+						}
+					],
+					"empty": []
+				},
+				"args": ["&a", "badkey"],
+				"error": "invalid-type"
+			},
+			{
+				"key": "test5",
+				"context": {
+					"people": [
+						{
+							"a": 10,
+							"b": 1,
+							"c": "z"
+						},
+						{
+							"a": 10,
+							"b": 2,
+							"c": null
+						},
+						{
+							"a": 10,
+							"b": 3
+						},
+						{
+							"a": 10,
+							"b": 4,
+							"c": "z"
+						},
+						{
+							"a": 10,
+							"b": 5,
+							"c": null
+						},
+						{
+							"a": 10,
+							"b": 6
+						},
+						{
+							"a": 10,
+							"b": 7,
+							"c": "z"
+						},
+						{
+							"a": 10,
+							"b": 8,
+							"c": null
+						},
+						{
+							"a": 10,
+							"b": 9
+						}
+					],
+					"empty": []
+				},
+				"args": ["&foo", "empty"],
+				"returns": []
+			},
+			{
+				"key": "test6",
+				"context": {
+					"array": [
+						{
+							"foo": {
+								"bar": "yes1"
+							}
+						},
+						{
+							"foo": {
+								"bar": "yes2"
+							}
+						},
+						{
+							"foo1": {
+								"bar": "no"
+							}
+						}
+					]
+				},
+				"args": ["&foo.bar", "array"],
+				"returns": ["yes1", "yes2", null]
+			},
+			{
+				"key": "test7",
+				"context": {
+					"array": [
+						{
+							"foo": {
+								"bar": "yes1"
+							}
+						},
+						{
+							"foo": {
+								"bar": "yes2"
+							}
+						},
+						{
+							"foo1": {
+								"bar": "no"
+							}
+						}
+					]
+				},
+				"args": ["&foo1.bar", "array"],
+				"returns": [null, null, "no"]
+			},
+			{
+				"key": "test8",
+				"context": {
+					"array": [
+						{
+							"foo": {
+								"bar": "yes1"
+							}
+						},
+						{
+							"foo": {
+								"bar": "yes2"
+							}
+						},
+						{
+							"foo1": {
+								"bar": "no"
+							}
+						}
+					]
+				},
+				"args": ["&foo.bar.baz", "array"],
+				"returns": [null, null, null]
+			},
+			{
+				"key": "test9",
+				"context": {
+					"array": [[1, 2, 3, [4]], [5, 6, 7, [8, 9]]]
+				},
+				"args": ["&[]", "array"],
+				"returns": [[1, 2, 3, 4], [5, 6, 7, 8, 9]]
+			}
+		]
+	},
+	{
+		"name": "max",
+		"topic": "math",
+		"args": {
+			"required": [
+				{
+					"name": "collection",
+					"type": ["array[number]", "array[string]"],
+					"desc": ""
+				}
+			],
+			"optional": []
+		},
+		"returns": {
+			"type": "number",
+			"desc": ""
+		},
+		"desc": "Returns the highest found number in the provided array argument.\n\nAn empty array will produce a return value of null.\n",
+		"examples": [
+			{
+				"key": "test0",
+				"context": [10, 15],
+				"args": ["@"],
+				"returns": 15
+			},
+			{
+				"key": "test1",
+				"context": ["a", "b"],
+				"args": ["@"],
+				"returns": "b"
+			},
+			{
+				"key": "test2",
+				"context": ["a", 2, "b"],
+				"args": ["@"],
+				"error": "invalid-type"
+			},
+			{
+				"key": "test3",
+				"context": [10, false, 20],
+				"args": ["@"],
+				"error": "invalid-type"
+			},
+			{
+				"key": "test4",
+				"context": {
+					"foo": -1,
+					"zero": 0,
+					"numbers": [-1, 3, 4, 5],
+					"array": [-1, 3, 4, 5, "a", "100"],
+					"strings": ["a", "b", "c"],
+					"decimals": [1.01, 1.2, -1.5],
+					"str": "Str",
+					"false": false,
+					"empty_list": [],
+					"empty_hash": {},
+					"objects": {
+						"foo": "bar",
+						"bar": "baz"
+					},
+					"null_key": null
+				},
+				"args": ["numbers"],
+				"returns": 5
+			},
+			{
+				"key": "test5",
+				"context": {
+					"foo": -1,
+					"zero": 0,
+					"numbers": [-1, 3, 4, 5],
+					"array": [-1, 3, 4, 5, "a", "100"],
+					"strings": ["a", "b", "c"],
+					"decimals": [1.01, 1.2, -1.5],
+					"str": "Str",
+					"false": false,
+					"empty_list": [],
+					"empty_hash": {},
+					"objects": {
+						"foo": "bar",
+						"bar": "baz"
+					},
+					"null_key": null
+				},
+				"args": ["decimals"],
+				"returns": 1.2
+			},
+			{
+				"key": "test6",
+				"context": {
+					"foo": -1,
+					"zero": 0,
+					"numbers": [-1, 3, 4, 5],
+					"array": [-1, 3, 4, 5, "a", "100"],
+					"strings": ["a", "b", "c"],
+					"decimals": [1.01, 1.2, -1.5],
+					"str": "Str",
+					"false": false,
+					"empty_list": [],
+					"empty_hash": {},
+					"objects": {
+						"foo": "bar",
+						"bar": "baz"
+					},
+					"null_key": null
+				},
+				"args": ["strings"],
+				"returns": "c"
+			},
+			{
+				"key": "test7",
+				"context": {
+					"foo": -1,
+					"zero": 0,
+					"numbers": [-1, 3, 4, 5],
+					"array": [-1, 3, 4, 5, "a", "100"],
+					"strings": ["a", "b", "c"],
+					"decimals": [1.01, 1.2, -1.5],
+					"str": "Str",
+					"false": false,
+					"empty_list": [],
+					"empty_hash": {},
+					"objects": {
+						"foo": "bar",
+						"bar": "baz"
+					},
+					"null_key": null
+				},
+				"args": ["abc"],
+				"error": "invalid-type"
+			},
+			{
+				"key": "test8",
+				"context": {
+					"foo": -1,
+					"zero": 0,
+					"numbers": [-1, 3, 4, 5],
+					"array": [-1, 3, 4, 5, "a", "100"],
+					"strings": ["a", "b", "c"],
+					"decimals": [1.01, 1.2, -1.5],
+					"str": "Str",
+					"false": false,
+					"empty_list": [],
+					"empty_hash": {},
+					"objects": {
+						"foo": "bar",
+						"bar": "baz"
+					},
+					"null_key": null
+				},
+				"args": ["array"],
+				"error": "invalid-type"
+			},
+			{
+				"key": "test9",
+				"context": {
+					"foo": -1,
+					"zero": 0,
+					"numbers": [-1, 3, 4, 5],
+					"array": [-1, 3, 4, 5, "a", "100"],
+					"strings": ["a", "b", "c"],
+					"decimals": [1.01, 1.2, -1.5],
+					"str": "Str",
+					"false": false,
+					"empty_list": [],
+					"empty_hash": {},
+					"objects": {
+						"foo": "bar",
+						"bar": "baz"
+					},
+					"null_key": null
+				},
+				"args": ["empty_list"],
+				"returns": null
+			}
+		]
+	},
+	{
+		"name": "max_by",
+		"topic": "math",
+		"args": {
+			"required": [
+				{
+					"name": "elements",
+					"type": ["array"],
+					"desc": ""
+				},
+				{
+					"name": "expr",
+					"type": ["expression->number", "expression->string"],
+					"desc": ""
+				}
+			],
+			"optional": []
+		},
+		"returns": {
+			"type": "any",
+			"desc": ""
+		},
+		"desc": "Return the maximum element in an array using the expression `expr` as the\ncomparison key.  The entire maximum element is returned.\nBelow are several examples using the `people` array (defined above) as the\ngiven input.\n",
+		"examples": [
+			{
+				"key": "test5",
+				"context": {
+					"people": [
+						{
+							"age": 20,
+							"age_str": "20",
+							"bool": true,
+							"name": "a",
+							"extra": "foo"
+						},
+						{
+							"age": 40,
+							"age_str": "40",
+							"bool": false,
+							"name": "b",
+							"extra": "bar"
+						},
+						{
+							"age": 30,
+							"age_str": "30",
+							"bool": true,
+							"name": "c"
+						},
+						{
+							"age": 50,
+							"age_str": "50",
+							"bool": false,
+							"name": "d"
+						},
+						{
+							"age": 10,
+							"age_str": "10",
+							"bool": true,
+							"name": 3
+						}
+					]
+				},
+				"args": ["people", "&age"],
+				"returns": {
+					"age": 50,
+					"age_str": "50",
+					"bool": false,
+					"name": "d"
+				}
+			},
+			{
+				"key": "test6",
+				"context": {
+					"people": [
+						{
+							"age": 20,
+							"age_str": "20",
+							"bool": true,
+							"name": "a",
+							"extra": "foo"
+						},
+						{
+							"age": 40,
+							"age_str": "40",
+							"bool": false,
+							"name": "b",
+							"extra": "bar"
+						},
+						{
+							"age": 30,
+							"age_str": "30",
+							"bool": true,
+							"name": "c"
+						},
+						{
+							"age": 50,
+							"age_str": "50",
+							"bool": false,
+							"name": "d"
+						},
+						{
+							"age": 10,
+							"age_str": "10",
+							"bool": true,
+							"name": 3
+						}
+					]
+				},
+				"args": ["people", "&age_str"],
+				"returns": {
+					"age": 50,
+					"age_str": "50",
+					"bool": false,
+					"name": "d"
+				}
+			},
+			{
+				"key": "test7",
+				"context": {
+					"people": [
+						{
+							"age": 20,
+							"age_str": "20",
+							"bool": true,
+							"name": "a",
+							"extra": "foo"
+						},
+						{
+							"age": 40,
+							"age_str": "40",
+							"bool": false,
+							"name": "b",
+							"extra": "bar"
+						},
+						{
+							"age": 30,
+							"age_str": "30",
+							"bool": true,
+							"name": "c"
+						},
+						{
+							"age": 50,
+							"age_str": "50",
+							"bool": false,
+							"name": "d"
+						},
+						{
+							"age": 10,
+							"age_str": "10",
+							"bool": true,
+							"name": 3
+						}
+					]
+				},
+				"args": ["people", "&bool"],
+				"error": "invalid-type"
+			},
+			{
+				"key": "test8",
+				"context": {
+					"people": [
+						{
+							"age": 20,
+							"age_str": "20",
+							"bool": true,
+							"name": "a",
+							"extra": "foo"
+						},
+						{
+							"age": 40,
+							"age_str": "40",
+							"bool": false,
+							"name": "b",
+							"extra": "bar"
+						},
+						{
+							"age": 30,
+							"age_str": "30",
+							"bool": true,
+							"name": "c"
+						},
+						{
+							"age": 50,
+							"age_str": "50",
+							"bool": false,
+							"name": "d"
+						},
+						{
+							"age": 10,
+							"age_str": "10",
+							"bool": true,
+							"name": 3
+						}
+					]
+				},
+				"args": ["people", "&extra"],
+				"error": "invalid-type"
+			},
+			{
+				"key": "test9",
+				"context": {
+					"people": [
+						{
+							"age": 20,
+							"age_str": "20",
+							"bool": true,
+							"name": "a",
+							"extra": "foo"
+						},
+						{
+							"age": 40,
+							"age_str": "40",
+							"bool": false,
+							"name": "b",
+							"extra": "bar"
+						},
+						{
+							"age": 30,
+							"age_str": "30",
+							"bool": true,
+							"name": "c"
+						},
+						{
+							"age": 50,
+							"age_str": "50",
+							"bool": false,
+							"name": "d"
+						},
+						{
+							"age": 10,
+							"age_str": "10",
+							"bool": true,
+							"name": 3
+						}
+					]
+				},
+				"args": ["people", "&to_number(age_str)"],
+				"returns": {
+					"age": 50,
+					"age_str": "50",
+					"bool": false,
+					"name": "d"
+				}
+			},
+			{
+				"key": "test3",
+				"context": {
+					"people": [
+						{
+							"age": 20,
+							"age_str": "20",
+							"bool": true,
+							"name": "a",
+							"extra": "foo"
+						},
+						{
+							"age": 40,
+							"age_str": "40",
+							"bool": false,
+							"name": "b",
+							"extra": "bar"
+						},
+						{
+							"age": 30,
+							"age_str": "30",
+							"bool": true,
+							"name": "c"
+						},
+						{
+							"age": 50,
+							"age_str": "50",
+							"bool": false,
+							"name": "d"
+						},
+						{
+							"age": 10,
+							"age_str": "10",
+							"bool": true,
+							"name": 3
+						}
+					]
+				},
+				"args": ["people", "&age_str"],
+				"error": "invalid-type"
+			},
+			{
+				"key": "test4",
+				"context": {
+					"people": [
+						{
+							"age": 20,
+							"age_str": "20",
+							"bool": true,
+							"name": "a",
+							"extra": "foo"
+						},
+						{
+							"age": 40,
+							"age_str": "40",
+							"bool": false,
+							"name": "b",
+							"extra": "bar"
+						},
+						{
+							"age": 30,
+							"age_str": "30",
+							"bool": true,
+							"name": "c"
+						},
+						{
+							"age": 50,
+							"age_str": "50",
+							"bool": false,
+							"name": "d"
+						},
+						{
+							"age": 10,
+							"age_str": "10",
+							"bool": true,
+							"name": 3
+						}
+					]
+				},
+				"args": ["people", "age"],
+				"error": "invalid-type"
+			}
+		]
+	},
+	{
+		"name": "merge",
+		"topic": "collections",
+		"args": {
+			"required": [
+				{
+					"name": "argument",
+					"type": ["object"],
+					"desc": ""
+				}
+			],
+			"optional": [
+				{
+					"name": "..",
+					"type": ["object"],
+					"desc": ""
+				}
+			]
+		},
+		"returns": {
+			"type": "object",
+			"desc": ""
+		},
+		"desc": "Accepts 0 or more objects as arguments, and returns a single object\nwith subsequent objects merged.  Each subsequent object’s key/value\npairs are added to the preceding object.  This function is used\nto combine multiple objects into one.  You can think of this as\nthe first object being the base object, and each subsequent argument\nbeing overrides that are applied to the base object.\n",
+		"examples": [
+			{
+				"key": "test0",
+				"context": null,
+				"args": [
+					{
+						"a": "'b'"
+					},
+					{
+						"c": "'d'"
+					}
+				],
+				"returns": {
+					"a": "b",
+					"c": "d"
+				}
+			},
+			{
+				"key": "test1",
+				"context": null,
+				"args": [
+					{
+						"a": "'b'"
+					},
+					{
+						"a": "'override'"
+					}
+				],
+				"returns": {
+					"a": "override"
+				}
+			},
+			{
+				"key": "test2",
+				"context": null,
+				"args": [
+					{
+						"a": "'x'",
+						"b": "'y'"
+					},
+					{
+						"b": "'override'",
+						"c": "'z'"
+					}
+				],
+				"returns": {
+					"a": "x",
+					"b": "override",
+					"c": "z"
+				}
+			},
+			{
+				"key": "test3",
+				"context": {
+					"foo": -1,
+					"zero": 0,
+					"numbers": [-1, 3, 4, 5],
+					"array": [-1, 3, 4, 5, "a", "100"],
+					"strings": ["a", "b", "c"],
+					"decimals": [1.01, 1.2, -1.5],
+					"str": "Str",
+					"false": false,
+					"empty_list": [],
+					"empty_hash": {},
+					"objects": {
+						"foo": "bar",
+						"bar": "baz"
+					},
+					"null_key": null
+				},
+				"args": ["empty_hash"],
+				"returns": {}
+			},
+			{
+				"key": "test4",
+				"context": {
+					"foo": -1,
+					"zero": 0,
+					"numbers": [-1, 3, 4, 5],
+					"array": [-1, 3, 4, 5, "a", "100"],
+					"strings": ["a", "b", "c"],
+					"decimals": [1.01, 1.2, -1.5],
+					"str": "Str",
+					"false": false,
+					"empty_list": [],
+					"empty_hash": {},
+					"objects": {
+						"foo": "bar",
+						"bar": "baz"
+					},
+					"null_key": null
+				},
+				"args": ["empty_hash", "empty_hash"],
+				"returns": {}
+			},
+			{
+				"key": "test5",
+				"context": {
+					"foo": -1,
+					"zero": 0,
+					"numbers": [-1, 3, 4, 5],
+					"array": [-1, 3, 4, 5, "a", "100"],
+					"strings": ["a", "b", "c"],
+					"decimals": [1.01, 1.2, -1.5],
+					"str": "Str",
+					"false": false,
+					"empty_list": [],
+					"empty_hash": {},
+					"objects": {
+						"foo": "bar",
+						"bar": "baz"
+					},
+					"null_key": null
+				},
+				"args": [
+					{
+						"a": 1
+					},
+					{
+						"b": 2
+					}
+				],
+				"returns": {
+					"a": 1,
+					"b": 2
+				}
+			},
+			{
+				"key": "test6",
+				"context": {
+					"foo": -1,
+					"zero": 0,
+					"numbers": [-1, 3, 4, 5],
+					"array": [-1, 3, 4, 5, "a", "100"],
+					"strings": ["a", "b", "c"],
+					"decimals": [1.01, 1.2, -1.5],
+					"str": "Str",
+					"false": false,
+					"empty_list": [],
+					"empty_hash": {},
+					"objects": {
+						"foo": "bar",
+						"bar": "baz"
+					},
+					"null_key": null
+				},
+				"args": [
+					{
+						"a": 1
+					},
+					{
+						"a": 2
+					}
+				],
+				"returns": {
+					"a": 2
+				}
+			},
+			{
+				"key": "test7",
+				"context": {
+					"foo": -1,
+					"zero": 0,
+					"numbers": [-1, 3, 4, 5],
+					"array": [-1, 3, 4, 5, "a", "100"],
+					"strings": ["a", "b", "c"],
+					"decimals": [1.01, 1.2, -1.5],
+					"str": "Str",
+					"false": false,
+					"empty_list": [],
+					"empty_hash": {},
+					"objects": {
+						"foo": "bar",
+						"bar": "baz"
+					},
+					"null_key": null
+				},
+				"args": [
+					{
+						"a": 1,
+						"b": 2
+					},
+					{
+						"a": 2,
+						"c": 3
+					},
+					{
+						"d": 4
+					}
+				],
+				"returns": {
+					"a": 2,
+					"b": 2,
+					"c": 3,
+					"d": 4
+				}
+			}
+		]
+	},
+	{
+		"name": "min",
+		"topic": "math",
+		"args": {
+			"required": [
+				{
+					"name": "collection",
+					"type": ["array[number]", "array[string]"],
+					"desc": ""
+				}
+			],
+			"optional": []
+		},
+		"returns": {
+			"type": "number",
+			"desc": ""
+		},
+		"desc": "Returns the lowest found number in the provided `$collection` argument.\n",
+		"examples": [
+			{
+				"key": "test0",
+				"context": [10, 15],
+				"args": ["@"],
+				"returns": 10
+			},
+			{
+				"key": "test1",
+				"context": ["a", "b"],
+				"args": ["@"],
+				"returns": "a"
+			},
+			{
+				"key": "test2",
+				"context": ["a", 2, "b"],
+				"args": ["@"],
+				"error": "invalid-type"
+			},
+			{
+				"key": "test3",
+				"context": [10, false, 20],
+				"args": ["@"],
+				"error": "invalid-type"
+			},
+			{
+				"key": "test4",
+				"context": {
+					"foo": -1,
+					"zero": 0,
+					"numbers": [-1, 3, 4, 5],
+					"array": [-1, 3, 4, 5, "a", "100"],
+					"strings": ["a", "b", "c"],
+					"decimals": [1.01, 1.2, -1.5],
+					"str": "Str",
+					"false": false,
+					"empty_list": [],
+					"empty_hash": {},
+					"objects": {
+						"foo": "bar",
+						"bar": "baz"
+					},
+					"null_key": null
+				},
+				"args": ["numbers"],
+				"returns": -1
+			},
+			{
+				"key": "test5",
+				"context": {
+					"foo": -1,
+					"zero": 0,
+					"numbers": [-1, 3, 4, 5],
+					"array": [-1, 3, 4, 5, "a", "100"],
+					"strings": ["a", "b", "c"],
+					"decimals": [1.01, 1.2, -1.5],
+					"str": "Str",
+					"false": false,
+					"empty_list": [],
+					"empty_hash": {},
+					"objects": {
+						"foo": "bar",
+						"bar": "baz"
+					},
+					"null_key": null
+				},
+				"args": ["decimals"],
+				"returns": -1.5
+			},
+			{
+				"key": "test6",
+				"context": {
+					"foo": -1,
+					"zero": 0,
+					"numbers": [-1, 3, 4, 5],
+					"array": [-1, 3, 4, 5, "a", "100"],
+					"strings": ["a", "b", "c"],
+					"decimals": [1.01, 1.2, -1.5],
+					"str": "Str",
+					"false": false,
+					"empty_list": [],
+					"empty_hash": {},
+					"objects": {
+						"foo": "bar",
+						"bar": "baz"
+					},
+					"null_key": null
+				},
+				"args": ["abc"],
+				"error": "invalid-type"
+			},
+			{
+				"key": "test7",
+				"context": {
+					"foo": -1,
+					"zero": 0,
+					"numbers": [-1, 3, 4, 5],
+					"array": [-1, 3, 4, 5, "a", "100"],
+					"strings": ["a", "b", "c"],
+					"decimals": [1.01, 1.2, -1.5],
+					"str": "Str",
+					"false": false,
+					"empty_list": [],
+					"empty_hash": {},
+					"objects": {
+						"foo": "bar",
+						"bar": "baz"
+					},
+					"null_key": null
+				},
+				"args": ["array"],
+				"error": "invalid-type"
+			},
+			{
+				"key": "test8",
+				"context": {
+					"foo": -1,
+					"zero": 0,
+					"numbers": [-1, 3, 4, 5],
+					"array": [-1, 3, 4, 5, "a", "100"],
+					"strings": ["a", "b", "c"],
+					"decimals": [1.01, 1.2, -1.5],
+					"str": "Str",
+					"false": false,
+					"empty_list": [],
+					"empty_hash": {},
+					"objects": {
+						"foo": "bar",
+						"bar": "baz"
+					},
+					"null_key": null
+				},
+				"args": ["empty_list"],
+				"returns": null
+			},
+			{
+				"key": "test9",
+				"context": {
+					"foo": -1,
+					"zero": 0,
+					"numbers": [-1, 3, 4, 5],
+					"array": [-1, 3, 4, 5, "a", "100"],
+					"strings": ["a", "b", "c"],
+					"decimals": [1.01, 1.2, -1.5],
+					"str": "Str",
+					"false": false,
+					"empty_list": [],
+					"empty_hash": {},
+					"objects": {
+						"foo": "bar",
+						"bar": "baz"
+					},
+					"null_key": null
+				},
+				"args": ["strings"],
+				"returns": "a"
+			}
+		]
+	},
+	{
+		"name": "min_by",
+		"topic": "math",
+		"args": {
+			"required": [
+				{
+					"name": "elements",
+					"type": ["array"],
+					"desc": ""
+				},
+				{
+					"name": "expr",
+					"type": ["expression->number", "expression->string"],
+					"desc": ""
+				}
+			],
+			"optional": []
+		},
+		"returns": {
+			"type": "any",
+			"desc": ""
+		},
+		"desc": "Return the minimum element in an array using the expression `expr` as the\ncomparison key.  The entire maximum element is returned.\nBelow are several examples using the `people` array (defined above) as the\ngiven input.\n",
+		"examples": [
+			{
+				"key": "test5",
+				"context": {
+					"people": [
+						{
+							"age": 20,
+							"age_str": "20",
+							"bool": true,
+							"name": "a",
+							"extra": "foo"
+						},
+						{
+							"age": 40,
+							"age_str": "40",
+							"bool": false,
+							"name": "b",
+							"extra": "bar"
+						},
+						{
+							"age": 30,
+							"age_str": "30",
+							"bool": true,
+							"name": "c"
+						},
+						{
+							"age": 50,
+							"age_str": "50",
+							"bool": false,
+							"name": "d"
+						},
+						{
+							"age": 10,
+							"age_str": "10",
+							"bool": true,
+							"name": 3
+						}
+					]
+				},
+				"args": ["people", "&age"],
+				"returns": {
+					"age": 10,
+					"age_str": "10",
+					"bool": true,
+					"name": 3
+				}
+			},
+			{
+				"key": "test6",
+				"context": {
+					"people": [
+						{
+							"age": 20,
+							"age_str": "20",
+							"bool": true,
+							"name": "a",
+							"extra": "foo"
+						},
+						{
+							"age": 40,
+							"age_str": "40",
+							"bool": false,
+							"name": "b",
+							"extra": "bar"
+						},
+						{
+							"age": 30,
+							"age_str": "30",
+							"bool": true,
+							"name": "c"
+						},
+						{
+							"age": 50,
+							"age_str": "50",
+							"bool": false,
+							"name": "d"
+						},
+						{
+							"age": 10,
+							"age_str": "10",
+							"bool": true,
+							"name": 3
+						}
+					]
+				},
+				"args": ["people", "&age_str"],
+				"returns": {
+					"age": 10,
+					"age_str": "10",
+					"bool": true,
+					"name": 3
+				}
+			},
+			{
+				"key": "test7",
+				"context": {
+					"people": [
+						{
+							"age": 20,
+							"age_str": "20",
+							"bool": true,
+							"name": "a",
+							"extra": "foo"
+						},
+						{
+							"age": 40,
+							"age_str": "40",
+							"bool": false,
+							"name": "b",
+							"extra": "bar"
+						},
+						{
+							"age": 30,
+							"age_str": "30",
+							"bool": true,
+							"name": "c"
+						},
+						{
+							"age": 50,
+							"age_str": "50",
+							"bool": false,
+							"name": "d"
+						},
+						{
+							"age": 10,
+							"age_str": "10",
+							"bool": true,
+							"name": 3
+						}
+					]
+				},
+				"args": ["people", "&bool"],
+				"error": "invalid-type"
+			},
+			{
+				"key": "test8",
+				"context": {
+					"people": [
+						{
+							"age": 20,
+							"age_str": "20",
+							"bool": true,
+							"name": "a",
+							"extra": "foo"
+						},
+						{
+							"age": 40,
+							"age_str": "40",
+							"bool": false,
+							"name": "b",
+							"extra": "bar"
+						},
+						{
+							"age": 30,
+							"age_str": "30",
+							"bool": true,
+							"name": "c"
+						},
+						{
+							"age": 50,
+							"age_str": "50",
+							"bool": false,
+							"name": "d"
+						},
+						{
+							"age": 10,
+							"age_str": "10",
+							"bool": true,
+							"name": 3
+						}
+					]
+				},
+				"args": ["people", "&extra"],
+				"error": "invalid-type"
+			},
+			{
+				"key": "test9",
+				"context": {
+					"people": [
+						{
+							"age": 20,
+							"age_str": "20",
+							"bool": true,
+							"name": "a",
+							"extra": "foo"
+						},
+						{
+							"age": 40,
+							"age_str": "40",
+							"bool": false,
+							"name": "b",
+							"extra": "bar"
+						},
+						{
+							"age": 30,
+							"age_str": "30",
+							"bool": true,
+							"name": "c"
+						},
+						{
+							"age": 50,
+							"age_str": "50",
+							"bool": false,
+							"name": "d"
+						},
+						{
+							"age": 10,
+							"age_str": "10",
+							"bool": true,
+							"name": 3
+						}
+					]
+				},
+				"args": ["people", "&to_number(age_str)"],
+				"returns": {
+					"age": 10,
+					"age_str": "10",
+					"bool": true,
+					"name": 3
+				}
+			},
+			{
+				"key": "test3",
+				"context": {
+					"people": [
+						{
+							"age": 20,
+							"age_str": "20",
+							"bool": true,
+							"name": "a",
+							"extra": "foo"
+						},
+						{
+							"age": 40,
+							"age_str": "40",
+							"bool": false,
+							"name": "b",
+							"extra": "bar"
+						},
+						{
+							"age": 30,
+							"age_str": "30",
+							"bool": true,
+							"name": "c"
+						},
+						{
+							"age": 50,
+							"age_str": "50",
+							"bool": false,
+							"name": "d"
+						},
+						{
+							"age": 10,
+							"age_str": "10",
+							"bool": true,
+							"name": 3
+						}
+					]
+				},
+				"args": ["people", "&age_str"],
+				"error": "invalid-type"
+			},
+			{
+				"key": "test4",
+				"context": {
+					"people": [
+						{
+							"age": 20,
+							"age_str": "20",
+							"bool": true,
+							"name": "a",
+							"extra": "foo"
+						},
+						{
+							"age": 40,
+							"age_str": "40",
+							"bool": false,
+							"name": "b",
+							"extra": "bar"
+						},
+						{
+							"age": 30,
+							"age_str": "30",
+							"bool": true,
+							"name": "c"
+						},
+						{
+							"age": 50,
+							"age_str": "50",
+							"bool": false,
+							"name": "d"
+						},
+						{
+							"age": 10,
+							"age_str": "10",
+							"bool": true,
+							"name": 3
+						}
+					]
+				},
+				"args": ["people", "age"],
+				"error": "invalid-type"
+			}
+		]
+	},
+	{
+		"name": "not_null",
+		"topic": "misc",
+		"args": {
+			"required": [
+				{
+					"name": "argument",
+					"type": ["any"],
+					"desc": ""
+				}
+			],
+			"optional": [
+				{
+					"name": "..",
+					"type": ["any"],
+					"desc": ""
+				}
+			]
+		},
+		"returns": {
+			"type": "any",
+			"desc": ""
+		},
+		"desc": "Returns the first argument that does not resolve to `null`.  This function\naccepts one or more arguments, and will evaluate them in order until a\nnon null argument is encounted.  If all arguments values resolve to `null`,\nthen a value of `null` is returned.\n",
+		"examples": [
+			{
+				"key": "test0",
+				"context": {
+					"a": null,
+					"b": null,
+					"c": [],
+					"d": "foo"
+				},
+				"args": ["no_exist", "a", "b", "c", "d"],
+				"returns": []
+			},
+			{
+				"key": "test1",
+				"context": {
+					"a": null,
+					"b": null,
+					"c": [],
+					"d": "foo"
+				},
+				"args": ["a", "b", null, "d", "c"],
+				"returns": "foo"
+			},
+			{
+				"key": "test2",
+				"context": {
+					"a": null,
+					"b": null,
+					"c": [],
+					"d": "foo"
+				},
+				"args": ["a", "b"],
+				"returns": null
+			},
+			{
+				"key": "test3",
+				"context": {
+					"foo": -1,
+					"zero": 0,
+					"numbers": [-1, 3, 4, 5],
+					"array": [-1, 3, 4, 5, "a", "100"],
+					"strings": ["a", "b", "c"],
+					"decimals": [1.01, 1.2, -1.5],
+					"str": "Str",
+					"false": false,
+					"empty_list": [],
+					"empty_hash": {},
+					"objects": {
+						"foo": "bar",
+						"bar": "baz"
+					},
+					"null_key": null
+				},
+				"args": ["unknown_key", "str"],
+				"returns": "Str"
+			},
+			{
+				"key": "test4",
+				"context": {
+					"foo": -1,
+					"zero": 0,
+					"numbers": [-1, 3, 4, 5],
+					"array": [-1, 3, 4, 5, "a", "100"],
+					"strings": ["a", "b", "c"],
+					"decimals": [1.01, 1.2, -1.5],
+					"str": "Str",
+					"false": false,
+					"empty_list": [],
+					"empty_hash": {},
+					"objects": {
+						"foo": "bar",
+						"bar": "baz"
+					},
+					"null_key": null
+				},
+				"args": ["unknown_key", "foo.bar", "empty_list", "str"],
+				"returns": []
+			},
+			{
+				"key": "test5",
+				"context": {
+					"foo": -1,
+					"zero": 0,
+					"numbers": [-1, 3, 4, 5],
+					"array": [-1, 3, 4, 5, "a", "100"],
+					"strings": ["a", "b", "c"],
+					"decimals": [1.01, 1.2, -1.5],
+					"str": "Str",
+					"false": false,
+					"empty_list": [],
+					"empty_hash": {},
+					"objects": {
+						"foo": "bar",
+						"bar": "baz"
+					},
+					"null_key": null
+				},
+				"args": ["unknown_key", "null_key", "empty_list", "str"],
+				"returns": []
+			},
+			{
+				"key": "test6",
+				"context": {
+					"foo": -1,
+					"zero": 0,
+					"numbers": [-1, 3, 4, 5],
+					"array": [-1, 3, 4, 5, "a", "100"],
+					"strings": ["a", "b", "c"],
+					"decimals": [1.01, 1.2, -1.5],
+					"str": "Str",
+					"false": false,
+					"empty_list": [],
+					"empty_hash": {},
+					"objects": {
+						"foo": "bar",
+						"bar": "baz"
+					},
+					"null_key": null
+				},
+				"args": ["all", "expressions", "are_null"],
+				"returns": null
+			},
+			{
+				"key": "test7",
+				"context": {
+					"foo": -1,
+					"zero": 0,
+					"numbers": [-1, 3, 4, 5],
+					"array": [-1, 3, 4, 5, "a", "100"],
+					"strings": ["a", "b", "c"],
+					"decimals": [1.01, 1.2, -1.5],
+					"str": "Str",
+					"false": false,
+					"empty_list": [],
+					"empty_hash": {},
+					"objects": {
+						"foo": "bar",
+						"bar": "baz"
+					},
+					"null_key": null
+				},
+				"args": [""],
+				"error": "invalid-arity"
+			}
+		]
+	},
+	{
+		"name": "pad_left",
+		"topic": "strings",
+		"args": {
+			"required": [
+				{
+					"name": "subject",
+					"type": ["string"],
+					"desc": "Subject string"
+				},
+				{
+					"name": "width",
+					"type": ["number"],
+					"desc": "Total width of the resulting string"
+				}
+			],
+			"optional": [
+				{
+					"name": "pad",
+					"type": ["string"],
+					"desc": "Pad character"
+				}
+			]
+		},
+		"returns": {
+			"type": "string",
+			"desc": ""
+		},
+		"desc": "Given the `subject` string, `pad_left()` adds characters to the beginning and returns a string of length at least `width`.\n\nThe `pad` optional string parameter specifies the padding character.\nIf omitted, it defaults to an ASCII space (U+0020).\nIf present, it MUST have length 1, otherwise an error MUST be raised.\n\nIf the `subject` string has length greater than or equal to `width`, it is returned unmodified.\n\nIf `$width` is not an integer, an error MUST be raised.\n",
+		"examples": [
+			{
+				"key": "pad_left_less_than_length",
+				"context": "string",
+				"args": ["@", "`0`"],
+				"returns": "string",
+				"comment": "The function has no effect if `width` is less than the length of the subject string."
+			},
+			{
+				"key": "pad_left_equals_to_length",
+				"context": "string",
+				"args": ["@", "`6`"],
+				"returns": "string",
+				"comment": "The function has no effect if `width` is equal to the length of the subject string."
+			},
+			{
+				"key": "pad_left",
+				"context": "string",
+				"args": ["@", "`10`"],
+				"returns": "    string"
+			},
+			{
+				"key": "pad_left_character",
+				"context": "string",
+				"args": ["@", "`10`", "-"],
+				"returns": "----string"
+			}
+		]
+	},
+	{
+		"name": "pad_right",
+		"topic": "strings",
+		"args": {
+			"required": [
+				{
+					"name": "subject",
+					"type": ["string"],
+					"desc": "Subject string"
+				},
+				{
+					"name": "width",
+					"type": ["number"],
+					"desc": "Total width of the resulting string"
+				}
+			],
+			"optional": [
+				{
+					"name": "pad",
+					"type": ["string"],
+					"desc": "Pad character"
+				}
+			]
+		},
+		"returns": {
+			"type": "string",
+			"desc": ""
+		},
+		"desc": "Given the `subject` string, `pad_right()` adds characters to the end and returns a string of length at least `width`.\n\nThe `pad` optional string parameter specifies the padding character.\nIf omitted, it defaults to an ASCII space (U+0020).\nIf present, it MUST have length 1, otherwise an error MUST be raised.\n\nIf the `subject` string has length greater than or equal to `width`, it is returned unmodified.\n\nIf `$width` is not an integer, an error MUST be raised.\n",
+		"examples": [
+			{
+				"key": "pad_right_less_than_length",
+				"context": "string",
+				"args": ["@", "`0`"],
+				"returns": "string",
+				"comment": "The function has no effect if `width` is less than the length of the subject string."
+			},
+			{
+				"key": "pad_right_equals_to_length",
+				"context": "string",
+				"args": ["@", "`6`"],
+				"returns": "string",
+				"comment": "The function has no effect if `width` is equal to the length of the subject string."
+			},
+			{
+				"key": "pad_right",
+				"context": "string",
+				"args": ["@", "`10`"],
+				"returns": "string    "
+			},
+			{
+				"key": "pad_right_character",
+				"context": "string",
+				"args": ["@", "`10`", "-"],
+				"returns": "string----"
+			}
+		]
+	},
+	{
+		"name": "replace",
+		"topic": "strings",
+		"args": {
+			"required": [
+				{
+					"name": "subject",
+					"type": ["string"],
+					"desc": "Subject string"
+				},
+				{
+					"name": "old",
+					"type": ["string"],
+					"desc": "Text that must be replaced in the subject string"
+				},
+				{
+					"name": "new",
+					"type": ["string"],
+					"desc": "Text used as a replacement"
+				}
+			],
+			"optional": [
+				{
+					"name": "count",
+					"type": ["number"],
+					"desc": "Number of replacements to perform"
+				}
+			]
+		},
+		"returns": {
+			"type": "string",
+			"desc": ""
+		},
+		"desc": "Given the `subject` string, `replace()` replaces ocurrences of the `old` substring with the `new` substring.\n\nThe `count` optional parameter specifies how many occurrences of the `old` substring in `subject` are to be replaced.\nIf this parameter is omitted, all occurrences are replaced. If `count` is not an integer or is negative,\n\nThe `replace()` function has no effect if `count` is `0`.\n",
+		"examples": [
+			{
+				"key": "replace_noop",
+				"context": "aabaaabaaaab",
+				"args": ["@", "'aa'", "'-'", "`0`"],
+				"returns": "aabaaabaaaab",
+				"comment": "The function has no effect if `count` is `0`."
+			},
+			{
+				"key": "replace_once",
+				"context": "aabaaabaaaab",
+				"args": ["@", "'aa'", "'-'", "`1`"],
+				"returns": "-baaabaaaab"
+			},
+			{
+				"key": "replace_twice",
+				"context": "aabaaabaaaab",
+				"args": ["@", "'aa'", "'-'", "`2`"],
+				"returns": "-b-abaaaab"
+			},
+			{
+				"key": "replace_three_times",
+				"context": "aabaaabaaaab",
+				"args": ["@", "'aa'", "'-'", "`3`"],
+				"returns": "-b-ab-aab"
+			},
+			{
+				"key": "replace_all",
+				"context": "aabaaabaaaab",
+				"args": ["@", "'aa'", "'-'"],
+				"returns": "-b-ab--b"
+			}
+		]
+	},
+	{
+		"name": "reverse",
+		"topic": "collections",
+		"args": {
+			"required": [
+				{
+					"name": "argument",
+					"type": ["string", "array"],
+					"desc": ""
+				}
+			],
+			"optional": []
+		},
+		"returns": {
+			"type": "array",
+			"desc": ""
+		},
+		"desc": "Reverses the order of the `$argument`.\n",
+		"examples": [
+			{
+				"key": "test0",
+				"context": [0, 1, 2, 3, 4],
+				"args": ["@"],
+				"returns": [4, 3, 2, 1, 0]
+			},
+			{
+				"key": "test1",
+				"context": [],
+				"args": ["@"],
+				"returns": []
+			},
+			{
+				"key": "test2",
+				"context": ["a", "b", "c", 1, 2, 3],
+				"args": ["@"],
+				"returns": [3, 2, 1, "c", "b", "a"]
+			},
+			{
+				"key": "test3",
+				"context": "abcd",
+				"args": ["@"],
+				"returns": "dcba"
+			},
+			{
+				"key": "test4",
+				"context": {
+					"foo": -1,
+					"zero": 0,
+					"numbers": [-1, 3, 4, 5],
+					"array": [-1, 3, 4, 5, "a", "100"],
+					"strings": ["a", "b", "c"],
+					"decimals": [1.01, 1.2, -1.5],
+					"str": "Str",
+					"false": false,
+					"empty_list": [],
+					"empty_hash": {},
+					"objects": {
+						"foo": "bar",
+						"bar": "baz"
+					},
+					"null_key": null
+				},
+				"args": ["numbers"],
+				"returns": [5, 4, 3, -1]
+			},
+			{
+				"key": "test5",
+				"context": {
+					"foo": -1,
+					"zero": 0,
+					"numbers": [-1, 3, 4, 5],
+					"array": [-1, 3, 4, 5, "a", "100"],
+					"strings": ["a", "b", "c"],
+					"decimals": [1.01, 1.2, -1.5],
+					"str": "Str",
+					"false": false,
+					"empty_list": [],
+					"empty_hash": {},
+					"objects": {
+						"foo": "bar",
+						"bar": "baz"
+					},
+					"null_key": null
+				},
+				"args": ["array"],
+				"returns": ["100", "a", 5, 4, 3, -1]
+			},
+			{
+				"key": "test6",
+				"context": {
+					"foo": -1,
+					"zero": 0,
+					"numbers": [-1, 3, 4, 5],
+					"array": [-1, 3, 4, 5, "a", "100"],
+					"strings": ["a", "b", "c"],
+					"decimals": [1.01, 1.2, -1.5],
+					"str": "Str",
+					"false": false,
+					"empty_list": [],
+					"empty_hash": {},
+					"objects": {
+						"foo": "bar",
+						"bar": "baz"
+					},
+					"null_key": null
+				},
+				"args": ["empty_list"],
+				"returns": []
+			},
+			{
+				"key": "test7",
+				"context": {
+					"foo": -1,
+					"zero": 0,
+					"numbers": [-1, 3, 4, 5],
+					"array": [-1, 3, 4, 5, "a", "100"],
+					"strings": ["a", "b", "c"],
+					"decimals": [1.01, 1.2, -1.5],
+					"str": "Str",
+					"false": false,
+					"empty_list": [],
+					"empty_hash": {},
+					"objects": {
+						"foo": "bar",
+						"bar": "baz"
+					},
+					"null_key": null
+				},
+				"args": ["''"],
+				"returns": ""
+			},
+			{
+				"key": "test8",
+				"context": {
+					"foo": -1,
+					"zero": 0,
+					"numbers": [-1, 3, 4, 5],
+					"array": [-1, 3, 4, 5, "a", "100"],
+					"strings": ["a", "b", "c"],
+					"decimals": [1.01, 1.2, -1.5],
+					"str": "Str",
+					"false": false,
+					"empty_list": [],
+					"empty_hash": {},
+					"objects": {
+						"foo": "bar",
+						"bar": "baz"
+					},
+					"null_key": null
+				},
+				"args": ["'hello world'"],
+				"returns": "dlrow olleh"
+			}
+		]
+	},
+	{
+		"name": "sort",
+		"topic": "collections",
+		"args": {
+			"required": [
+				{
+					"name": "list",
+					"type": ["array[number]", "array[string]"],
+					"desc": ""
+				}
+			],
+			"optional": []
+		},
+		"returns": {
+			"type": "array",
+			"desc": ""
+		},
+		"desc": "This function accepts an array `$list` argument and returns the sorted\nelements of the `$list` as an array.\n\nThe array must be a list of strings or numbers.  Sorting strings is based on\ncode points.  Locale is not taken into account.\n",
+		"examples": [
+			{
+				"key": "test0",
+				"context": ["b", "a", "c"],
+				"args": ["@"],
+				"returns": ["a", "b", "c"]
+			},
+			{
+				"key": "test1",
+				"context": [1, "a", "c"],
+				"args": ["@"],
+				"returns": [1, "a", "c"]
+			},
+			{
+				"key": "test2",
+				"context": [false, [], null],
+				"args": ["@"],
+				"returns": [[], null, false]
+			},
+			{
+				"key": "test3",
+				"context": [[], {}, false],
+				"args": ["@"],
+				"returns": [{}, [], false]
+			},
+			{
+				"key": "test4",
+				"context": {
+					"a": 1,
+					"b": 2
+				},
+				"args": ["@"],
+				"returns": null
+			},
+			{
+				"key": "test5",
+				"context": false,
+				"args": ["@"],
+				"returns": null
+			},
+			{
+				"key": "test6",
+				"context": {
+					"foo": -1,
+					"zero": 0,
+					"numbers": [-1, 3, 4, 5],
+					"array": [-1, 3, 4, 5, "a", "100"],
+					"strings": ["a", "b", "c"],
+					"decimals": [1.01, 1.2, -1.5],
+					"str": "Str",
+					"false": false,
+					"empty_list": [],
+					"empty_hash": {},
+					"objects": {
+						"foo": "bar",
+						"bar": "baz"
+					},
+					"null_key": null
+				},
+				"args": ["keys(objects)"],
+				"returns": ["bar", "foo"]
+			},
+			{
+				"key": "test7",
+				"context": {
+					"foo": -1,
+					"zero": 0,
+					"numbers": [-1, 3, 4, 5],
+					"array": [-1, 3, 4, 5, "a", "100"],
+					"strings": ["a", "b", "c"],
+					"decimals": [1.01, 1.2, -1.5],
+					"str": "Str",
+					"false": false,
+					"empty_list": [],
+					"empty_hash": {},
+					"objects": {
+						"foo": "bar",
+						"bar": "baz"
+					},
+					"null_key": null
+				},
+				"args": ["values(objects)"],
+				"returns": ["bar", "baz"]
+			},
+			{
+				"key": "test8",
+				"context": {
+					"foo": -1,
+					"zero": 0,
+					"numbers": [-1, 3, 4, 5],
+					"array": [-1, 3, 4, 5, "a", "100"],
+					"strings": ["a", "b", "c"],
+					"decimals": [1.01, 1.2, -1.5],
+					"str": "Str",
+					"false": false,
+					"empty_list": [],
+					"empty_hash": {},
+					"objects": {
+						"foo": "bar",
+						"bar": "baz"
+					},
+					"null_key": null
+				},
+				"args": ["numbers"],
+				"returns": [-1, 3, 4, 5]
+			},
+			{
+				"key": "test9",
+				"context": {
+					"foo": -1,
+					"zero": 0,
+					"numbers": [-1, 3, 4, 5],
+					"array": [-1, 3, 4, 5, "a", "100"],
+					"strings": ["a", "b", "c"],
+					"decimals": [1.01, 1.2, -1.5],
+					"str": "Str",
+					"false": false,
+					"empty_list": [],
+					"empty_hash": {},
+					"objects": {
+						"foo": "bar",
+						"bar": "baz"
+					},
+					"null_key": null
+				},
+				"args": ["strings"],
+				"returns": ["a", "b", "c"]
+			},
+			{
+				"key": "test10",
+				"context": {
+					"foo": -1,
+					"zero": 0,
+					"numbers": [-1, 3, 4, 5],
+					"array": [-1, 3, 4, 5, "a", "100"],
+					"strings": ["a", "b", "c"],
+					"decimals": [1.01, 1.2, -1.5],
+					"str": "Str",
+					"false": false,
+					"empty_list": [],
+					"empty_hash": {},
+					"objects": {
+						"foo": "bar",
+						"bar": "baz"
+					},
+					"null_key": null
+				},
+				"args": ["decimals"],
+				"returns": [-1.5, 1.01, 1.2]
+			},
+			{
+				"key": "test11",
+				"context": {
+					"foo": -1,
+					"zero": 0,
+					"numbers": [-1, 3, 4, 5],
+					"array": [-1, 3, 4, 5, "a", "100"],
+					"strings": ["a", "b", "c"],
+					"decimals": [1.01, 1.2, -1.5],
+					"str": "Str",
+					"false": false,
+					"empty_list": [],
+					"empty_hash": {},
+					"objects": {
+						"foo": "bar",
+						"bar": "baz"
+					},
+					"null_key": null
+				},
+				"args": ["array"],
+				"error": "invalid-type"
+			},
+			{
+				"key": "test12",
+				"context": {
+					"foo": -1,
+					"zero": 0,
+					"numbers": [-1, 3, 4, 5],
+					"array": [-1, 3, 4, 5, "a", "100"],
+					"strings": ["a", "b", "c"],
+					"decimals": [1.01, 1.2, -1.5],
+					"str": "Str",
+					"false": false,
+					"empty_list": [],
+					"empty_hash": {},
+					"objects": {
+						"foo": "bar",
+						"bar": "baz"
+					},
+					"null_key": null
+				},
+				"args": ["abc"],
+				"error": "invalid-type"
+			},
+			{
+				"key": "test13",
+				"context": {
+					"foo": -1,
+					"zero": 0,
+					"numbers": [-1, 3, 4, 5],
+					"array": [-1, 3, 4, 5, "a", "100"],
+					"strings": ["a", "b", "c"],
+					"decimals": [1.01, 1.2, -1.5],
+					"str": "Str",
+					"false": false,
+					"empty_list": [],
+					"empty_hash": {},
+					"objects": {
+						"foo": "bar",
+						"bar": "baz"
+					},
+					"null_key": null
+				},
+				"args": ["empty_list"],
+				"returns": []
+			},
+			{
+				"key": "test14",
+				"context": {
+					"foo": -1,
+					"zero": 0,
+					"numbers": [-1, 3, 4, 5],
+					"array": [-1, 3, 4, 5, "a", "100"],
+					"strings": ["a", "b", "c"],
+					"decimals": [1.01, 1.2, -1.5],
+					"str": "Str",
+					"false": false,
+					"empty_list": [],
+					"empty_hash": {},
+					"objects": {
+						"foo": "bar",
+						"bar": "baz"
+					},
+					"null_key": null
+				},
+				"args": ["@"],
+				"error": "invalid-type"
+			}
+		]
+	},
+	{
+		"name": "sort_by",
+		"topic": "collections",
+		"args": {
+			"required": [
+				{
+					"name": "elements",
+					"type": ["array"],
+					"desc": ""
+				},
+				{
+					"name": "expr",
+					"type": ["expression->number", "expression->string"],
+					"desc": ""
+				}
+			],
+			"optional": []
+		},
+		"returns": {
+			"type": "array",
+			"desc": ""
+		},
+		"desc": "Sort an array using an expression `expr` as the sort key.  For each element\nin the array of `elements`, the `expr` expression is applied and the\nresulting value is used as the key used when sorting the `elements`.\n\nIf the result of evaluating the `expr` against the current array element\nresults in type other than a `number` or a `string`, an `invalid-type` error will\noccur.\n\nBelow are several examples using the `people` array (defined above) as the\ngiven input.  `sort_by` follows the same sorting logic as the `sort`\nfunction.\n",
+		"examples": [
+			{
+				"key": "test3",
+				"context": {
+					"people": [
+						{
+							"age": 20,
+							"age_str": "20",
+							"bool": true,
+							"name": "a",
+							"extra": "foo"
+						},
+						{
+							"age": 40,
+							"age_str": "40",
+							"bool": false,
+							"name": "b",
+							"extra": "bar"
+						},
+						{
+							"age": 30,
+							"age_str": "30",
+							"bool": true,
+							"name": "c"
+						},
+						{
+							"age": 50,
+							"age_str": "50",
+							"bool": false,
+							"name": "d"
+						},
+						{
+							"age": 10,
+							"age_str": "10",
+							"bool": true,
+							"name": 3
+						}
+					],
+					"empty_list": []
+				},
+				"args": ["people", "&age"],
+				"returns": [
+					{
+						"age": 10,
+						"age_str": "10",
+						"bool": true,
+						"name": 3
+					},
+					{
+						"age": 20,
+						"age_str": "20",
+						"bool": true,
+						"name": "a",
+						"extra": "foo"
+					},
+					{
+						"age": 30,
+						"age_str": "30",
+						"bool": true,
+						"name": "c"
+					},
+					{
+						"age": 40,
+						"age_str": "40",
+						"bool": false,
+						"name": "b",
+						"extra": "bar"
+					},
+					{
+						"age": 50,
+						"age_str": "50",
+						"bool": false,
+						"name": "d"
+					}
+				]
+			},
+			{
+				"key": "test4",
+				"context": {
+					"people": [
+						{
+							"age": 20,
+							"age_str": "20",
+							"bool": true,
+							"name": "a",
+							"extra": "foo"
+						},
+						{
+							"age": 40,
+							"age_str": "40",
+							"bool": false,
+							"name": "b",
+							"extra": "bar"
+						},
+						{
+							"age": 30,
+							"age_str": "30",
+							"bool": true,
+							"name": "c"
+						},
+						{
+							"age": 50,
+							"age_str": "50",
+							"bool": false,
+							"name": "d"
+						},
+						{
+							"age": 10,
+							"age_str": "10",
+							"bool": true,
+							"name": 3
+						}
+					],
+					"empty_list": []
+				},
+				"args": ["people", "&age_str"],
+				"returns": [
+					{
+						"age": 10,
+						"age_str": "10",
+						"bool": true,
+						"name": 3
+					},
+					{
+						"age": 20,
+						"age_str": "20",
+						"bool": true,
+						"name": "a",
+						"extra": "foo"
+					},
+					{
+						"age": 30,
+						"age_str": "30",
+						"bool": true,
+						"name": "c"
+					},
+					{
+						"age": 40,
+						"age_str": "40",
+						"bool": false,
+						"name": "b",
+						"extra": "bar"
+					},
+					{
+						"age": 50,
+						"age_str": "50",
+						"bool": false,
+						"name": "d"
+					}
+				]
+			},
+			{
+				"key": "test5",
+				"context": {
+					"people": [
+						{
+							"age": 20,
+							"age_str": "20",
+							"bool": true,
+							"name": "a",
+							"extra": "foo"
+						},
+						{
+							"age": 40,
+							"age_str": "40",
+							"bool": false,
+							"name": "b",
+							"extra": "bar"
+						},
+						{
+							"age": 30,
+							"age_str": "30",
+							"bool": true,
+							"name": "c"
+						},
+						{
+							"age": 50,
+							"age_str": "50",
+							"bool": false,
+							"name": "d"
+						},
+						{
+							"age": 10,
+							"age_str": "10",
+							"bool": true,
+							"name": 3
+						}
+					],
+					"empty_list": []
+				},
+				"args": ["people", "&to_number(age_str)"],
+				"returns": [
+					{
+						"age": 10,
+						"age_str": "10",
+						"bool": true,
+						"name": 3
+					},
+					{
+						"age": 20,
+						"age_str": "20",
+						"bool": true,
+						"name": "a",
+						"extra": "foo"
+					},
+					{
+						"age": 30,
+						"age_str": "30",
+						"bool": true,
+						"name": "c"
+					},
+					{
+						"age": 40,
+						"age_str": "40",
+						"bool": false,
+						"name": "b",
+						"extra": "bar"
+					},
+					{
+						"age": 50,
+						"age_str": "50",
+						"bool": false,
+						"name": "d"
+					}
+				]
+			},
+			{
+				"key": "test7",
+				"context": {
+					"people": [
+						{
+							"age": 20,
+							"age_str": "20",
+							"bool": true,
+							"name": "a",
+							"extra": "foo"
+						},
+						{
+							"age": 40,
+							"age_str": "40",
+							"bool": false,
+							"name": "b",
+							"extra": "bar"
+						},
+						{
+							"age": 30,
+							"age_str": "30",
+							"bool": true,
+							"name": "c"
+						},
+						{
+							"age": 50,
+							"age_str": "50",
+							"bool": false,
+							"name": "d"
+						},
+						{
+							"age": 10,
+							"age_str": "10",
+							"bool": true,
+							"name": 3
+						}
+					],
+					"empty_list": []
+				},
+				"args": ["people", "&extra"],
+				"error": "invalid-type"
+			},
+			{
+				"key": "test8",
+				"context": {
+					"people": [
+						{
+							"age": 20,
+							"age_str": "20",
+							"bool": true,
+							"name": "a",
+							"extra": "foo"
+						},
+						{
+							"age": 40,
+							"age_str": "40",
+							"bool": false,
+							"name": "b",
+							"extra": "bar"
+						},
+						{
+							"age": 30,
+							"age_str": "30",
+							"bool": true,
+							"name": "c"
+						},
+						{
+							"age": 50,
+							"age_str": "50",
+							"bool": false,
+							"name": "d"
+						},
+						{
+							"age": 10,
+							"age_str": "10",
+							"bool": true,
+							"name": 3
+						}
+					],
+					"empty_list": []
+				},
+				"args": ["people", "&bool"],
+				"error": "invalid-type"
+			},
+			{
+				"key": "test9",
+				"context": {
+					"people": [
+						{
+							"age": 20,
+							"age_str": "20",
+							"bool": true,
+							"name": "a",
+							"extra": "foo"
+						},
+						{
+							"age": 40,
+							"age_str": "40",
+							"bool": false,
+							"name": "b",
+							"extra": "bar"
+						},
+						{
+							"age": 30,
+							"age_str": "30",
+							"bool": true,
+							"name": "c"
+						},
+						{
+							"age": 50,
+							"age_str": "50",
+							"bool": false,
+							"name": "d"
+						},
+						{
+							"age": 10,
+							"age_str": "10",
+							"bool": true,
+							"name": 3
+						}
+					],
+					"empty_list": []
+				},
+				"args": ["people", "&name"],
+				"error": "invalid-type"
+			},
+			{
+				"key": "test10",
+				"context": {
+					"people": [
+						{
+							"age": 20,
+							"age_str": "20",
+							"bool": true,
+							"name": "a",
+							"extra": "foo"
+						},
+						{
+							"age": 40,
+							"age_str": "40",
+							"bool": false,
+							"name": "b",
+							"extra": "bar"
+						},
+						{
+							"age": 30,
+							"age_str": "30",
+							"bool": true,
+							"name": "c"
+						},
+						{
+							"age": 50,
+							"age_str": "50",
+							"bool": false,
+							"name": "d"
+						},
+						{
+							"age": 10,
+							"age_str": "10",
+							"bool": true,
+							"name": 3
+						}
+					],
+					"empty_list": []
+				},
+				"args": ["people", "name"],
+				"error": "invalid-type"
+			},
+			{
+				"key": "test12",
+				"context": {
+					"people": [
+						{
+							"age": 20,
+							"age_str": "20",
+							"bool": true,
+							"name": "a",
+							"extra": "foo"
+						},
+						{
+							"age": 40,
+							"age_str": "40",
+							"bool": false,
+							"name": "b",
+							"extra": "bar"
+						},
+						{
+							"age": 30,
+							"age_str": "30",
+							"bool": true,
+							"name": "c"
+						},
+						{
+							"age": 50,
+							"age_str": "50",
+							"bool": false,
+							"name": "d"
+						},
+						{
+							"age": 10,
+							"age_str": "10",
+							"bool": true,
+							"name": 3
+						}
+					],
+					"empty_list": []
+				},
+				"args": ["empty_list", "&age"],
+				"returns": []
+			},
+			{
+				"key": "test13",
+				"context": {
+					"people": [
+						{
+							"age": 10,
+							"order": "1"
+						},
+						{
+							"age": 10,
+							"order": "2"
+						},
+						{
+							"age": 10,
+							"order": "3"
+						},
+						{
+							"age": 10,
+							"order": "4"
+						},
+						{
+							"age": 10,
+							"order": "5"
+						},
+						{
+							"age": 10,
+							"order": "6"
+						},
+						{
+							"age": 10,
+							"order": "7"
+						},
+						{
+							"age": 10,
+							"order": "8"
+						},
+						{
+							"age": 10,
+							"order": "9"
+						},
+						{
+							"age": 10,
+							"order": "10"
+						},
+						{
+							"age": 10,
+							"order": "11"
+						}
+					]
+				},
+				"args": ["people", "&age"],
+				"returns": [
+					{
+						"age": 10,
+						"order": "1"
+					},
+					{
+						"age": 10,
+						"order": "2"
+					},
+					{
+						"age": 10,
+						"order": "3"
+					},
+					{
+						"age": 10,
+						"order": "4"
+					},
+					{
+						"age": 10,
+						"order": "5"
+					},
+					{
+						"age": 10,
+						"order": "6"
+					},
+					{
+						"age": 10,
+						"order": "7"
+					},
+					{
+						"age": 10,
+						"order": "8"
+					},
+					{
+						"age": 10,
+						"order": "9"
+					},
+					{
+						"age": 10,
+						"order": "10"
+					},
+					{
+						"age": 10,
+						"order": "11"
+					}
+				]
+			}
+		]
+	},
+	{
+		"name": "split",
+		"topic": "strings",
+		"args": {
+			"required": [
+				{
+					"name": "subject",
+					"type": ["string"],
+					"desc": "Subject string"
+				},
+				{
+					"name": "search",
+					"type": ["string"],
+					"desc": "Text separator"
+				}
+			],
+			"optional": [
+				{
+					"name": "count",
+					"type": ["number"],
+					"desc": "Number of splits to perform"
+				}
+			]
+		},
+		"returns": {
+			"type": ["array[string]"],
+			"desc": ""
+		},
+		"desc": "Given the `subject` string, `split()` breaks on ocurrences of the string `search` and returns an array.\n\nThe `split()` function returns an array containing each partial string between occurrences of `search`.\nIf `subject` contains no occurrences of the `search` text, an array containing just the original `subject`\nstring will be returned.\n\nThe `count` optional parameter specifies the maximum number of split points within the `search` string.\nIf this parameter is omitted, all occurrences are split. If `count` is not an integer or is negative,\nan error MUST be raised.\n\nIf `count` is equal to `0`, `split()` returns an array containing a single element, the `subject` string.\n\nOtherwise, the `split()` function breaks on occurrences of the `search` string up to `count` times. The\nlast string in the resulting array containing the remaining contents of the `subject` string unmodified.\n",
+		"examples": [
+			{
+				"key": "split_all_chars",
+				"context": null,
+				"args": ["all chars", ""],
+				"returns": ["a", "l", "l", " ", "c", "h", "a", "r", "s"]
+			},
+			{
+				"key": "split_slash",
+				"context": null,
+				"args": ["/", "/"],
+				"returns": ["", ""]
+			},
+			{
+				"key": "split_all",
+				"context": "average|-|min|-|max|-|mean|-|median",
+				"args": ["average|-|min|-|max|-|mean|-|median", "'|-|'"],
+				"returns": ["average", "min", "max", "mean", "median"]
+			},
+			{
+				"key": "split_three_times",
+				"context": "average|-|min|-|max|-|mean|-|median",
+				"args": ["average|-|min|-|max|-|mean|-|median", "'|-|'", "`3`"],
+				"returns": ["average", "min", "max", "mean|-|median"]
+			},
+			{
+				"key": "split_twice",
+				"context": "average|-|min|-|max|-|mean|-|median",
+				"args": ["average|-|min|-|max|-|mean|-|median", "'|-|'", "`2`"],
+				"returns": ["average", "min", "max|-|mean|-|median"]
+			},
+			{
+				"key": "split_once",
+				"context": "average|-|min|-|max|-|mean|-|median",
+				"args": ["average|-|min|-|max|-|mean|-|median", "'|-|'", "`1`"],
+				"returns": ["average", "min|-|max|-|mean|-|median"]
+			},
+			{
+				"key": "split_none",
+				"context": "average|-|min|-|max|-|mean|-|median",
+				"args": ["average|-|min|-|max|-|mean|-|median", "'|-|'", "`0`"],
+				"returns": ["average|-|min|-|max|-|mean|-|median"]
+			},
+			{
+				"key": "split_hyphen",
+				"context": "average|-|min|-|max|-|mean|-|median",
+				"args": ["average|-|min|-|max|-|mean|-|median", "'-'"],
+				"returns": ["average|", "|min|", "|max|", "|mean|", "|median"]
+			}
+		]
+	},
+	{
+		"name": "starts_with",
+		"topic": "strings",
+		"args": {
+			"required": [
+				{
+					"name": "subject",
+					"type": ["string"],
+					"desc": ""
+				},
+				{
+					"name": "prefix",
+					"type": ["string"],
+					"desc": ""
+				}
+			],
+			"optional": []
+		},
+		"returns": {
+			"type": "boolean",
+			"desc": ""
+		},
+		"desc": "Returns `true` if the `$subject` starts with the `$prefix`, otherwise\nthis function returns `false`.\n",
+		"examples": [
+			{
+				"key": "test0",
+				"context": "foobarbaz",
+				"args": ["@", "'foo'"],
+				"returns": true
+			},
+			{
+				"key": "test1",
+				"context": "foobarbaz",
+				"args": ["@", "'baz'"],
+				"returns": false
+			},
+			{
+				"key": "test2",
+				"context": "foobarbaz",
+				"args": ["@", "'f'"],
+				"returns": true
+			},
+			{
+				"key": "test3",
+				"context": {
+					"foo": -1,
+					"zero": 0,
+					"numbers": [-1, 3, 4, 5],
+					"array": [-1, 3, 4, 5, "a", "100"],
+					"strings": ["a", "b", "c"],
+					"decimals": [1.01, 1.2, -1.5],
+					"str": "Str",
+					"false": false,
+					"empty_list": [],
+					"empty_hash": {},
+					"objects": {
+						"foo": "bar",
+						"bar": "baz"
+					},
+					"null_key": null
+				},
+				"args": ["str", "'S'"],
+				"returns": true
+			},
+			{
+				"key": "test4",
+				"context": {
+					"foo": -1,
+					"zero": 0,
+					"numbers": [-1, 3, 4, 5],
+					"array": [-1, 3, 4, 5, "a", "100"],
+					"strings": ["a", "b", "c"],
+					"decimals": [1.01, 1.2, -1.5],
+					"str": "Str",
+					"false": false,
+					"empty_list": [],
+					"empty_hash": {},
+					"objects": {
+						"foo": "bar",
+						"bar": "baz"
+					},
+					"null_key": null
+				},
+				"args": ["str", "'St'"],
+				"returns": true
+			},
+			{
+				"key": "test5",
+				"context": {
+					"foo": -1,
+					"zero": 0,
+					"numbers": [-1, 3, 4, 5],
+					"array": [-1, 3, 4, 5, "a", "100"],
+					"strings": ["a", "b", "c"],
+					"decimals": [1.01, 1.2, -1.5],
+					"str": "Str",
+					"false": false,
+					"empty_list": [],
+					"empty_hash": {},
+					"objects": {
+						"foo": "bar",
+						"bar": "baz"
+					},
+					"null_key": null
+				},
+				"args": ["str", "'Str'"],
+				"returns": true
+			},
+			{
+				"key": "test6",
+				"context": {
+					"foo": -1,
+					"zero": 0,
+					"numbers": [-1, 3, 4, 5],
+					"array": [-1, 3, 4, 5, "a", "100"],
+					"strings": ["a", "b", "c"],
+					"decimals": [1.01, 1.2, -1.5],
+					"str": "Str",
+					"false": false,
+					"empty_list": [],
+					"empty_hash": {},
+					"objects": {
+						"foo": "bar",
+						"bar": "baz"
+					},
+					"null_key": null
+				},
+				"args": ["str", "'String'"],
+				"returns": false
+			},
+			{
+				"key": "test7",
+				"context": {
+					"foo": -1,
+					"zero": 0,
+					"numbers": [-1, 3, 4, 5],
+					"array": [-1, 3, 4, 5, "a", "100"],
+					"strings": ["a", "b", "c"],
+					"decimals": [1.01, 1.2, -1.5],
+					"str": "Str",
+					"false": false,
+					"empty_list": [],
+					"empty_hash": {},
+					"objects": {
+						"foo": "bar",
+						"bar": "baz"
+					},
+					"null_key": null
+				},
+				"args": ["str", 0],
+				"error": "invalid-type"
+			}
+		]
+	},
+	{
+		"name": "sum",
+		"topic": "math",
+		"args": {
+			"required": [
+				{
+					"name": "collection",
+					"type": ["array[number]"],
+					"desc": ""
+				}
+			],
+			"optional": []
+		},
+		"returns": {
+			"type": "number",
+			"desc": ""
+		},
+		"desc": "Returns the sum of the provided array argument.\n\nAn empty array will produce a return value of 0.\n",
+		"examples": [
+			{
+				"key": "test0",
+				"context": [10, 15],
+				"args": ["@"],
+				"returns": 25
+			},
+			{
+				"key": "test1",
+				"context": [10, false, 20],
+				"args": ["@"],
+				"error": "invalid-type"
+			},
+			{
+				"key": "test2",
+				"context": [10, false, 20],
+				"args": ["[].to_number(@)"],
+				"returns": 30
+			},
+			{
+				"key": "test3",
+				"context": [],
+				"args": ["@"],
+				"returns": 0
+			},
+			{
+				"key": "test4",
+				"context": {
+					"foo": -1,
+					"zero": 0,
+					"numbers": [-1, 3, 4, 5],
+					"array": [-1, 3, 4, 5, "a", "100"],
+					"strings": ["a", "b", "c"],
+					"decimals": [1.01, 1.2, -1.5],
+					"str": "Str",
+					"false": false,
+					"empty_list": [],
+					"empty_hash": {},
+					"objects": {
+						"foo": "bar",
+						"bar": "baz"
+					},
+					"null_key": null
+				},
+				"args": ["numbers"],
+				"returns": 11
+			},
+			{
+				"key": "test5",
+				"context": {
+					"foo": -1,
+					"zero": 0,
+					"numbers": [-1, 3, 4, 5],
+					"array": [-1, 3, 4, 5, "a", "100"],
+					"strings": ["a", "b", "c"],
+					"decimals": [1.01, 1.2, -1.5],
+					"str": "Str",
+					"false": false,
+					"empty_list": [],
+					"empty_hash": {},
+					"objects": {
+						"foo": "bar",
+						"bar": "baz"
+					},
+					"null_key": null
+				},
+				"args": ["decimals"],
+				"returns": 0.71
+			},
+			{
+				"key": "test6",
+				"context": {
+					"foo": -1,
+					"zero": 0,
+					"numbers": [-1, 3, 4, 5],
+					"array": [-1, 3, 4, 5, "a", "100"],
+					"strings": ["a", "b", "c"],
+					"decimals": [1.01, 1.2, -1.5],
+					"str": "Str",
+					"false": false,
+					"empty_list": [],
+					"empty_hash": {},
+					"objects": {
+						"foo": "bar",
+						"bar": "baz"
+					},
+					"null_key": null
+				},
+				"args": ["array"],
+				"error": "invalid-type"
+			},
+			{
+				"key": "test7",
+				"context": {
+					"foo": -1,
+					"zero": 0,
+					"numbers": [-1, 3, 4, 5],
+					"array": [-1, 3, 4, 5, "a", "100"],
+					"strings": ["a", "b", "c"],
+					"decimals": [1.01, 1.2, -1.5],
+					"str": "Str",
+					"false": false,
+					"empty_list": [],
+					"empty_hash": {},
+					"objects": {
+						"foo": "bar",
+						"bar": "baz"
+					},
+					"null_key": null
+				},
+				"args": ["array[].to_number(@)"],
+				"returns": 111
+			},
+			{
+				"key": "test8",
+				"context": {
+					"foo": -1,
+					"zero": 0,
+					"numbers": [-1, 3, 4, 5],
+					"array": [-1, 3, 4, 5, "a", "100"],
+					"strings": ["a", "b", "c"],
+					"decimals": [1.01, 1.2, -1.5],
+					"str": "Str",
+					"false": false,
+					"empty_list": [],
+					"empty_hash": {},
+					"objects": {
+						"foo": "bar",
+						"bar": "baz"
+					},
+					"null_key": null
+				},
+				"args": ["empty_list"],
+				"returns": 0
+			}
+		]
+	},
+	{
+		"name": "to_array",
+		"topic": "conversion",
+		"args": {
+			"required": [
+				{
+					"name": "arg",
+					"type": ["any"],
+					"desc": ""
+				}
+			],
+			"optional": []
+		},
+		"returns": {
+			"type": "array",
+			"desc": ""
+		},
+		"desc": "* array - Returns the passed in value.\n* number/string/object/boolean/null - Returns a one element array containing\nthe passed in argument.\n",
+		"examples": [
+			{
+				"key": "test0",
+				"context": null,
+				"args": [[1, 2]],
+				"returns": [1, 2]
+			},
+			{
+				"key": "test1",
+				"context": null,
+				"args": ["'string'"],
+				"returns": ["string"]
+			},
+			{
+				"key": "test2",
+				"context": null,
+				"args": [0],
+				"returns": [0]
+			},
+			{
+				"key": "test3",
+				"context": null,
+				"args": [true],
+				"returns": [true]
+			},
+			{
+				"key": "test4",
+				"context": null,
+				"args": [
+					{
+						"foo": "'bar'"
+					}
+				],
+				"returns": [
+					{
+						"foo": "bar"
+					}
+				]
+			},
+			{
+				"key": "test5",
+				"context": {
+					"foo": -1,
+					"zero": 0,
+					"numbers": [-1, 3, 4, 5],
+					"array": [-1, 3, 4, 5, "a", "100"],
+					"strings": ["a", "b", "c"],
+					"decimals": [1.01, 1.2, -1.5],
+					"str": "Str",
+					"false": false,
+					"empty_list": [],
+					"empty_hash": {},
+					"objects": {
+						"foo": "bar",
+						"bar": "baz"
+					},
+					"null_key": null
+				},
+				"args": ["'foo'"],
+				"returns": ["foo"]
+			},
+			{
+				"key": "test6",
+				"context": {
+					"foo": -1,
+					"zero": 0,
+					"numbers": [-1, 3, 4, 5],
+					"array": [-1, 3, 4, 5, "a", "100"],
+					"strings": ["a", "b", "c"],
+					"decimals": [1.01, 1.2, -1.5],
+					"str": "Str",
+					"false": false,
+					"empty_list": [],
+					"empty_hash": {},
+					"objects": {
+						"foo": "bar",
+						"bar": "baz"
+					},
+					"null_key": null
+				},
+				"args": [0],
+				"returns": [0]
+			},
+			{
+				"key": "test7",
+				"context": {
+					"foo": -1,
+					"zero": 0,
+					"numbers": [-1, 3, 4, 5],
+					"array": [-1, 3, 4, 5, "a", "100"],
+					"strings": ["a", "b", "c"],
+					"decimals": [1.01, 1.2, -1.5],
+					"str": "Str",
+					"false": false,
+					"empty_list": [],
+					"empty_hash": {},
+					"objects": {
+						"foo": "bar",
+						"bar": "baz"
+					},
+					"null_key": null
+				},
+				"args": ["objects"],
+				"returns": [
+					{
+						"foo": "bar",
+						"bar": "baz"
+					}
+				]
+			},
+			{
+				"key": "test8",
+				"context": {
+					"foo": -1,
+					"zero": 0,
+					"numbers": [-1, 3, 4, 5],
+					"array": [-1, 3, 4, 5, "a", "100"],
+					"strings": ["a", "b", "c"],
+					"decimals": [1.01, 1.2, -1.5],
+					"str": "Str",
+					"false": false,
+					"empty_list": [],
+					"empty_hash": {},
+					"objects": {
+						"foo": "bar",
+						"bar": "baz"
+					},
+					"null_key": null
+				},
+				"args": [[1, 2, 3]],
+				"returns": [1, 2, 3]
+			},
+			{
+				"key": "test9",
+				"context": {
+					"foo": -1,
+					"zero": 0,
+					"numbers": [-1, 3, 4, 5],
+					"array": [-1, 3, 4, 5, "a", "100"],
+					"strings": ["a", "b", "c"],
+					"decimals": [1.01, 1.2, -1.5],
+					"str": "Str",
+					"false": false,
+					"empty_list": [],
+					"empty_hash": {},
+					"objects": {
+						"foo": "bar",
+						"bar": "baz"
+					},
+					"null_key": null
+				},
+				"args": [false],
+				"returns": [false]
+			}
+		]
+	},
+	{
+		"name": "to_number",
+		"topic": "conversion",
+		"args": {
+			"required": [
+				{
+					"name": "arg",
+					"type": ["any"],
+					"desc": ""
+				}
+			],
+			"optional": []
+		},
+		"returns": {
+			"type": "number",
+			"desc": ""
+		},
+		"desc": "* string - Returns the parsed number.  Any string that conforms to the\n`json-number` production is supported.  Note that the floating number\nsupport will be implementation specific, but implementations should support\nat least IEEE 754-2008 binary64 (double precision) numbers, as this is\ngenerally available and widely used.\n\n\n* number - Returns the passed in value.\n\n\n* array - null\n\n\n* object - null\n\n\n* boolean - null\n\n\n* null - null\n",
+		"examples": [
+			{
+				"key": "test0",
+				"context": {
+					"foo": -1,
+					"zero": 0,
+					"numbers": [-1, 3, 4, 5],
+					"array": [-1, 3, 4, 5, "a", "100"],
+					"strings": ["a", "b", "c"],
+					"decimals": [1.01, 1.2, -1.5],
+					"str": "Str",
+					"false": false,
+					"empty_list": [],
+					"empty_hash": {},
+					"objects": {
+						"foo": "bar",
+						"bar": "baz"
+					},
+					"null_key": null
+				},
+				"args": ["'1.0'"],
+				"returns": 1
+			},
+			{
+				"key": "test1",
+				"context": {
+					"foo": -1,
+					"zero": 0,
+					"numbers": [-1, 3, 4, 5],
+					"array": [-1, 3, 4, 5, "a", "100"],
+					"strings": ["a", "b", "c"],
+					"decimals": [1.01, 1.2, -1.5],
+					"str": "Str",
+					"false": false,
+					"empty_list": [],
+					"empty_hash": {},
+					"objects": {
+						"foo": "bar",
+						"bar": "baz"
+					},
+					"null_key": null
+				},
+				"args": ["'1.1'"],
+				"returns": 1.1
+			},
+			{
+				"key": "test2",
+				"context": {
+					"foo": -1,
+					"zero": 0,
+					"numbers": [-1, 3, 4, 5],
+					"array": [-1, 3, 4, 5, "a", "100"],
+					"strings": ["a", "b", "c"],
+					"decimals": [1.01, 1.2, -1.5],
+					"str": "Str",
+					"false": false,
+					"empty_list": [],
+					"empty_hash": {},
+					"objects": {
+						"foo": "bar",
+						"bar": "baz"
+					},
+					"null_key": null
+				},
+				"args": ["'4'"],
+				"returns": 4
+			},
+			{
+				"key": "test3",
+				"context": {
+					"foo": -1,
+					"zero": 0,
+					"numbers": [-1, 3, 4, 5],
+					"array": [-1, 3, 4, 5, "a", "100"],
+					"strings": ["a", "b", "c"],
+					"decimals": [1.01, 1.2, -1.5],
+					"str": "Str",
+					"false": false,
+					"empty_list": [],
+					"empty_hash": {},
+					"objects": {
+						"foo": "bar",
+						"bar": "baz"
+					},
+					"null_key": null
+				},
+				"args": ["notanumber"],
+				"returns": null
+			},
+			{
+				"key": "test4",
+				"context": {
+					"foo": -1,
+					"zero": 0,
+					"numbers": [-1, 3, 4, 5],
+					"array": [-1, 3, 4, 5, "a", "100"],
+					"strings": ["a", "b", "c"],
+					"decimals": [1.01, 1.2, -1.5],
+					"str": "Str",
+					"false": false,
+					"empty_list": [],
+					"empty_hash": {},
+					"objects": {
+						"foo": "bar",
+						"bar": "baz"
+					},
+					"null_key": null
+				},
+				"args": [false],
+				"returns": null
+			},
+			{
+				"key": "test5",
+				"context": {
+					"foo": -1,
+					"zero": 0,
+					"numbers": [-1, 3, 4, 5],
+					"array": [-1, 3, 4, 5, "a", "100"],
+					"strings": ["a", "b", "c"],
+					"decimals": [1.01, 1.2, -1.5],
+					"str": "Str",
+					"false": false,
+					"empty_list": [],
+					"empty_hash": {},
+					"objects": {
+						"foo": "bar",
+						"bar": "baz"
+					},
+					"null_key": null
+				},
+				"args": [null],
+				"returns": null
+			},
+			{
+				"key": "test6",
+				"context": {
+					"foo": -1,
+					"zero": 0,
+					"numbers": [-1, 3, 4, 5],
+					"array": [-1, 3, 4, 5, "a", "100"],
+					"strings": ["a", "b", "c"],
+					"decimals": [1.01, 1.2, -1.5],
+					"str": "Str",
+					"false": false,
+					"empty_list": [],
+					"empty_hash": {},
+					"objects": {
+						"foo": "bar",
+						"bar": "baz"
+					},
+					"null_key": null
+				},
+				"args": [[0]],
+				"returns": null
+			},
+			{
+				"key": "test7",
+				"context": {
+					"foo": -1,
+					"zero": 0,
+					"numbers": [-1, 3, 4, 5],
+					"array": [-1, 3, 4, 5, "a", "100"],
+					"strings": ["a", "b", "c"],
+					"decimals": [1.01, 1.2, -1.5],
+					"str": "Str",
+					"false": false,
+					"empty_list": [],
+					"empty_hash": {},
+					"objects": {
+						"foo": "bar",
+						"bar": "baz"
+					},
+					"null_key": null
+				},
+				"args": [
+					{
+						"foo": 0
+					}
+				],
+				"returns": null
+			}
+		]
+	},
+	{
+		"name": "to_string",
+		"topic": "conversion",
+		"args": {
+			"required": [
+				{
+					"name": "arg",
+					"type": ["any"],
+					"desc": ""
+				}
+			],
+			"optional": []
+		},
+		"returns": {
+			"type": "string",
+			"desc": ""
+		},
+		"desc": "\n* string - Returns the passed in value.\n\n\n* number/array/object/boolean - The JSON encoded value of the object.  The\nJSON encoder should emit the encoded JSON value without adding any additional\nnew lines.\n",
+		"examples": [
+			{
+				"key": "test0",
+				"context": null,
+				"args": [2],
+				"returns": "2"
+			},
+			{
+				"key": "test1",
+				"context": {
+					"foo": -1,
+					"zero": 0,
+					"numbers": [-1, 3, 4, 5],
+					"array": [-1, 3, 4, 5, "a", "100"],
+					"strings": ["a", "b", "c"],
+					"decimals": [1.01, 1.2, -1.5],
+					"str": "Str",
+					"false": false,
+					"empty_list": [],
+					"empty_hash": {},
+					"objects": {
+						"foo": "bar",
+						"bar": "baz"
+					},
+					"null_key": null
+				},
+				"args": ["'foo'"],
+				"returns": "foo"
+			},
+			{
+				"key": "test2",
+				"context": {
+					"foo": -1,
+					"zero": 0,
+					"numbers": [-1, 3, 4, 5],
+					"array": [-1, 3, 4, 5, "a", "100"],
+					"strings": ["a", "b", "c"],
+					"decimals": [1.01, 1.2, -1.5],
+					"str": "Str",
+					"false": false,
+					"empty_list": [],
+					"empty_hash": {},
+					"objects": {
+						"foo": "bar",
+						"bar": "baz"
+					},
+					"null_key": null
+				},
+				"args": [1.2],
+				"returns": "1.2"
+			},
+			{
+				"key": "test3",
+				"context": {
+					"foo": -1,
+					"zero": 0,
+					"numbers": [-1, 3, 4, 5],
+					"array": [-1, 3, 4, 5, "a", "100"],
+					"strings": ["a", "b", "c"],
+					"decimals": [1.01, 1.2, -1.5],
+					"str": "Str",
+					"false": false,
+					"empty_list": [],
+					"empty_hash": {},
+					"objects": {
+						"foo": "bar",
+						"bar": "baz"
+					},
+					"null_key": null
+				},
+				"args": [[0, 1]],
+				"returns": "[0,1]"
+			}
+		]
+	},
+	{
+		"name": "trim",
+		"topic": "strings",
+		"args": {
+			"required": [
+				{
+					"name": "subject",
+					"type": ["string"],
+					"desc": "Subject string"
+				}
+			],
+			"optional": [
+				{
+					"name": "chars",
+					"type": ["string"],
+					"desc": "Set of characters to be removed"
+				}
+			]
+		},
+		"returns": {
+			"type": "string",
+			"desc": ""
+		},
+		"desc": "Given the `subject` string, `trim()` removes the leading and trailing characters found in `chars`.\n\nThe `chars` optional parameter represents a set of characters to be removed from the `subject` string.\nIf this parameter is not specified, or is an empty string, whitespace characters are removed from the\n`subject` string.\n",
+		"examples": [
+			{
+				"key": "trim_whitespaces_by_default",
+				"context": " subject string ",
+				"args": ["@"],
+				"returns": "subject string"
+			},
+			{
+				"key": "trim_whitespaces_on_empty_chars",
+				"context": " subject string ",
+				"args": ["@", "''"],
+				"returns": "subject string"
+			},
+			{
+				"key": "trim_blank",
+				"context": " subject string ",
+				"args": ["@", "' '"],
+				"returns": "subject string"
+			},
+			{
+				"key": "trim_unmatched_single_letter",
+				"context": " subject string ",
+				"args": ["@", "'s'"],
+				"returns": " subject string ",
+				"comment": "The trim() has no effect if the `subject` string does not have leading or trailing characters from the `chars` string."
+			},
+			{
+				"key": "trim_unmatched_leading_prefix",
+				"context": " subject string ",
+				"args": ["@", "'su'"],
+				"returns": " subject string ",
+				"comment": "The trim() has no effect if the `subject` string does not have leading or trailing characters from the `chars` string."
+			},
+			{
+				"key": "trim_leading_prefix",
+				"context": " subject string ",
+				"args": ["@", "'su '"],
+				"returns": "bject string"
+			},
+			{
+				"key": "trim_leading_prefix_and_trailing_suffix",
+				"context": " subject string ",
+				"args": ["@", "'gsu '"],
+				"returns": "bject strin"
+			}
+		]
+	},
+	{
+		"name": "trim_left",
+		"topic": "strings",
+		"args": {
+			"required": [
+				{
+					"name": "subject",
+					"type": ["string"],
+					"desc": "Subject string"
+				}
+			],
+			"optional": [
+				{
+					"name": "chars",
+					"type": ["string"],
+					"desc": "Set of characters to be removed"
+				}
+			]
+		},
+		"returns": {
+			"type": "string",
+			"desc": ""
+		},
+		"desc": "Given the `subject` string, `trim_left()` removes the leading characters found in `chars`.\n\nLike the `trim()` function, the `chars` optional string parameter represents a set of characters to be removed.\n`trim_left()` defaults to removing whitespace characters if `chars` is not specified or is an empty string.\n",
+		"examples": [
+			{
+				"key": "trim_whitespaces_by_default",
+				"context": " subject string ",
+				"args": ["@"],
+				"returns": "subject string "
+			},
+			{
+				"key": "trim_unmatched_single_letter",
+				"context": " subject string ",
+				"args": ["@", "'s'"],
+				"returns": " subject string ",
+				"comment": "The trim_left() has no effect if the `subject` string does not have leading characters from the `chars` string."
+			},
+			{
+				"key": "trim_unmatched_leading_prefix",
+				"context": " subject string ",
+				"args": ["@", "'su'"],
+				"returns": " subject string ",
+				"comment": "The trim_left() has no effect if the `subject` string does not have leading characters from the `chars` string."
+			},
+			{
+				"key": "trim_leading_prefix",
+				"context": " subject string ",
+				"args": ["@", "'su '"],
+				"returns": "bject string "
+			},
+			{
+				"key": "trim_leading_prefix_only",
+				"context": " subject string ",
+				"args": ["@", "'gsu '"],
+				"returns": "bject string "
+			}
+		]
+	},
+	{
+		"name": "trim_right",
+		"topic": "strings",
+		"args": {
+			"required": [
+				{
+					"name": "subject",
+					"type": ["string"],
+					"desc": "Subject string"
+				}
+			],
+			"optional": [
+				{
+					"name": "chars",
+					"type": ["string"],
+					"desc": "Set of characters to be removed"
+				}
+			]
+		},
+		"returns": {
+			"type": "string",
+			"desc": ""
+		},
+		"desc": "Given the `subject` string, `trim_right()` removes the trailing characters found in `chars`.\n\nLike the `trim()` function, the `chars` optional string parameter represents a set of characters to be removed.\n`trim_right()` defaults to removing whitespace characters if `chars` is not specified or is an empty string.\n",
+		"examples": [
+			{
+				"key": "trim_whitespaces_by_default",
+				"context": " subject string ",
+				"args": ["@"],
+				"returns": "subject string "
+			},
+			{
+				"key": "trim_unmatched_single_letter",
+				"context": " subject string ",
+				"args": ["@", "'s'"],
+				"returns": " subject string ",
+				"comment": "The trim_right() has no effect if the `subject` string does not have trailing characters from the `chars` string."
+			},
+			{
+				"key": "trim_unmatched_leading_prefix",
+				"context": " subject string ",
+				"args": ["@", "'su'"],
+				"returns": " subject string ",
+				"comment": "The trim_right() has no effect if the `subject` string does not have trailing characters from the `chars` string."
+			},
+			{
+				"key": "trim_leading_prefix",
+				"context": " subject string ",
+				"args": ["@", "'su '"],
+				"returns": " subject string"
+			},
+			{
+				"key": "trim_leading_prefix_only",
+				"context": " subject string ",
+				"args": ["@", "'gsu '"],
+				"returns": " subject string"
+			}
+		]
+	},
+	{
+		"name": "type",
+		"topic": "misc",
+		"args": {
+			"required": [
+				{
+					"name": "subject",
+					"type": ["array", "object", "string", "number", "boolean", "null"],
+					"desc": ""
+				}
+			],
+			"optional": []
+		},
+		"returns": {
+			"type": "string",
+			"desc": ""
+		},
+		"desc": "Returns the JavaScript type of the given `$subject` argument as a string\nvalue.\n\nThe return value MUST be one of the following:\n\n* number\n* string\n* boolean\n* array\n* object\n* null\n",
+		"examples": [
+			{
+				"key": "test0",
+				"context": "foo",
+				"args": ["@"],
+				"returns": "string"
+			},
+			{
+				"key": "test1",
+				"context": true,
+				"args": ["@"],
+				"returns": "boolean"
+			},
+			{
+				"key": "test2",
+				"context": false,
+				"args": ["@"],
+				"returns": "boolean"
+			},
+			{
+				"key": "test3",
+				"context": null,
+				"args": ["@"],
+				"returns": "null"
+			},
+			{
+				"key": "test4",
+				"context": 123,
+				"args": ["@"],
+				"returns": "number"
+			},
+			{
+				"key": "test5",
+				"context": 123.05,
+				"args": ["@"],
+				"returns": "number"
+			},
+			{
+				"key": "test6",
+				"context": ["abc"],
+				"args": ["@"],
+				"returns": "array"
+			},
+			{
+				"key": "test7",
+				"context": {
+					"abc": "123"
+				},
+				"args": ["@"],
+				"returns": "object"
+			},
+			{
+				"key": "test8",
+				"context": {
+					"foo": -1,
+					"zero": 0,
+					"numbers": [-1, 3, 4, 5],
+					"array": [-1, 3, 4, 5, "a", "100"],
+					"strings": ["a", "b", "c"],
+					"decimals": [1.01, 1.2, -1.5],
+					"str": "Str",
+					"false": false,
+					"empty_list": [],
+					"empty_hash": {},
+					"objects": {
+						"foo": "bar",
+						"bar": "baz"
+					},
+					"null_key": null
+				},
+				"args": ["'abc'"],
+				"returns": "string"
+			},
+			{
+				"key": "test9",
+				"context": {
+					"foo": -1,
+					"zero": 0,
+					"numbers": [-1, 3, 4, 5],
+					"array": [-1, 3, 4, 5, "a", "100"],
+					"strings": ["a", "b", "c"],
+					"decimals": [1.01, 1.2, -1.5],
+					"str": "Str",
+					"false": false,
+					"empty_list": [],
+					"empty_hash": {},
+					"objects": {
+						"foo": "bar",
+						"bar": "baz"
+					},
+					"null_key": null
+				},
+				"args": [1],
+				"returns": "number"
+			},
+			{
+				"key": "test10",
+				"context": {
+					"foo": -1,
+					"zero": 0,
+					"numbers": [-1, 3, 4, 5],
+					"array": [-1, 3, 4, 5, "a", "100"],
+					"strings": ["a", "b", "c"],
+					"decimals": [1.01, 1.2, -1.5],
+					"str": "Str",
+					"false": false,
+					"empty_list": [],
+					"empty_hash": {},
+					"objects": {
+						"foo": "bar",
+						"bar": "baz"
+					},
+					"null_key": null
+				},
+				"args": [2],
+				"returns": "number"
+			},
+			{
+				"key": "test11",
+				"context": {
+					"foo": -1,
+					"zero": 0,
+					"numbers": [-1, 3, 4, 5],
+					"array": [-1, 3, 4, 5, "a", "100"],
+					"strings": ["a", "b", "c"],
+					"decimals": [1.01, 1.2, -1.5],
+					"str": "Str",
+					"false": false,
+					"empty_list": [],
+					"empty_hash": {},
+					"objects": {
+						"foo": "bar",
+						"bar": "baz"
+					},
+					"null_key": null
+				},
+				"args": [true],
+				"returns": "boolean"
+			},
+			{
+				"key": "test12",
+				"context": {
+					"foo": -1,
+					"zero": 0,
+					"numbers": [-1, 3, 4, 5],
+					"array": [-1, 3, 4, 5, "a", "100"],
+					"strings": ["a", "b", "c"],
+					"decimals": [1.01, 1.2, -1.5],
+					"str": "Str",
+					"false": false,
+					"empty_list": [],
+					"empty_hash": {},
+					"objects": {
+						"foo": "bar",
+						"bar": "baz"
+					},
+					"null_key": null
+				},
+				"args": [false],
+				"returns": "boolean"
+			},
+			{
+				"key": "test13",
+				"context": {
+					"foo": -1,
+					"zero": 0,
+					"numbers": [-1, 3, 4, 5],
+					"array": [-1, 3, 4, 5, "a", "100"],
+					"strings": ["a", "b", "c"],
+					"decimals": [1.01, 1.2, -1.5],
+					"str": "Str",
+					"false": false,
+					"empty_list": [],
+					"empty_hash": {},
+					"objects": {
+						"foo": "bar",
+						"bar": "baz"
+					},
+					"null_key": null
+				},
+				"args": [null],
+				"returns": "null"
+			},
+			{
+				"key": "test14",
+				"context": {
+					"foo": -1,
+					"zero": 0,
+					"numbers": [-1, 3, 4, 5],
+					"array": [-1, 3, 4, 5, "a", "100"],
+					"strings": ["a", "b", "c"],
+					"decimals": [1.01, 1.2, -1.5],
+					"str": "Str",
+					"false": false,
+					"empty_list": [],
+					"empty_hash": {},
+					"objects": {
+						"foo": "bar",
+						"bar": "baz"
+					},
+					"null_key": null
+				},
+				"args": [[0]],
+				"returns": "array"
+			},
+			{
+				"key": "test15",
+				"context": {
+					"foo": -1,
+					"zero": 0,
+					"numbers": [-1, 3, 4, 5],
+					"array": [-1, 3, 4, 5, "a", "100"],
+					"strings": ["a", "b", "c"],
+					"decimals": [1.01, 1.2, -1.5],
+					"str": "Str",
+					"false": false,
+					"empty_list": [],
+					"empty_hash": {},
+					"objects": {
+						"foo": "bar",
+						"bar": "baz"
+					},
+					"null_key": null
+				},
+				"args": [
+					{
+						"a": "b"
+					}
+				],
+				"returns": "object"
+			},
+			{
+				"key": "test16",
+				"context": {
+					"foo": -1,
+					"zero": 0,
+					"numbers": [-1, 3, 4, 5],
+					"array": [-1, 3, 4, 5, "a", "100"],
+					"strings": ["a", "b", "c"],
+					"decimals": [1.01, 1.2, -1.5],
+					"str": "Str",
+					"false": false,
+					"empty_list": [],
+					"empty_hash": {},
+					"objects": {
+						"foo": "bar",
+						"bar": "baz"
+					},
+					"null_key": null
+				},
+				"args": ["@"],
+				"returns": "object"
+			}
+		]
+	},
+	{
+		"name": "upper",
+		"topic": "strings",
+		"args": {
+			"required": [
+				{
+					"name": "subject",
+					"type": ["string"],
+					"desc": "Subject string"
+				}
+			]
+		},
+		"returns": {
+			"type": "string",
+			"desc": ""
+		},
+		"desc": "Returns the uppercase subject string.\n",
+		"examples": [
+			{
+				"key": "lower",
+				"context": "string",
+				"args": ["@"],
+				"returns": "STRING"
+			}
+		]
+	},
+	{
+		"name": "values",
+		"topic": "collections",
+		"args": {
+			"required": [
+				{
+					"name": "obj",
+					"type": ["object"],
+					"desc": ""
+				}
+			],
+			"optional": []
+		},
+		"returns": {
+			"type": "array",
+			"desc": ""
+		},
+		"desc": "Returns the values of the provided object.\nNote that because JSON hashes are inheritently unordered, the\nvalues associated with the provided object `obj` are inheritently\nunordered.  Implementations are not required to return values in\nany specific order.  For example, given the input:\n\n```\n{\"a\": \"first\", \"b\": \"second\", \"c\": \"third\"}\n```\n\nThe expression `values(@)` could have any of these return values:\n\n\n* `[\"first\", \"second\", \"third\"]`\n\n\n* `[\"first\", \"third\", \"second\"]`\n\n\n* `[\"second\", \"first\", \"third\"]`\n\n\n* `[\"second\", \"third\", \"first\"]`\n\n\n* `[\"third\", \"first\", \"second\"]`\n\n\n* `[\"third\", \"second\", \"first\"]`\n\nIf you would like a specific order, consider using the\n`sort` or `sort_by` functions.\n",
+		"examples": [
+			{
+				"key": "test0",
+				"context": {
+					"foo": "baz",
+					"bar": "bam"
+				},
+				"args": ["@"],
+				"returns": ["baz", "bam"]
+			},
+			{
+				"key": "test1",
+				"context": ["a", "b"],
+				"args": ["@"],
+				"error": "invalid-type"
+			},
+			{
+				"key": "test2",
+				"context": false,
+				"args": ["@"],
+				"error": "invalid-type"
+			},
+			{
+				"key": "test3",
+				"context": {
+					"foo": -1,
+					"zero": 0,
+					"numbers": [-1, 3, 4, 5],
+					"array": [-1, 3, 4, 5, "a", "100"],
+					"strings": ["a", "b", "c"],
+					"decimals": [1.01, 1.2, -1.5],
+					"str": "Str",
+					"false": false,
+					"empty_list": [],
+					"empty_hash": {},
+					"objects": {
+						"foo": "bar",
+						"bar": "baz"
+					},
+					"null_key": null
+				},
+				"args": ["foo"],
+				"error": "invalid-type"
+			}
+		]
+	},
+	{
+		"name": "zip",
+		"topic": "misc",
+		"args": {
+			"required": [
+				{
+					"name": "arg",
+					"type": ["array[any]"],
+					"desc": ""
+				}
+			],
+			"variadic": {
+				"type": ["array[any]"],
+				"desc": ""
+			},
+			"optional": []
+		},
+		"returns": {
+			"type": ["array[array[any]]"],
+			"desc": ""
+		},
+		"desc": "Accepts one or more arrays as arguments and returns an array of arrays\nin which the _i-th_ array contains the _i-th_ element from each of the\nargument arrays.\nThe returned array is truncated to the length of the shortest argument array.\n",
+		"examples": [
+			{
+				"key": "zip",
+				"context": null,
+				"args": [["a", "b"], [1, 2]],
+				"returns": [["a", 1], ["b", 2]]
+			},
+			{
+				"key": "zip_sparse",
+				"context": null,
+				"args": [["a", "b", "c"], [1, 2]],
+				"returns": [["a", 1], ["b", 2]]
+			}
+		]
+	}
+]

@@ -3,66 +3,56 @@ on:
   push:
     branches:
       - main
+  pull_request:
   workflow_dispatch: {}
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
+      ## checkout & setup
 
-    ## checkout prerequisites
+      - name: 📚 Checkout repository
+        uses: actions/checkout@v4
 
-    - name: 📚 Checkout site
-      uses: actions/checkout@v3
+      - name: 📦 Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
 
-    - name: 📚 Checkout spec
-      uses: actions/checkout@v3
-      with:
-        repository: jmespath-community/jmespath.spec.git
-        ref: main
-        path: spec
+      - name: 🟢 Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+          cache-dependency-path: app/pnpm-lock.yaml
 
-    - name: 📚 Checkout wiki
-      uses: actions/checkout@v3
-      with:
-        repository: jmespath-community/jmespath.spec.wiki.git
-        ref: master
-        path: content/wiki
+      - name: 📥 Install dependencies
+        run: pnpm -C app/ install
 
-    ## install supporting software
+      - name: 🔧 Download jp binary
+        run: |
+          curl -sSL https://github.com/jmespath-community/jp/releases/download/v1.1.0/jp-linux-amd64 -o app/jp
+          chmod +x app/jp
 
-    - name: 📘 Install ncat
-      run: 'sudo apt-get -y install ncat'
+      ## quality checks
 
-    - name: 📘 Setup Hugo
-      uses: peaceiris/actions-hugo@v2
-      with:
-        hugo-version: 'latest'
-        extended: true
+      - name: 🎨 Format check
+        run: pnpm -C app/ run format
 
-    ## update home page
+      - name: 🔍 Lint check
+        run: pnpm -C app/ run lint
 
-    - name: 📃 Checkout site gh-pages branch
-      uses: actions/checkout@v3
-      with:
-        ref: gh-pages
-        path: build/
-        token: ${{ secrets.GITHUB_TOKEN }}
+      - name: 🔎 Type check
+        run: pnpm -C app/ run check
 
-    - name: 📃 Generate site pages
-      run:
-        .github/workflows/gh-pages.sh "${{ github.ref_name }}"
-      env:
-        OUTPUTDIR: "build/${{ github.ref_name }}"
+      - name: 🏗️ Build
+        run: pnpm -C app/ run build
 
-    ## publish home pages
+      ## artifacts
 
-    - name: ✉ Deploy
-      if: github.ref == 'refs/heads/main'
-      run: |
-        git -C build/ config --local user.name Springcomp
-        git -C build/ config --local user.email springcomp@users.noreply.github.com
-
-        git -C build/ add .
-        git -C build/ commit -m "Commit from GitHub Actions (Build)"
-        git -C build/ push origin gh-pages --force
+      - name: 📤 Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: app/dist/

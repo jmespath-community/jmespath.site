@@ -1,0 +1,15 @@
+---
+// Redirect to the first function for the given version
+import { getVersionSlugs } from "../../../config/versions";
+
+export async function getStaticPaths() {
+	return getVersionSlugs().map((version) => ({
+		params: { version },
+	}));
+}
+
+const { version } = Astro.params;
+console.log(version);
+
+return Astro.redirect(`/functions/${version}/abs`);
+---

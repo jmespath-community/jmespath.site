@@ -1,0 +1,328 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+---
+
+<BaseLayout title="Libraries" pageType="shared">
+  <div class="libraries-page">
+    <section class="intro">
+      <p>
+        The JMESPath specification is implemented in various languages. Each list
+        below shows JMESPath libraries as well as the compliance level. The
+        compliance level is based on which compliance tests the library can pass
+        and as reported by their respective authors.
+      </p>
+      <ul>
+        <li>
+          <strong>Fully compliant</strong>: means compliant with respect to the
+          <a href="/specification/latest/"
+            >original version of JMESPath</a
+          >.
+        </li>
+        <li>
+          <strong>JMESPath Community</strong>: means compliant with respect to
+          the new JMESPath Community specifications.
+        </li>
+      </ul>
+    </section>
+
+    <section class="implementations">
+      <h2>Language Implementations</h2>
+      <table class="libraries-table">
+        <thead>
+          <tr>
+            <th>Language</th>
+            <th>Name</th>
+            <th>Compliance Level</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>C++</td>
+            <td>
+              <a href="https://github.com/robertmrk/jmespath.cpp" target="_blank"
+                >jmespath.cpp</a
+              >
+            </td>
+            <td>Fully compliant</td>
+          </tr>
+          <tr>
+            <td>Elixir</td>
+            <td>
+              <a href="https://github.com/stephan83/ex-jmes" target="_blank"
+                >ex-jmes</a
+              >
+            </td>
+            <td>Fully compliant</td>
+          </tr>
+          <tr>
+            <td>Go</td>
+            <td>
+              <a href="https://github.com/jmespath-community/go-jmespath" target="_blank"
+                >go-jmespath</a
+              >
+            </td>
+            <td>
+              <span class="compliance-badge"><img src="https://img.shields.io/badge/JMESPath%20Community-100%25-yellowgreen" alt=""></span>
+            </td>
+          </tr>
+          <tr>
+            <td>Java</td>
+            <td>
+              <a href="https://github.com/burtcorp/jmespath-java" target="_blank"
+                >jmespath-java</a
+              >
+            </td>
+            <td>Fully compliant</td>
+          </tr>
+          <tr>
+            <td>JavaScript</td>
+            <td>
+              <a href="https://github.com/jmespath/jmespath.js" target="_blank"
+                >jmespath.js</a
+              >
+            </td>
+            <td>Fully compliant</td>
+          </tr>
+          <tr>
+            <td>Lua</td>
+            <td>
+              <a href="https://github.com/jmespath/jmespath.lua" target="_blank"
+                >jmespath.lua</a
+              >
+            </td>
+            <td>Fully compliant</td>
+          </tr>
+          <tr>
+            <td>.NET</td>
+            <td>
+              <a href="https://github.com/jdevillard/JmesPath.Net" target="_blank"
+                >jmespath.net</a
+              >
+            </td>
+            <td>
+              <span class="compliance-badge"><img src="https://img.shields.io/badge/JMESPath%20Community-100%25-yellowgreen" alt=""></span>
+            </td>
+          </tr>
+          <tr>
+            <td>PHP</td>
+            <td>
+              <a href="https://github.com/jmespath/jmespath.php" target="_blank"
+                >jmespath.php</a
+              >
+            </td>
+            <td>Fully compliant</td>
+          </tr>
+          <tr>
+            <td>Python</td>
+            <td>
+              <a href="https://github.com/jmespath-community/python-jmespath" target="_blank"
+                >python-jmespath</a
+              >
+            </td>
+            <td>
+              <span class="compliance-badge"><img src="https://img.shields.io/badge/JMESPath%20Community-100%25-yellowgreen" alt=""></span>
+            </td>
+          </tr>
+          <tr>
+            <td>Ruby</td>
+            <td>
+              <a href="https://github.com/trevorrowe/jmespath.rb" target="_blank"
+                >jmespath.rb</a
+              >
+            </td>
+            <td>Fully compliant</td>
+          </tr>
+          <tr>
+            <td>Rust</td>
+            <td>
+              <a href="https://github.com/mtdowling/jmespath.rs" target="_blank"
+                >jmespath.rs</a
+              >
+            </td>
+            <td>Fully compliant</td>
+          </tr>
+          <tr>
+            <td>TypeScript</td>
+            <td>
+              <a href="https://github.com/jmespath-community/typescript-jmespath" target="_blank"
+                >typescript-jmespath</a
+              >
+            </td>
+            <td>
+              <span class="compliance-badge"><img src="https://img.shields.io/badge/JMESPath%20Community-100%25-yellowgreen" alt=""></span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="tools">
+      <h2>JMESPath Tools</h2>
+      <table class="tools-table">
+        <thead>
+          <tr>
+            <th>Tool</th>
+            <th>Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>
+              <a href="https://github.com/jmespath-community/jmespath.terminal" target="_blank"
+                >jmespath.terminal</a
+              >
+            </td>
+            <td>
+              Provides a JMESPath interactive terminal that you can use to
+              evaluate JMESPath expressions as you type. The README in the
+              <a href="https://github.com/jmespath-community/jmespath.terminal" target="_blank"
+                >github repo</a
+              > shows GIFs of <code>jpterm</code> in action.
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <a href="https://github.com/jmespath-community/jp" target="_blank"
+                >jp</a
+              >
+            </td>
+            <td>
+              Provides a JMESPath command line interface called <code>jp</code>.
+              This cross platform tool accepts JSON data through stdin or input
+              files, and prints the result of evaluating the JMESPath
+              expression to stdout. This is useful if you're writing shell
+              scripts that need to manipulate JSON data.
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+  </div>
+</BaseLayout>
+
+<style scoped>
+  .libraries-page {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 2rem;
+  }
+
+  .intro {
+    margin-bottom: 3rem;
+  }
+
+  .intro p {
+    margin-bottom: 1rem;
+    line-height: 1.6;
+  }
+
+  .intro ul {
+    list-style: disc;
+    padding-left: 2rem;
+  }
+
+  .intro li {
+    margin-bottom: 0.5rem;
+    line-height: 1.5;
+  }
+
+  .intro a {
+    color: var(--color-accent);
+    text-decoration: none;
+  }
+
+  .intro a:hover {
+    text-decoration: underline;
+  }
+
+  h2 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin: 2rem 0 1rem;
+    color: var(--color-text-primary);
+  }
+
+  .implementations {
+    margin-bottom: 3rem;
+  }
+
+  .tools {
+    margin-bottom: 2rem;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1rem 0;
+    background-color: var(--color-surface);
+  }
+
+  thead {
+    background-color: var(--color-surface-alt);
+    border-bottom: 2px solid var(--color-border);
+  }
+
+  th {
+    padding: 1rem;
+    text-align: left;
+    font-weight: 600;
+    color: var(--color-text-primary);
+  }
+
+  td {
+    padding: 1rem;
+    border-bottom: 1px solid var(--color-border);
+    color: var(--color-text-secondary);
+  }
+
+  tbody tr:hover {
+    background-color: var(--color-surface-hover);
+  }
+
+  a {
+    color: var(--color-accent);
+    text-decoration: none;
+  }
+
+  a:hover {
+    text-decoration: underline;
+  }
+
+  code {
+    background-color: var(--color-code-bg);
+    padding: 0.2rem 0.4rem;
+    border-radius: 0.25rem;
+    font-family: monospace;
+    font-size: 0.9em;
+  }
+
+  .compliance-badge {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    background-color: var(--color-success-light);
+    color: var(--color-success-dark);
+    border-radius: 1rem;
+    font-size: 0.9em;
+    font-weight: 500;
+  }
+
+  @media (max-width: 768px) {
+    .libraries-page {
+      padding: 1rem;
+    }
+
+    h2 {
+      font-size: 1.25rem;
+    }
+
+    th,
+    td {
+      padding: 0.75rem 0.5rem;
+      font-size: 0.95em;
+    }
+
+    table {
+      font-size: 0.9em;
+    }
+  }
+</style>

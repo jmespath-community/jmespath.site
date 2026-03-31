@@ -1,0 +1,38 @@
+# Progress
+
+## US-001: Update Build Workflow for Astro/Starlight
+
+- Replaced Hugo-based `build.yaml` with Astro/pnpm-based workflow
+- Triggers: push to main, all pull_requests, workflow_dispatch
+- Uses: actions/checkout@v4, pnpm/action-setup@v4, actions/setup-node@v4 (pnpm cache)
+- Downloads jp binary (v1.1.0) to app/ folder for build step
+- Steps: format check → lint → astro check → astro build → upload artifact
+- All steps fail-fast by default (no continue-on-error); emoji markers throughout
+- pnpm version 9 (matches lockfileVersion 9.0), Node.js 20
+
+## US-002: Create GitHub Pages Deployment Workflow (Option B)
+
+- Created `.github/workflows/gh-pages.yaml` with manual git operations (Option B)
+- Triggers: `workflow_run` on "🧤 Build" completion (main branch only) + `workflow_dispatch`
+- `if` condition guards deployment: only runs when build succeeded or manually triggered
+- Uses `git worktree add` to checkout `gh-pages` branch into a temp dir
+- Preserves CNAME by reading it before `git rm -rf .`, then restoring after copy
+- Committer set to `Springcomp` (consistent with existing style)
+- Commit skipped gracefully if nothing changed (no redundant empty commits)
+- **Gotcha**: `.gitignore` contains `.github/` pattern — new workflow files must be force-added with `git add -f`
+- **Gotcha**: `.agentic/` is also in `.gitignore` — PRD.md updates need `git add -f` too
+- Node.js updated to 22 (matching build.yaml which was already updated to 22 in a previous manual commit)
+
+## US-003: Create Comprehensive README Documentation
+
+- Created README.md at repository root with project overview, prerequisites, quick start, development commands, project structure, deployment instructions, contributing notes, troubleshooting, and license reference
+- Verified commands reflect pnpm usage and app/ subdirectory
+
+## US-003: Create Comprehensive README Documentation (Completed)
+
+- Added links to JMESPath specification and community resources
+- Clarified Node.js versions (18.x or 20.x) and pnpm installation
+- Added fenced code blocks for quick-start and contributing commands
+- Noted `pnpm -C app/` alternative when running from repo root
+- Updated PRD acceptance criteria to mark verified items as complete
+- Learnings: Keep commands runnable from both repo root and app/ to lower friction for contributors

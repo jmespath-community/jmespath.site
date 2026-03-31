@@ -1,0 +1,156 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import JMESPathDemo from "../components/JMESPathDemo.astro";
+
+const data = `{
+  "locations": [
+    {"name": "Seattle", "state": "WA"},
+    {"name": "New York", "state": "NY"},
+    {"name": "Bellevue", "state": "WA"},
+    {"name": "Olympia", "state": "WA"}
+  ]
+}`;
+---
+
+<BaseLayout title="JMESPath" pageType="shared">
+	<section class="hero">
+		<h1>JMESPath — Query Language for JSON</h1>
+		<p>A query language for JSON with a simple, powerful syntax.</p>
+		<JMESPathDemo
+			alwaysExpanded={true}
+			label="Try JMESPath"
+			expression="locations[?state == 'WA'].name | sort(@) | {WashingtonCities: join(', ', @)}"
+			data={data}
+			result='{"WashingtonCities": "Bellevue, Olympia, Seattle"}'
+		/>
+	</section>
+
+	<div class="info-sections">
+		<section id="specification">
+			<h2>ABNF Specification</h2>
+			<p>
+				The formal ABNF grammar defines the JMESPath language, providing a
+				precise and unambiguous description of its syntax and semantics.
+			</p>
+			<a class="cta-link" href="/specification/latest/">Read the specification →</a>
+		</section>
+
+		<section id="libraries">
+			<h2>Libraries</h2>
+			<p>
+				Multiple language implementations — Python, JavaScript, Java, Go, and
+				more — all conforming to the same specification for consistent behavior.
+			</p>
+			<a class="cta-link" href="/libraries/">Browse libraries →</a>
+		</section>
+
+		<section id="compliance">
+			<h2>Compliance Test Suite</h2>
+			<p>
+				Data-driven tests ensure consistent behavior across all implementations,
+				making it easy to verify conformance to the JMESPath specification.
+			</p>
+		</section>
+
+		<section id="try">
+			<h2>Try it Out!</h2>
+			<p>
+				Learn JMESPath through an interactive tutorial and explore real-world
+				examples to get started quickly.
+			</p>
+			<div class="cta-links">
+				<a class="cta-link" href="/tutorial/">Tutorial</a>
+				<a class="cta-link" href="/examples/">Examples</a>
+			</div>
+		</section>
+	</div>
+</BaseLayout>
+
+<style>
+	.hero {
+		padding: 3rem 1rem 2rem;
+		text-align: center;
+		background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+		color: #fff;
+	}
+
+	.hero h1 {
+		font-size: clamp(1.8rem, 4vw, 2.8rem);
+		margin: 0 0 0.75rem;
+		font-weight: 800;
+		letter-spacing: -0.02em;
+	}
+
+	.hero > p {
+		font-size: 1.1rem;
+		opacity: 0.85;
+		margin: 0 auto 2rem;
+		max-width: 600px;
+	}
+
+	.hero :global(.jmespath-demo) {
+		max-width: 720px;
+		margin: 0 auto;
+		text-align: left;
+	}
+
+	.info-sections {
+		display: grid;
+		grid-template-columns: repeat(2, 1fr);
+		gap: 2rem;
+		padding: 3rem 1rem;
+		max-width: 960px;
+		margin: 0 auto;
+	}
+
+	.info-sections section {
+		background: var(--card-bg, #fff);
+		border: 1px solid var(--card-border, #e8e8f0);
+		border-radius: 10px;
+		padding: 1.5rem;
+	}
+
+	.info-sections h2 {
+		font-size: 1.1rem;
+		font-weight: 700;
+		margin: 0 0 0.75rem;
+		color: var(--heading-color, #1a1a2e);
+	}
+
+	.info-sections p {
+		margin: 0 0 1rem;
+		color: var(--body-color, #444);
+		line-height: 1.6;
+		font-size: 0.95rem;
+	}
+
+	.cta-link {
+		display: inline-block;
+		margin-top: 0.25rem;
+		color: var(--accent, #3b82f6);
+		font-weight: 600;
+		text-decoration: none;
+		font-size: 0.9rem;
+	}
+
+	.cta-link:hover {
+		text-decoration: underline;
+	}
+
+	.cta-links {
+		display: flex;
+		gap: 1rem;
+		margin-top: 0.25rem;
+	}
+
+	@media (max-width: 640px) {
+		.info-sections {
+			grid-template-columns: 1fr;
+			padding: 2rem 1rem;
+		}
+
+		.hero {
+			padding: 2rem 1rem 1.5rem;
+		}
+	}
+</style>

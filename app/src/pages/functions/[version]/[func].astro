@@ -1,0 +1,303 @@
+---
+import { readFileSync, existsSync } from "node:fs";
+import { join } from "node:path";
+import { marked } from "marked";
+import BaseLayout from "../../../layouts/BaseLayout.astro";
+import FunctionPage from "../../../components/FunctionPage.astro";
+import { getVersionSlugs } from "../../../config/versions";
+import {
+	parseMarkdownGrammar,
+	type Block,
+} from "../../../utils/parseMarkdownGrammar";
+import { highlightJSON } from "../../../utils/highlightJSON";
+import { highlightJMESPath } from "../../../utils/highlightJMESPath";
+import { parseSearchExpression } from "../../../utils/parseSearchExpression";
+import { escapeHtml } from "../../../utils/escape";
+
+interface FunctionData {
+	title: string;
+	description: string;
+	topic: string;
+	signature: string;
+	version: string;
+}
+
+interface FunctionEntry {
+	data: FunctionData;
+	slug: string;
+}
+
+export async function getStaticPaths() {
+	const paths: {
+		params: { version: string; func: string };
+		props: {
+			version: string;
+			funcName: string;
+			allFunctions: Array<{ name: string; file: string }>;
+		};
+	}[] = [];
+	const versionsToProcess = getVersionSlugs();
+
+	for (const version of versionsToProcess) {
+		// Read the functions list from _functions.json
+		const functionsJsonPath = join(
+			process.cwd(),
+			`src/data/functions/${version}/_functions.json`,
+		);
+
+		if (!existsSync(functionsJsonPath)) {
+			console.warn(`⚠️ Functions file not found: ${functionsJsonPath}`);
+			continue;
+		}
+
+		try {
+			const functionsJson = JSON.parse(
+				readFileSync(functionsJsonPath, "utf-8"),
+			);
+
+			// For each function, create a static path
+			for (const func of functionsJson) {
+				paths.push({
+					params: {
+						version,
+						func: func.name,
+					},
+					props: {
+						version,
+						funcName: func.name,
+						allFunctions: functionsJson,
+					},
+				});
+			}
+		} catch (error) {
+			console.error(`❌ Failed to parse functions for ${version}:`, error);
+			throw new Error(`Invalid functions.json for version ${version}`);
+		}
+	}
+
+	return paths;
+}
+
+interface Props {
+	version: string;
+	funcName: string;
+	allFunctions: Array<{ name: string; file: string }>;
+}
+
+const { version, funcName, allFunctions } = Astro.props;
+const { func } = Astro.params;
+
+// Read the function markdown file
+const functionPath = join(
+	process.cwd(),
+	`src/data/functions/${version}/${funcName}.md`,
+);
+const rawContent = readFileSync(functionPath, "utf-8");
+
+// Parse frontmatter
+function parseFrontmatter(content: string): {
+	data: FunctionData;
+	body: string;
+} {
+	const match = content.match(/^---\n([\s\S]*?)\n---\n([\s\S]*)/);
+	if (!match) {
+		return {
+			data: {
+				title: funcName,
+				description: "",
+				topic: "",
+				signature: "",
+				version,
+			},
+			body: content,
+		};
+	}
+
+	const [, frontmatterStr, body] = match;
+	const lines = frontmatterStr.split("\n");
+	const data: Record<string, string> = {};
+
+	for (const line of lines) {
+		const [key, ...valueParts] = line.split(": ");
+		if (key && valueParts.length > 0) {
+			const value = valueParts.join(": ").replace(/^"(.*)"$/, "$1");
+			data[key.trim()] = value.trim();
+		}
+	}
+
+	return {
+		data: {
+			title: data.title || funcName,
+			description: data.description || "",
+			topic: data.topic || "",
+			signature: data.signature || "",
+			version: data.version || version,
+		},
+		body,
+	};
+}
+
+const parsed = parseFrontmatter(rawContent);
+const functionData = parsed.data;
+
+// Helper function for HTML escaping
+// Rendering functions (reused from spec pages)
+function renderJsonBlock(lines: string[]): string {
+	const jsonString = lines.join("\n");
+	const highlighted = highlightJSON(jsonString);
+	return `<pre><code class="language-json">${highlighted}</code></pre>`;
+}
+
+function renderJMESPathBlock(lines: string[]): string {
+	const renderedLines = lines
+		.filter((line) => line.trim().length > 0)
+		.map((line) => {
+			const parts = line.split(" -> ");
+			if (parts.length === 2) {
+				const expr = parts[0].trim();
+				const result = parts[1].trim();
+				const highlightedExpr = highlightJMESPath(expr);
+				const highlightedResult = highlightJSON(result);
+				return `${highlightedExpr} → ${highlightedResult}`;
+			}
+			return highlightJMESPath(line);
+		});
+	return `<pre><code class="language-jmespath">${renderedLines.join("\n")}</code></pre>`;
+}
+
+function renderCodeBlock(lines: string[]): string {
+	const filtered = lines.filter((line) => line.trim().length > 0);
+	const renderedLines: string[] = [];
+	let i = 0;
+
+	while (i < filtered.length) {
+		const line = filtered[i];
+
+		// Check for comments
+		if (line.trim().startsWith("#")) {
+			renderedLines.push(
+				`<span style="color: #a6e3a1;">${escapeHtml(line)}</span>`,
+			);
+			i++;
+			continue;
+		}
+
+		let fullExpression = line;
+		let j = i + 1;
+
+		while (j < filtered.length && !fullExpression.includes(" -> ")) {
+			fullExpression += `\n${filtered[j]}`;
+			j++;
+		}
+
+		const parsed = parseSearchExpression(fullExpression);
+
+		if (parsed) {
+			const { expr, input, result, identifier } = parsed;
+			const highlightedExpr = highlightJMESPath(expr);
+
+			let highlightedResult: string;
+			try {
+				JSON.parse(result);
+				highlightedResult = highlightJSON(result);
+			} catch {
+				highlightedResult = escapeHtml(result);
+			}
+
+			const prefix = identifier ? `${escapeHtml(identifier)} = ` : "";
+
+			if (input === null) {
+				renderedLines.push(
+					`${prefix}${highlightedExpr} → ${highlightedResult}`,
+				);
+			} else {
+				let highlightedInput: string;
+				try {
+					JSON.parse(input);
+					highlightedInput = highlightJSON(input);
+				} catch {
+					highlightedInput = escapeHtml(input);
+				}
+
+				const inputLines = highlightedInput.split("\n");
+				if (inputLines.length === 1) {
+					renderedLines.push(
+						`${prefix}search(${highlightedExpr}, ${highlightedInput}) → ${highlightedResult}`,
+					);
+				} else {
+					renderedLines.push(`${prefix}search(${highlightedExpr},`);
+					renderedLines.push(inputLines[0]);
+					for (let k = 1; k < inputLines.length; k++) {
+						renderedLines.push(inputLines[k]);
+					}
+					renderedLines[renderedLines.length - 1] += `) → ${highlightedResult}`;
+				}
+			}
+
+			i = j;
+		} else {
+			renderedLines.push(escapeHtml(line));
+			i++;
+		}
+	}
+
+	return `<pre><code class="language-code">${renderedLines.join("\n")}</code></pre>`;
+}
+
+// Parse markdown and render blocks
+async function renderBlocks(blocks: Block[]): Promise<string> {
+	const output: string[] = [];
+
+	for (const block of blocks) {
+		if (block.type === "doc") {
+			// Render doc blocks as markdown (use full parse for block elements like headings)
+			const html = await marked.parse(block.markdown);
+			output.push(html);
+		} else if (block.type === "json") {
+			output.push(renderJsonBlock(block.lines));
+		} else if (block.type === "jmespath") {
+			output.push(renderJMESPathBlock(block.lines));
+		} else if (block.type === "code") {
+			output.push(renderCodeBlock(block.lines));
+		}
+	}
+
+	return output.join("\n");
+}
+
+// Create function entries for the TOC
+const functionsForToc: FunctionEntry[] = allFunctions.map((f) => ({
+	data: {
+		title: f.name
+			.split("_")
+			.map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+			.join(" "),
+		description: "",
+		topic: "",
+		signature: "",
+		version,
+	},
+	slug: f.name,
+}));
+
+const currentEntry: FunctionEntry = {
+	data: functionData,
+	slug: funcName,
+};
+
+// Parse markdown body and render with syntax highlighting
+const { blocks } = parseMarkdownGrammar(parsed.body);
+const htmlContent = await renderBlocks(blocks);
+---
+
+<BaseLayout
+	title={`${functionData.title} — Functions`}
+	pageType="versioned"
+	currentVersion={version}
+>
+	<FunctionPage entry={currentEntry} allFunctions={functionsForToc} version={version} func={func}>
+		<div set:html={htmlContent} />
+	</FunctionPage>
+</BaseLayout>
+
+

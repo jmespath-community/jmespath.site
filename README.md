@@ -1,65 +1,65 @@
-# JMESPath Community Site
+# Overview
 
-[![gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/jmespath/chat)
+The [jmespath.site](https://jmepath.site) source code.
 
-This is the repo for the community website: https://jmespath.site. This is a reworking of the official
-website: https://jmespath.org
+## Prerequisites
 
-Join us on our [Gitter channel](https://gitter.im/jmespath/chat).
+- Node.js v18+ (recommend 22.x)
+- pnpm (latest) — install with: `npm install -g pnpm@latest`
+- Git (familiarity recommended)
 
-## Overview
+## Quick start
 
-This site is a static website based on the Hugo static site generator. The custom theme provides two custom code blocks that
-can be included in markdown, and an interactive JMESPath editor to demo examples. 
-See [themes/jmespath/README.md](themes/jmespath/README.md) for more information about how to use or edit the theme.
+Clone the repo, and install dependencies:
 
-The [main template](layouts/index.html) expects the `jmespath.spec.git` and `jmespath.spec.wiki.git` repos to be cloned into `spec/`
-and `content/wiki/` respectively before building. These are not tracked as git submodules as there is no specific commit
-to track within those repos for any build of this site. This template is responsible for rendering the entire page, calling out to partials provided by the theme.
-Hugo uses this template to render `content/_index.md`.
+```sh
+git clone https://github.com/jmespath-community/jmespath.site.git
 
-The only content contained within this repo is the main introduction content in [content/_index.md](content/_index.md).
-All other content is derived from the `jmespath.spec.git` and `jmespath.spec.wiki.git` repos.
-
-## Build
-
-This site is configured to build relative to a tag in the `jmespath.spec.git` repo. The spec repo is configured to
-automatically trigger a rebuild upon tagging. You can manually initiate a rebuild of the site for a tag by going to
-the `Actions` tab of this repo.
-
-## Development
-
-[Install Hugo](https://gohugo.io/getting-started/installing/).
-
-Clone this repo, and the `jmespath.spec.git` and `jmespath.spec.wiki.git` repos as described above:
-```bash
-git clone git@github.com:jmespath-community/jmespath.site.git
-cd jmespath.site
-git clone --depth 1 https://github.com/jmespath-community/jmespath.spec.git content/spec
-git clone --depth 1 https://github.com/jmespath-community/jmespath.spec.wiki.git content/wiki
+pnpm -C app/ install
 ```
 
-Download the JMESPath CLI:
-```bash
-curl -L https://github.com/jmespath/jp/releases/download/0.2.1/jp-linux-amd64 --output jp
-chmod +x jp
+Install required [`jp`](https://github.com/jmespath-community/jp/releases/download/v1.1.0/jp-linux-amd64) binary to pre-compute live examples:
+
+```sh
+curl -sSL https://github.com/jmespath-community/jp/releases/download/v1.1.0/jp-linux-amd64 -o app/jp
+chmod +x app/jp
 ```
 
-Start the development server:
-```bash
-ncat -lk -p 8000 -e ".github/workflows/jp_service.sh" &
-hugo server
+Build and run the local server:
+
+```sh
+pnpm -C app/ build
+pnpm -C app run dev
 ```
 
-When running from a GitHub CodeSpaces instance, please serve the development server using the following command:
+1. Open the site at <http://localhost:3000> (Astro default)
 
-```bash
-source ./.devcontainer/hugo-serve.sh
-serve 
+## Development commands
+
+- `pnpm run dev` — Start dev server with hot reload
+- `pnpm run build` — Build static site (outputs to app/dist/)
+- `pnpm run preview` — Preview production build locally
+- `pnpm run format` — Check formatting (dry-run)
+- `pnpm run format`:write — Fix formatting
+- `pnpm run lint` — Run biome/linters
+- `pnpm run lint:fix` — Try to auto-fix lint issues
+- `pnpm run check` — Run Astro/TypeScript checks
+- `pnpm run test` — Run tests (if present)
+
+## Contributing
+
+1. Create a branch for your changes
+2. Run formatting and lint checks locally:
+
+```sh
+pnpm run format:write && pnpm run lint:fix && pnpm run check
 ```
 
+1. Commit and push; open a PR. CI will validate format, lint, and type checks before merging.
 
-Alternatively, you can avoid installing Hugo and run within Docker via:
-```bash
-docker run --rm --net=host -v $(pwd):/src klakegg/hugo server
-```
+## Troubleshooting
+
+- "pnpm: command not found" — install pnpm globally: `npm install -g pnpm@latest`
+- "Port 3000 already in use" — Astro will usually pick the next free port; check the terminal or specify PORT env var
+- "Build fails with TypeScript error" — run `pnpm run check` to inspect errors
+- Dependencies missing — run `pnpm install` from app/
