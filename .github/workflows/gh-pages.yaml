@@ -73,6 +73,9 @@ jobs:
           # Copy fresh build artifacts
           cp -r app/dist/. "$TEMP_DIR/"
 
+          # Create .nojekyll so GitHub Pages serves files with leading underscores (e.g., _astro)
+          touch "$TEMP_DIR/.nojekyll"
+
           # Restore CNAME to ensure custom domain remains active
           if [ -n "$CNAME_CONTENT" ]; then
             printf '%s' "$CNAME_CONTENT" > "$TEMP_DIR/CNAME"
