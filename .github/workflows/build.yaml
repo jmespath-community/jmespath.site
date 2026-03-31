@@ -10,50 +10,49 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
+      ## checkout & setup
 
-    ## checkout & setup
+      - name: 📚 Checkout repository
+        uses: actions/checkout@v4
 
-    - name: 📚 Checkout repository
-      uses: actions/checkout@v4
+      - name: 📦 Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
 
-    - name: 📦 Setup pnpm
-      uses: pnpm/action-setup@v4
-      with:
-        version: 9
+      - name: 🟢 Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+          cache-dependency-path: app/pnpm-lock.yaml
 
-    - name: 🟢 Setup Node.js
-      uses: actions/setup-node@v4
-      with:
-        node-version: 20
-        cache: pnpm
-        cache-dependency-path: app/pnpm-lock.yaml
+      - name: 📥 Install dependencies
+        run: pnpm -C app/ install
 
-    - name: 📥 Install dependencies
-      run: pnpm -C app/ install
+      - name: 🔧 Download jp binary
+        run: |
+          curl -sSL https://github.com/jmespath-community/jp/releases/download/v1.1.0/jp-linux-amd64 -o app/jp
+          chmod +x app/jp
 
-    - name: 🔧 Download jp binary
-      run: |
-        curl -sSL https://github.com/jmespath-community/jp/releases/download/v1.1.0/jp-linux-amd64 -o app/jp
-        chmod +x app/jp
+      ## quality checks
 
-    ## quality checks
+      - name: 🎨 Format check
+        run: pnpm -C app/ run format
 
-    - name: 🎨 Format check
-      run: pnpm -C app/ run format
+      - name: 🔍 Lint check
+        run: pnpm -C app/ run lint
 
-    - name: 🔍 Lint check
-      run: pnpm -C app/ run lint
+      - name: 🔎 Type check
+        run: pnpm -C app/ run check
 
-    - name: 🔎 Type check
-      run: pnpm -C app/ run check
+      - name: 🏗️ Build
+        run: pnpm -C app/ run build
 
-    - name: 🏗️ Build
-      run: pnpm -C app/ run build
+      ## artifacts
 
-    ## artifacts
-
-    - name: 📤 Upload build artifact
-      uses: actions/upload-artifact@v4
-      with:
-        name: dist
-        path: app/dist/
+      - name: 📤 Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: app/dist/
