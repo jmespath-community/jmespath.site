@@ -1,9 +1,7 @@
-content/wiki/
-build/
-public/
-resources/
-spec/
+.astro/
+.github/
 
-\.hugo_build\.lock
+dist/
+node_modules/
 
 jp
