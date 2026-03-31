@@ -1,7 +1,9 @@
+.agentic/
 .astro/
 .github/
 
 dist/
 node_modules/
 
+jp\.exe
 jp

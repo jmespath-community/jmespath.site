@@ -1,0 +1,610 @@
+---
+import { marked, Renderer } from "marked";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { getVersionSlugs } from "../../config/versions";
+import {
+	parseMarkdownGrammar,
+	type Block,
+	type TocEntry,
+} from "../../utils/parseMarkdownGrammar";
+import { highlightJSON } from "../../utils/highlightJSON";
+import { highlightJMESPath } from "../../utils/highlightJMESPath";
+import { parseSearchExpression } from "../../utils/parseSearchExpression";
+import { escapeHtml } from "../../utils/escape";
+
+// Import all grammar files eagerly
+const markdownGrammars = import.meta.glob("../../data/grammar/*.md", {
+	eager: true,
+	query: "?raw",
+	import: "default",
+}) as Record<string, string>;
+const jsonGrammars = import.meta.glob("../../data/grammar/*.json", {
+	eager: true,
+	query: "?raw",
+	import: "default",
+}) as Record<string, string>;
+
+// ─── ABNF Parser ──────────────────────────────────────────────────────────────
+
+function slugify(text: string): string {
+	return `spec-${text
+		.toLowerCase()
+		.replace(/[^a-z0-9]+/g, "-")
+		.replace(/^-|-$/g, "")}`;
+}
+
+function parseABNF(content: string): Block[] {
+	const lines = content.split("\n");
+	const blocks: Block[] = [];
+	let docLines: string[] = [];
+	let ruleLines: string[] = [];
+	let sectionHeader = "";
+
+	function flushDoc() {
+		if (docLines.length === 0) return;
+		blocks.push({ type: "doc", markdown: docLines.join("\n") });
+		docLines = [];
+	}
+
+	function flushRule() {
+		if (ruleLines.length === 0) return;
+		blocks.push({ type: "rule", lines: [...ruleLines], sectionHeader });
+		ruleLines = [];
+		sectionHeader = "";
+	}
+
+	for (const line of lines) {
+		if (line.startsWith(";;")) {
+			// Documentation comment — strip leading ";;" + optional space
+			flushRule();
+			const text = line.slice(2);
+			docLines.push(text.startsWith(" ") ? text.slice(1) : text);
+		} else if (line.trim() === "") {
+			// Blank line — ends current rule block; keep blank in doc blocks
+			if (ruleLines.length > 0) {
+				flushRule();
+			} else if (docLines.length > 0) {
+				docLines.push("");
+			}
+		} else {
+			// Check for inline ";;" section header (e.g. `rule = ... ;; # Heading`)
+			const inlineIdx = line.indexOf(";;");
+			if (inlineIdx > 0) {
+				flushDoc();
+				const rulePart = line.slice(0, inlineIdx).trimEnd();
+				const headerPart = line
+					.slice(inlineIdx + 2)
+					.trim()
+					.replace(/\\$/, "")
+					.trim();
+				sectionHeader = headerPart;
+				ruleLines.push(rulePart);
+			} else {
+				flushDoc();
+				ruleLines.push(line);
+			}
+		}
+	}
+	flushDoc();
+	flushRule();
+	return blocks;
+}
+
+// ─── TOC extraction ───────────────────────────────────────────────────────────
+
+function extractToc(blocks: Block[]): TocEntry[] {
+	const toc: TocEntry[] = [];
+	for (const block of blocks) {
+		if (block.type === "doc") {
+			for (const line of block.markdown.split("\n")) {
+				const m = /^(#{1,3})\s+(.+)$/.exec(line);
+				if (m) {
+					const level = m[1].length;
+					toc.push({
+						text: m[2].trim(),
+						anchor: slugify(m[2].trim()),
+						level,
+					});
+				}
+			}
+		} else if (block.type === "rule" && block.sectionHeader) {
+			const heading = block.sectionHeader.replace(/^#+\s*/, "").trim();
+			const levelMatch = /^(#{1,3})\s+/.exec(block.sectionHeader);
+			const level = levelMatch ? levelMatch[1].length : 1;
+			if (heading) {
+				toc.push({ text: heading, anchor: slugify(heading), level });
+			}
+		}
+	}
+	return toc;
+}
+
+// ─── ABNF syntax highlighting ─────────────────────────────────────────────────
+
+function highlightABNF(line: string): string {
+	// Split off single-semicolon comment (not ;;)
+	let code = line;
+	let comment = "";
+	const semiIdx = line.search(/(?<!;);(?!;)/);
+	if (semiIdx >= 0) {
+		code = line.slice(0, semiIdx);
+		comment = line.slice(semiIdx);
+	}
+
+	// Split rule name from rest at first = sign
+	const eqIdx = code.search(/\s*=\/?/);
+	let out = "";
+	if (eqIdx > 0) {
+		const rulePart = escapeHtml(code.slice(0, eqIdx));
+		const rest = escapeHtml(code.slice(eqIdx));
+		// Highlight string literals in the rest
+		const highlighted = rest.replace(
+			/(&quot;[^&]*?&quot;|'[^']*?')/g,
+			'<span class="literal">$1</span>',
+		);
+		out = `<span class="rule-name">${rulePart}</span>${highlighted}`;
+	} else {
+		out = escapeHtml(code);
+	}
+
+	if (comment) {
+		out += `<span class="comment">${escapeHtml(comment)}</span>`;
+	}
+	return out;
+}
+
+// ─── JSON block rendering ────────────────────────────────────────────────────
+
+function renderJsonBlock(lines: string[]): string {
+	const jsonString = lines.join("\n");
+	const highlighted = highlightJSON(jsonString);
+	return `<pre><code class="language-json">${highlighted}</code></pre>`;
+}
+
+// ─── JMESPath block rendering ────────────────────────────────────────────────
+
+function renderJMESPathBlock(lines: string[]): string {
+	// Each line is a separate expression (possibly with result)
+	const renderedLines = lines
+		.filter((line) => line.trim().length > 0)
+		.map((line) => {
+			// Try to split on " -> " for results, but primarily highlight the expression
+			const parts = line.split(" -> ");
+			if (parts.length === 2) {
+				const expr = parts[0].trim();
+				const result = parts[1].trim();
+				const highlightedExpr = highlightJMESPath(expr);
+				const highlightedResult = highlightJSON(result);
+				return `${highlightedExpr} → ${highlightedResult}`;
+			}
+			return highlightJMESPath(line);
+		});
+	return `<pre><code class="language-jmespath">${renderedLines.join("\n")}</code></pre>`;
+}
+
+// ─── Code block rendering (search expressions) ───────────────────────────────
+
+function renderCodeBlock(lines: string[]): string {
+	// Code blocks contain search expressions in multiple formats, possibly spanning multiple lines:
+	// 1. search(jmespath-expression, json-input) -> json-result
+	// 2. identifier = search(jmespath-expression, json-input) -> json-result
+	// 3. jmespath-expression -> json-result (simple format, no input)
+	const filtered = lines.filter((line) => line.trim().length > 0);
+
+	const renderedLines: string[] = [];
+	let i = 0;
+
+	while (i < filtered.length) {
+		const line = filtered[i];
+
+		// Try to find a complete expression starting at this line
+		// A complete expression contains " -> "
+		let fullExpression = line;
+		let j = i + 1;
+
+		// Keep adding lines until we find the arrow separator
+		while (j < filtered.length && !fullExpression.includes(" -> ")) {
+			fullExpression += `\n${filtered[j]}`;
+			j++;
+		}
+
+		// Try to parse the accumulated expression
+		const parsed = parseSearchExpression(fullExpression);
+
+		if (parsed) {
+			const { expr, input, result, identifier } = parsed;
+
+			// Highlight each component
+			const highlightedExpr = highlightJMESPath(expr);
+
+			let highlightedResult: string;
+			try {
+				JSON.parse(result);
+				highlightedResult = highlightJSON(result);
+			} catch {
+				highlightedResult = escapeHtml(result);
+			}
+
+			// Build the output line(s), optionally with identifier prefix
+			const prefix = identifier ? `${escapeHtml(identifier)} = ` : "";
+
+			if (input === null) {
+				// Simple format: [identifier = ] expr -> result
+				renderedLines.push(
+					`${prefix}${highlightedExpr} → ${highlightedResult}`,
+				);
+			} else {
+				// Full format: [identifier = ] search(expr, input) -> result
+				let highlightedInput: string;
+				try {
+					JSON.parse(input);
+					highlightedInput = highlightJSON(input);
+				} catch {
+					highlightedInput = escapeHtml(input);
+				}
+
+				// Reconstruct multiline output preserving formatting
+				const inputLines = highlightedInput.split("\n");
+				if (inputLines.length === 1) {
+					// Single-line search
+					renderedLines.push(
+						`${prefix}search(${highlightedExpr}, ${highlightedInput}) → ${highlightedResult}`,
+					);
+				} else {
+					// Multiline search - preserve structure
+					renderedLines.push(`${prefix}search(${highlightedExpr},`);
+					renderedLines.push(inputLines[0]);
+					for (let k = 1; k < inputLines.length; k++) {
+						renderedLines.push(inputLines[k]);
+					}
+					renderedLines[renderedLines.length - 1] += `) → ${highlightedResult}`;
+				}
+			}
+
+			i = j;
+		} else {
+			// Not a complete search expression, just escape the line as-is
+			renderedLines.push(escapeHtml(line));
+			i++;
+		}
+	}
+
+	return `<pre><code class="language-code">${renderedLines.join("\n")}</code></pre>`;
+}
+
+// ─── Markdown renderer ────────────────────────────────────────────────────────
+
+const renderer = new Renderer();
+// Add id to headings for anchor links
+renderer.heading = ({ text, depth }) => {
+	const anchor = slugify(text);
+	return `<h${depth} id="${anchor}">${text}</h${depth}>\n`;
+};
+
+marked.use({ renderer });
+
+function renderMarkdown(md: string): string {
+	// Replace %%GRAMMAR%% placeholder
+	const cleaned = md.replace(/%%GRAMMAR%%/g, "");
+	return marked.parse(cleaned) as string;
+}
+
+// ─── Static paths ─────────────────────────────────────────────────────────────
+
+export async function getStaticPaths() {
+	return getVersionSlugs().map((version) => ({ params: { version } }));
+}
+
+// ─── Page data ────────────────────────────────────────────────────────────────
+
+const { version } = Astro.params;
+
+let blocks: Block[] = [];
+let toc: TocEntry[] = [];
+let hasGrammar = false;
+
+// Try to load markdown grammar first, fall back to JSON
+const mdKey = `../../data/grammar/${version}.md`;
+const jsonKey = `../../data/grammar/${version}.json`;
+
+if (mdKey in markdownGrammars) {
+	const content = markdownGrammars[mdKey];
+	const parsed = parseMarkdownGrammar(content);
+	blocks = parsed.blocks;
+	toc = parsed.toc;
+	hasGrammar = true;
+} else if (jsonKey in jsonGrammars) {
+	const raw = jsonGrammars[jsonKey];
+	const data = JSON.parse(raw) as { content: string };
+	blocks = parseABNF(data.content);
+	toc = extractToc(blocks);
+	hasGrammar = true;
+}
+---
+
+<BaseLayout
+	title={`Specification — ${version}`}
+	pageType="versioned"
+	currentVersion={version}
+>
+	<div class="spec-page">
+		{
+			hasGrammar ? (
+				<>
+					<aside class="spec-toc" aria-label="Table of contents">
+						<h2>Contents</h2>
+						<nav>
+							<ul>
+								{toc.map((entry) => (
+									<li data-level={entry.level}>
+										<a href={`#${entry.anchor}`}>{entry.text}</a>
+									</li>
+								))}
+							</ul>
+						</nav>
+					</aside>
+
+					<article class="spec-content">
+						<h1>JMESPath Specification</h1>
+						{blocks.map((block) => {
+							if (block.type === "doc") {
+								return (
+									<div
+										class="spec-doc"
+										set:html={renderMarkdown(block.markdown)}
+									/>
+								);
+							}
+							if (block.type === "json") {
+								return (
+									<div class="spec-code-block">
+										<div
+											set:html={renderJsonBlock(block.lines)}
+										/>
+									</div>
+								);
+							}
+							if (block.type === "jmespath") {
+								return (
+									<div class="spec-code-block">
+										<div
+											set:html={renderJMESPathBlock(block.lines)}
+										/>
+									</div>
+								);
+							}
+							if (block.type === "code") {
+								return (
+									<div class="spec-code-block">
+										<div
+											set:html={renderCodeBlock(block.lines)}
+										/>
+									</div>
+								);
+							}
+							// rule block (ABNF)
+							const header = block.sectionHeader
+								? block.sectionHeader.replace(/^#+\s*/, "").trim()
+								: "";
+							const anchor = header ? slugify(header) : undefined;
+							return (
+								<div class="spec-rule-block">
+									{header && (
+										<h3 id={anchor} class="rule-section-heading">
+											{header}
+										</h3>
+									)}
+									<pre><code class="language-abnf">{block.lines.map((l) => (
+											<span
+												class="abnf-line"
+												set:html={highlightABNF(l) + "\n"}
+											/>
+										))}</code></pre>
+								</div>
+							);
+						})}
+					</article>
+				</>
+			) : (
+				<article class="spec-content">
+					<h1>JMESPath Specification</h1>
+					<p>Grammar data is not available for version <code>{version}</code>.</p>
+				</article>
+			)
+		}
+	</div>
+</BaseLayout>
+
+<style>
+	.spec-page {
+		display: flex;
+		gap: 2rem;
+		align-items: flex-start;
+	}
+
+	/* ── TOC ── */
+	.spec-toc {
+		flex: 0 0 220px;
+		position: sticky;
+		top: 4.5rem;
+		max-height: calc(100vh - 5rem);
+		overflow-y: auto;
+		padding: 1rem;
+		background: #f8f9fa;
+		border-radius: 6px;
+		border: 1px solid #e0e0e0;
+		font-size: 0.85rem;
+	}
+
+	.spec-toc h2 {
+		margin: 0 0 0.75rem;
+		font-size: 0.8rem;
+		text-transform: uppercase;
+		letter-spacing: 0.06em;
+		color: #555;
+	}
+
+	.spec-toc nav ul {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+		display: flex;
+		flex-direction: column;
+		gap: 0.2rem;
+	}
+
+	.spec-toc nav li {
+		padding-left: 0;
+	}
+
+	.spec-toc nav li[data-level="2"] {
+		padding-left: 1rem;
+	}
+
+	.spec-toc nav li[data-level="3"] {
+		padding-left: 2rem;
+	}
+
+	.spec-toc nav a {
+		display: block;
+		color: #333;
+		text-decoration: none;
+		padding: 0.2rem 0.4rem;
+		border-radius: 3px;
+		line-height: 1.4;
+		word-break: break-word;
+	}
+
+	.spec-toc nav a:hover {
+		background: #e8eaf6;
+		color: #1a237e;
+	}
+
+	/* ── Content ── */
+	.spec-content {
+		flex: 1;
+		min-width: 0;
+		line-height: 1.7;
+	}
+
+	.spec-content h1 {
+		margin-top: 0;
+		font-size: 2rem;
+		color: #1a1a2e;
+	}
+
+	.spec-content :global(h2),
+	.spec-content :global(h3),
+	.spec-content :global(h4) {
+		margin-top: 2rem;
+		margin-bottom: 0.5rem;
+		color: #1a1a2e;
+	}
+
+	.spec-content :global(p) {
+		margin: 0.6rem 0 1rem;
+	}
+
+	.spec-content :global(ul),
+	.spec-content :global(ol) {
+		padding-left: 1.5rem;
+		margin: 0.5rem 0 1rem;
+	}
+
+	.spec-content :global(li) {
+		margin: 0.25rem 0;
+	}
+
+	.spec-content :global(code) {
+		background: #f0f0f0;
+		padding: 0.1em 0.35em;
+		border-radius: 3px;
+		font-size: 0.9em;
+		font-family: "Fira Code", "Consolas", "Monaco", monospace;
+	}
+
+	.spec-content :global(pre) {
+		background: #f5f5f5;
+		border: 1px solid #e0e0e0;
+		border-radius: 6px;
+		padding: 1rem 1.25rem;
+		overflow-x: auto;
+		margin: 0.75rem 0 1.25rem;
+	}
+
+	.spec-content :global(pre code) {
+		background: none;
+		padding: 0;
+		font-size: 0.875rem;
+		line-height: 1.6;
+	}
+
+	.spec-content :global(a) {
+		color: #1565c0;
+		text-decoration: none;
+	}
+
+	.spec-content :global(a:hover) {
+		text-decoration: underline;
+	}
+
+	/* ── ABNF rule blocks ── */
+	.spec-rule-block {
+		margin: 1rem 0 1.5rem;
+	}
+
+	.rule-section-heading {
+		margin-top: 2rem;
+		margin-bottom: 0.25rem;
+		font-size: 1.3rem;
+		color: #1a1a2e;
+		padding-bottom: 0.25rem;
+		border-bottom: 1px solid #e0e0e0;
+	}
+
+	.spec-rule-block pre {
+		background: #1e1e2e;
+		border: none;
+		border-radius: 6px;
+		padding: 1rem 1.25rem;
+		overflow-x: auto;
+		margin: 0.5rem 0;
+	}
+
+	.spec-rule-block pre code {
+		background: none;
+		padding: 0;
+		font-size: 0.875rem;
+		font-family: "Fira Code", "Consolas", "Monaco", monospace;
+		line-height: 1.6;
+		color: #cdd6f4;
+	}
+
+	:global(.rule-name) {
+		color: #89b4fa;
+		font-weight: 600;
+	}
+
+	:global(.literal) {
+		color: #a6e3a1;
+	}
+
+	:global(.comment) {
+		color: #6c7086;
+		font-style: italic;
+	}
+
+	/* ── Responsive ── */
+	@media (max-width: 900px) {
+		.spec-page {
+			flex-direction: column;
+		}
+
+		.spec-toc {
+			position: static;
+			flex: none;
+			width: 100%;
+			max-height: 280px;
+		}
+	}
+</style>

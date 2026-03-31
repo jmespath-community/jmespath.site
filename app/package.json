@@ -1,0 +1,32 @@
+{
+	"name": "jmespath-site",
+	"private": true,
+	"type": "module",
+	"scripts": {
+		"build": "astro build",
+		"check": "astro check",
+		"convert-functions": "tsx scripts/convert-functions.ts",
+		"dev": "astro dev",
+		"format:write": "biome format --write src/",
+		"format": "biome format src/",
+		"lint:fix": "biome lint --write src/",
+		"lint": "biome lint src/",
+		"start": "astro preview",
+		"test": "vitest --run"
+	},
+	"devDependencies": {
+		"@astrojs/mdx": "^5.0.3",
+		"@biomejs/biome": "^1.0.0",
+		"@types/node": "^25.5.0",
+		"astro": "^5.0.0",
+		"js-yaml": "^4.1.0",
+		"tsx": "^4.19.3",
+		"typescript": "^5.1.6",
+		"vitest": "^4.1.2"
+	},
+	"dependencies": {
+		"@astrojs/check": "^0.9.8",
+		"marked": "^17.0.5",
+		"unist-util-visit": "^5.1.0"
+	}
+}

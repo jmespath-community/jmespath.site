@@ -1,0 +1,106 @@
+[
+	{
+		"name": "abs",
+		"file": "abs.mdx"
+	},
+	{
+		"name": "avg",
+		"file": "avg.mdx"
+	},
+	{
+		"name": "ceil",
+		"file": "ceil.mdx"
+	},
+	{
+		"name": "contains",
+		"file": "contains.mdx"
+	},
+	{
+		"name": "ends_with",
+		"file": "ends_with.mdx"
+	},
+	{
+		"name": "floor",
+		"file": "floor.mdx"
+	},
+	{
+		"name": "join",
+		"file": "join.mdx"
+	},
+	{
+		"name": "keys",
+		"file": "keys.mdx"
+	},
+	{
+		"name": "length",
+		"file": "length.mdx"
+	},
+	{
+		"name": "map",
+		"file": "map.mdx"
+	},
+	{
+		"name": "max",
+		"file": "max.mdx"
+	},
+	{
+		"name": "max_by",
+		"file": "max_by.mdx"
+	},
+	{
+		"name": "merge",
+		"file": "merge.mdx"
+	},
+	{
+		"name": "min",
+		"file": "min.mdx"
+	},
+	{
+		"name": "min_by",
+		"file": "min_by.mdx"
+	},
+	{
+		"name": "not_null",
+		"file": "not_null.mdx"
+	},
+	{
+		"name": "reverse",
+		"file": "reverse.mdx"
+	},
+	{
+		"name": "sort",
+		"file": "sort.mdx"
+	},
+	{
+		"name": "sort_by",
+		"file": "sort_by.mdx"
+	},
+	{
+		"name": "starts_with",
+		"file": "starts_with.mdx"
+	},
+	{
+		"name": "sum",
+		"file": "sum.mdx"
+	},
+	{
+		"name": "to_array",
+		"file": "to_array.mdx"
+	},
+	{
+		"name": "to_number",
+		"file": "to_number.mdx"
+	},
+	{
+		"name": "to_string",
+		"file": "to_string.mdx"
+	},
+	{
+		"name": "type",
+		"file": "type.mdx"
+	},
+	{
+		"name": "values",
+		"file": "values.mdx"
+	}
+]

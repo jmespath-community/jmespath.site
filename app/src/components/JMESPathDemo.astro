@@ -1,0 +1,314 @@
+---
+interface Props {
+	/** Initial JMESPath expression */
+	expression: string;
+	/** Initial JSON data (pretty-printed string) */
+	data: string;
+	/** Pre-computed result string (used as fallback without JS) */
+	result: string;
+	/** When true, always renders expanded (e.g. hero demo on landing page) */
+	alwaysExpanded?: boolean;
+	/** Optional label shown in the collapsed header */
+	label?: string;
+}
+
+const {
+	expression,
+	data,
+	result,
+	alwaysExpanded = false,
+	label = "JMESPath Demo",
+} = Astro.props;
+---
+
+<div
+	class:list={["jmespath-demo", { "always-expanded": alwaysExpanded }]}
+	data-interactive
+	data-always-expanded={alwaysExpanded ? "true" : undefined}
+>
+	<!-- Collapsed header — click to expand/collapse -->
+	{
+		!alwaysExpanded && (
+			<button class="demo-header" type="button" aria-expanded="false">
+				<span class="demo-label">{label}</span>
+				<span class="demo-query-preview" aria-hidden="true">
+					{expression}
+				</span>
+				<span class="demo-toggle-icon" aria-hidden="true">▶</span>
+			</button>
+		)
+	}
+
+	<div class="demo-body">
+		<div class="demo-fields">
+			<label class="demo-field-label" for="">
+				Expression
+				<input
+					class="demo-query"
+					type="text"
+					value={expression}
+					spellcheck="false"
+					autocomplete="off"
+				/>
+			</label>
+
+			<label class="demo-field-label demo-field-data">
+				Input data (JSON)
+				<textarea class="demo-data" spellcheck="false" rows="8"
+					>{data}</textarea
+				>
+			</label>
+
+			<label class="demo-field-label">
+				Result
+				<textarea class="demo-result" readonly rows="4"
+					>{result}</textarea
+				>
+			</label>
+		</div>
+	</div>
+</div>
+
+<script>
+	// Initialise all demos on the page.
+	// The jmespath library is loaded externally (via BaseLayout / version-switcher).
+	// We listen for a 'jmespath-loaded' custom event and re-evaluate on it.
+
+	type JMESPathLib = {
+		search: (data: unknown, expression: string) => unknown;
+	};
+
+	function getLib(): JMESPathLib | null {
+		const w = window as Window &
+			typeof globalThis & { jmespath?: JMESPathLib };
+		return w.jmespath ?? null;
+	}
+
+	function prettyResult(value: unknown): string {
+		if (value === null) return "null";
+		if (typeof value === "string") return JSON.stringify(value);
+		const compact = JSON.stringify(value);
+		if (compact.length < 100) return compact;
+		return JSON.stringify(value, null, 2);
+	}
+
+	function autoResize(ta: HTMLTextAreaElement): void {
+		ta.style.height = "auto";
+		ta.style.height = `${ta.scrollHeight + 2}px`;
+	}
+
+	function evaluate(demo: HTMLElement): void {
+		const lib = getLib();
+		const queryEl = demo.querySelector<HTMLInputElement>(".demo-query");
+		const dataEl = demo.querySelector<HTMLTextAreaElement>(".demo-data");
+		const resultEl = demo.querySelector<HTMLTextAreaElement>(".demo-result");
+		if (!queryEl || !dataEl || !resultEl) return;
+
+		resultEl.classList.remove("demo-error");
+
+		if (!lib) {
+			resultEl.value = "(JMESPath library not loaded yet)";
+			autoResize(resultEl);
+			return;
+		}
+
+		try {
+			const parsed = JSON.parse(dataEl.value) as unknown;
+			const output = lib.search(parsed, queryEl.value);
+			resultEl.value = prettyResult(output);
+		} catch (err) {
+			resultEl.value = err instanceof Error ? err.message : String(err);
+			resultEl.classList.add("demo-error");
+		}
+		autoResize(resultEl);
+	}
+
+	function initDemo(demo: HTMLElement): void {
+		const alwaysExpanded = demo.dataset.alwaysExpanded === "true";
+		const header = demo.querySelector<HTMLButtonElement>(".demo-header");
+		const body = demo.querySelector<HTMLElement>(".demo-body");
+
+		// Expand/collapse
+		if (header && body) {
+			header.addEventListener("click", () => {
+				const expanded = header.getAttribute("aria-expanded") === "true";
+				header.setAttribute("aria-expanded", String(!expanded));
+				demo.classList.toggle("expanded", !expanded);
+			});
+		} else if (alwaysExpanded && body) {
+			// Always-expanded: make body visible immediately
+			demo.classList.add("expanded");
+		}
+
+		const queryEl = demo.querySelector<HTMLInputElement>(".demo-query");
+		const dataEl = demo.querySelector<HTMLTextAreaElement>(".demo-data");
+		const resultEl = demo.querySelector<HTMLTextAreaElement>(".demo-result");
+		if (!queryEl || !dataEl || !resultEl) return;
+
+		// Auto-resize on data change
+		autoResize(dataEl);
+		autoResize(resultEl);
+
+		const onInput = (): void => {
+			evaluate(demo);
+		};
+		queryEl.addEventListener("input", onInput);
+		dataEl.addEventListener("input", () => {
+			autoResize(dataEl);
+			evaluate(demo);
+		});
+
+		// Re-evaluate when library becomes available
+		window.addEventListener("jmespath-loaded", () => {
+			evaluate(demo);
+		});
+
+		// Initial evaluation (lib may already be loaded)
+		evaluate(demo);
+	}
+
+	document.querySelectorAll<HTMLElement>(".jmespath-demo[data-interactive]").forEach(initDemo);
+</script>
+
+<style>
+	.jmespath-demo {
+		border: 1px solid var(--demo-border, #d0d0d8);
+		border-radius: 8px;
+		overflow: hidden;
+		background: var(--demo-bg, #fafafa);
+		margin: 1.5rem 0;
+		font-family: var(--font-mono, "Fira Code", "Cascadia Code", monospace);
+		font-size: 0.875rem;
+	}
+
+	/* ── Header (collapsed trigger) ── */
+	.demo-header {
+		display: flex;
+		align-items: center;
+		gap: 0.75rem;
+		width: 100%;
+		padding: 0.65rem 1rem;
+		background: var(--demo-header-bg, #ececf4);
+		border: none;
+		cursor: pointer;
+		text-align: left;
+		font-family: inherit;
+		font-size: 0.875rem;
+		color: var(--demo-header-fg, #333);
+		transition: background 0.15s;
+	}
+
+	.demo-header:hover,
+	.demo-header:focus-visible {
+		background: var(--demo-header-hover, #ddddef);
+		outline: 2px solid var(--accent, #3b82f6);
+		outline-offset: -2px;
+	}
+
+	.demo-label {
+		font-weight: 600;
+		flex-shrink: 0;
+	}
+
+	.demo-query-preview {
+		flex: 1;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+		opacity: 0.7;
+	}
+
+	.demo-toggle-icon {
+		flex-shrink: 0;
+		transition: transform 0.2s;
+		font-size: 0.65em;
+	}
+
+	.jmespath-demo.expanded .demo-toggle-icon {
+		transform: rotate(90deg);
+	}
+
+	/* ── Body ── */
+	.demo-body {
+		display: none;
+		padding: 1rem;
+	}
+
+	.jmespath-demo.always-expanded .demo-body,
+	.jmespath-demo.expanded .demo-body {
+		display: block;
+	}
+
+	/* Without JS: always show body so pre-computed result is visible */
+	@media (scripting: none) {
+		.demo-body {
+			display: block;
+		}
+	}
+
+	.demo-fields {
+		display: flex;
+		flex-direction: column;
+		gap: 0.75rem;
+	}
+
+	.demo-field-label {
+		display: flex;
+		flex-direction: column;
+		gap: 0.3rem;
+		font-family: var(--font-sans, system-ui, sans-serif);
+		font-size: 0.78rem;
+		font-weight: 600;
+		text-transform: uppercase;
+		letter-spacing: 0.05em;
+		color: var(--demo-label-fg, #555);
+	}
+
+	.demo-query,
+	.demo-data,
+	.demo-result {
+		width: 100%;
+		box-sizing: border-box;
+		padding: 0.5rem 0.75rem;
+		border: 1px solid var(--demo-input-border, #c8c8d4);
+		border-radius: 4px;
+		background: var(--demo-input-bg, #fff);
+		color: var(--demo-input-fg, #1a1a2e);
+		font-family: inherit;
+		font-size: inherit;
+		resize: vertical;
+		transition: border-color 0.15s;
+	}
+
+	.demo-query:focus,
+	.demo-data:focus {
+		outline: none;
+		border-color: var(--accent, #3b82f6);
+	}
+
+	.demo-result {
+		resize: none;
+		background: var(--demo-result-bg, #f0f0f8);
+		color: var(--demo-result-fg, #1a1a2e);
+	}
+
+	.demo-result.demo-error {
+		border-color: var(--error, #e53e3e);
+		background: var(--demo-error-bg, #fff5f5);
+		color: var(--error, #e53e3e);
+	}
+
+	/* ── Always-expanded variant (hero) ── */
+	.jmespath-demo.always-expanded {
+		border-radius: 12px;
+		font-size: 1rem;
+	}
+
+	.jmespath-demo.always-expanded .demo-body {
+		padding: 1.25rem;
+	}
+
+	.jmespath-demo.always-expanded .demo-query {
+		font-size: 1rem;
+	}
+</style>

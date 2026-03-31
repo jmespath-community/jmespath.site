@@ -1,0 +1,1087 @@
+﻿In this specification, examples are shown through the use of a search function. The syntax for this function is:
+
+```txt
+search(<jmespath expr>, <JSON document>) -> <return value>
+```
+
+For simplicity, the jmespath `expression` and the JSON document are not quoted. For example:
+
+```code
+search(foo, {"foo": "bar"}) -> "bar"
+```
+
+The result of applying a JMESPath `expression` against a JSON document will always result in valid JSON, provided there
+are no errors during the evaluation process. Structured data in, structured data out.
+
+This also means that, with the exception of JMESPath `expression` types, JMESPath only supports the same types supported by JSON:
+
+- `number` (integers and double-precision floating-point format in JSON)
+- string (a sequence of Unicode [code points](https://unicode.org/glossary/#code_point). Note that a code point is distinct to a [code unit](https://unicode.org/glossary/#code_unit))
+- boolean (`true` or `false`)
+- array (an ordered, sequence of values)
+- object (an unordered collection of key value pairs)
+- `null`
+
+Expression types are discussed in the [Function Expressions](#function-expressions) section.
+
+Implementations can map the corresponding JSON types to their language equivalent. For example, a JSON `null` could map to
+None in python, and nil in ruby and go.
+
+# Errors
+
+Errors may be raised during the JMEspath evaluation process. How and when errors are raised is implementation specific,
+but implementations should indicate to the caller when errors have occurred.
+
+The following errors are defined:
+
+- `invalid-arity` is raised when an invalid `number` of function arguments is encountered during the evaluation process.
+- `invalid-type` is raised when an invalid type is encountered during the evaluation process.
+- `invalid-value` is raised when an invalid value is encountered during the evaluation process.
+- `not-a-number` is raised when arithmetic expressions overflow.
+- `unknown-function` is raised when an unknown function is encountered during the evaluation process.
+
+# Grammar
+
+JMESPath grammar is specified using ABNF, as described in RFC4234
+
+```abnf
+expression        = sub-expression / index-expression  / comparator-expression
+expression        =/ or-expression / identifier
+expression        =/ and-expression / not-expression / paren-expression
+expression        =/ multi-select-list / multi-select-hash / literal
+expression        =/ function-expression / pipe-expression / raw-string
+expression        =/ root-node / current-node
+expression        =/ arithmetic-expression
+expression        =/ let-expression / variable-ref
+
+sub-expression    = expression "." ( identifier / multi-select-list / multi-select-hash / function-expression / "*" )
+
+pipe-expression   = expression "|" expression
+
+or-expression     = expression "||" expression
+
+and-expression    = expression "&&" expression
+
+not-expression    = "!" expression
+
+arithmetic-expression =/ "+" expression ; + %x43
+arithmetic-expression =/ ( "-" / "–" ) expression ; - %x45 – %x2212
+arithmetic-expression = expression "%" expression ; % %x37
+arithmetic-expression =/ expression ( "*" / "×" ) expression ; * %x42 ×  %xD7
+arithmetic-expression =/ expression "+" expression ; + %x43
+arithmetic-expression =/ expression ( "-" / "–" ) expression ; - %x45 – %x2212
+arithmetic-expression =/ expression ( "/" / "÷" ) expression ; / %x47 ÷ %F7
+arithmetic-expression = expression "//" expression ; // %47 %47
+
+paren-expression  = "(" expression ")"
+
+index-expression  = expression bracket-specifier / bracket-specifier
+bracket-specifier = "[" (number / slice-expression) "]"
+
+bracket-specifier =/ "[]"
+
+slice-expression  = [number] ":" [number] [ ":" [number] ]
+
+multi-select-list = "[" ( expression *( "," expression ) ) "]"
+
+multi-select-hash = "{" ( keyval-expr *( "," keyval-expr ) ) "}"
+keyval-expr       = identifier ":" expression
+
+keyval-expr       = identifier ":" expression
+
+expression        =/ "*"
+bracket-specifier =/ "[" "*" "]"
+
+filter-expression = "[?" expression "]"
+bracket-specifier =/ filter-expression
+
+comparator-expression = expression comparator expression
+comparator        = "<" / "<=" / "==" / ">=" / ">" / "!="
+
+function-expression = unquoted-string  ( no-args  / one-or-more-args )
+
+no-args             = "(" ")"
+one-or-more-args    = "(" ( function-arg *( "," function-arg ) ) ")"
+
+function-arg        = expression / expression-type
+
+expression-type     = "&" expression
+
+current-node        = "@"
+
+root-node           = "$"
+
+let-expression = "let" bindings "in" expression
+
+bindings = variable-binding *( "," variable-binding )
+variable-binding = variable-ref "=" expression
+variable-ref = "$" unquoted-string
+
+raw-string        = "'" *raw-string-char "'"
+
+raw-string-char   = (%x00-26 / %x28-5B / %x5D-10FFFF) / preserved-escape / raw-string-escape
+preserved-escape  = escape (%x00-26 / %x28-5B / %x5D-10FFFF)
+raw-string-escape = escape ("'" / escape)
+
+literal           = "`" json-text "`"
+
+unquoted-string   = (%x41-5A / %x61-7A / %x5F) *(  ; A-Za-z_
+                        %x30-39  /  ; 0-9
+                        %x41-5A /  ; A-Z
+                        %x5F    /  ; _
+                        %x61-7A)   ; a-z
+quoted-string     = quotation-mark *(unescaped-char / escaped-char) quotation-mark
+unescaped-char    = %x20-21 / %x23-5B / %x5D-10FFFF
+escape            = %x5C   ;
+quotation-mark    = %x22   ; "
+escaped-char      = escape (
+                        %x22 /          ; "    quotation mark  U+0022
+                        %x5C /          ; \    reverse solidus U+005C
+                        %x2F /          ; /    solidus         U+002F
+                        %x62 /          ; b    backspace       U+0008
+                        %x66 /          ; f    form feed       U+000C
+                        %x6E /          ; n    line feed       U+000A
+                        %x72 /          ; r    carriage return U+000D
+                        %x74 /          ; t    tab             U+0009
+                        %x75 4HEXDIG )  ; uXXXX                U+XXXX
+
+json-text  = ws json-value ws
+ws         = *(
+                %x20 /              ; Space
+                %x09 /              ; Horizontal tab
+                %x0A /              ; Line feed or New line
+                %x0D )              ; Carriage return
+; `json-value` is any valid JSON value with the one exception that each
+; U+0060 GRAVE ACCENT '`' must be escaped with a preceding backslash.
+; While implementations are encouraged to use any existing JSON parser for this
+; section of the grammar (after handling the escaped characters), a complete
+; set of rules derived from RFC 8259 is included below:
+json-value = false / null / true / json-object / json-array /
+             json-number / json-string
+; JSON literals
+false = %x66.61.6c.73.65   ; false
+null  = %x6e.75.6c.6c      ; null
+true  = %x74.72.75.65      ; true
+; JSON strings
+json-string    = quotation-mark *( json-unescaped / json-escaped ) quotation-mark
+json-unescaped = %x20-21     / ; space or '!' (precedes U+0022 '"')
+                 %x23-5B     / ; '#' through '[' (precedes U+005C '\')
+                 %x5D-5F     / ; ']' through '_' (precedes U+0060 '`')
+                 %x61-10FFFF   ; 'a' and all following code points
+json-escaped   = escaped-char / (escape "`")
+; JSON arrays
+json-array      = begin-array [ json-value *( value-separator json-value ) ] end-array
+begin-array     = ws %x5B ws  ; [ left square bracket
+end-array       = ws %x5D ws  ; ] right square bracket
+value-separator = ws %x2C ws  ; , comma
+; JSON objects
+json-object    = begin-object [ member *( value-separator member ) ] end-object
+begin-object   = ws %x7B ws  ; { left curly bracket
+end-object     = ws %x7D ws  ; } right curly bracket
+member         = json-string name-separator json-value
+name-separator = ws %x3A ws  ; : colon
+; JSON numbers
+json-number   = [ minus ] int [ frac ] [ exp ]
+decimal-point = %x2E                 ; .
+digit1-9      = %x31-39              ; 1-9
+e             = %x65 / %x45          ; e E
+exp           = e [ minus / plus ] 1*digit
+frac          = decimal-point 1*digit
+int           = zero / ( digit1-9 *digit )
+minus         = %x2D                 ; -
+plus          = %x2B                 ; +
+zero          = %x30                 ; 0
+
+number            = ["-"] 1*digit
+digit             = %x30-39 ; 0-9
+identifier        = unquoted-string / quoted-string
+```
+
+In addition to the grammar, there is the following token precedence that goes from weakest to tightest binding:
+
+- pipe: `|`
+- or: `||`
+- and: `&&`
+- unary not: `!`
+- rbracket: `]`
+
+# Sub-expressions
+
+A `sub-expression` is a combination of two expressions separated by the '.' char.
+
+```abnf
+expression        = sub-expression / index-expression  / comparator-expression
+expression        =/ or-expression / identifier
+expression        =/ and-expression / not-expression / paren-expression
+expression        =/ multi-select-list / multi-select-hash / literal
+expression        =/ function-expression / pipe-expression / raw-string
+expression        =/ root-node / current-node
+expression        =/ arithmetic-expression
+expression        =/ let-expression / variable-ref
+
+sub-expression    = expression "." ( identifier / multi-select-list / multi-select-hash / function-expression / "*" )
+```
+
+A `sub-expression` is evaluated as follows:
+
+- Evaluate the `expression` on the left with the original JSON document.
+- Evaluate the `expression` on the right with the result of the left `expression` evaluation.
+
+In pseudocode:
+
+```txt
+left-evaluation = search(left-expression, original-json-document)
+if left-evaluation is `null` then result = `null`
+else result = search(right-expression, left-evaluation)
+```
+
+A `sub-expression` is itself an `expression`, so there can be multiple levels of sub-expressions: grandparent.parent.child.
+Examples
+
+Given a JSON document: ``{"foo": {"bar": "baz"}}``, and a jmespath `expression`: foo.bar, the evaluation process would be:
+
+```code
+left-evaluation = search("foo", {"foo": {"bar": "baz"}}) -> {"bar": "baz"}
+result = search("bar", {"bar": "baz"}) -> "baz"
+```
+
+The final result in this example is "baz".
+
+Additional examples:
+
+```code
+search(foo.bar, {"foo": {"bar": "value"}}) -> "value"
+search(foo."bar", {"foo": {"bar": "value"}}) -> "value"
+search(foo.bar, {"foo": {"baz": "value"}}) -> null
+search(foo.bar.baz, {"foo": {"bar": {"baz": "value"}}}) -> "value"
+```
+
+# Pipe Expressions
+
+A `pipe-expression` combines two expressions, separated by the `|` character.
+It is similar to a `sub-expression` with a few important distinctions:
+
+```abnf
+pipe-expression   = expression "|" expression
+```
+
+1. Any `expression` can be used on the right hand side. A `sub-expression` restricts the type of `expression` that can be
+   used on the right hand side.
+1. A `pipe-expression` stops projections on the left hand side for propagating to the right hand side. If the left
+   `expression` creates a projection, it does not apply to the right hand side.
+1. Contrary to a `sub-expression`, a `pipe-expression` **does not stop evaluation** if the left-hand-side evaluates to `null`.
+
+In pseudocode:
+
+```code
+left-evaluation = search(left-expression, original-json-document)
+result = search(right-expression, left-evaluation)
+```
+
+For example, given the following data:
+
+```json
+{"foo": [{"bar": ["first1", "second1"]}, {"bar": ["first2", "second2"]}]}
+```
+
+The `expression` `foo[*].bar` gives the result of:
+
+```json
+[
+    [
+        "first1",
+        "second1"
+    ],
+    [
+        "first2",
+        "second2"
+    ]
+]
+```
+
+The first part of the `expression`, `foo[*]`, creates a projection. At this point, the remaining `expression`, bar is
+projected onto each element of the list created from `foo[*]`. If you project the `[0]` `expression`, you will get the
+first element from each sub list. The `expression` `foo[*].bar[0]` will return:
+
+```json
+["first1", "first2"]
+```
+
+If you instead wanted only the first sub list, `["first1", "second1"]`, you can use a `pipe-expression`:
+
+```code
+foo[*].bar[0] -> ["first1", "first2"]
+foo[*].bar | [0] -> ["first1", "second1"]
+```
+
+## Examples
+
+```code
+search(foo | bar, {"foo": {"bar": "baz"}}) -> "baz"
+search(foo[*].bar | [0], {
+    "foo": [{"bar": ["first1", "second1"]},
+            {"bar": ["first2", "second2"]}]}) -> ["first1", "second1"]
+search(foo | [0], {"foo": [0, 1, 2]}) -> [0]
+```
+
+# Or Expressions
+
+```abnf
+or-expression     = expression "||" expression
+```
+
+An `or-expression` will evaluate to either the left `expression` or the right `expression`. If the evaluation of the left
+`expression` is not `false` it is used as the return value. If the evaluation of the right `expression` is not `false` it is
+used as the return value. If neither the left or right `expression` are non-null, then a value of `null` is returned. A
+`false` value corresponds to any of the following conditions:
+
+- Empty list: `[]`
+- Empty object: `{}`
+- Empty string: `""`
+- False boolean: `false`
+- Null value: `null`
+
+A `true` value corresponds to any value that is not `false`.
+
+## Examples
+
+```code
+search(foo || bar, {"foo": "foo-value"}) -> "foo-value"
+search(foo || bar, {"bar": "bar-value"}) -> "bar-value"
+search(foo || bar, {"foo": "foo-value", "bar": "bar-value"}) -> "foo-value"
+search(foo || bar, {"baz": "baz-value"}) -> null
+search(foo || bar || baz, {"baz": "baz-value"}) -> "baz-value"
+search(override || mylist[-1], {"mylist": ["one", "two"]}) -> "two"
+search(override || mylist[-1], {"mylist": ["one", "two"], "override": "yes"}) -> "yes"
+```
+
+# And Expressions
+
+```abnf
+and-expression    = expression "&&" expression
+```
+
+An `and-expression` will evaluate to either the left `expression` or the right `expression`. If the `expression` on the left
+hand side is a truth-like value, then the value on the right hand side is returned. Otherwise the result of the
+`expression` on the left hand side is returned. This also reduces to the expected truth table:
+
+Truth table for and expressions
+
+| LHS | RHS | Result |
+| --- | --- | ------ |
+| True | True | True |
+| True | False | False |
+| False | True | False |
+| False | False | False |
+
+This is the standard truth table for a logical conjunction (AND).
+
+## Examples
+
+```code
+search(True && False, {"True": true, "False": false}) -> false
+search(Number && EmptyList, {"Number": 5, "EmptyList": []}) -> []
+search(foo[?a == `1` && b == `2`],
+       {"foo": [{"a": 1, "b": 2}, {"a": 1, "b": 3}]}) -> [{"a": 1, "b": 2}]
+```
+
+# Not Expressions
+
+```abnf
+not-expression    = "!" expression
+```
+
+A `not-expression` negates the result of an `expression`. If the `expression` results in a truth-like value, a `not-expression`
+will change this value to `false`. If the `expression` results in a false-like value, a `not-expression` will change this value
+to `true`.
+
+## Examples
+
+```code
+search(!True, {"True": true}) -> false
+search(!False, {"False": false}) -> true
+search(!Number, {"Number": 5}) -> false
+search(!EmptyList, {"EmptyList": []}) -> true
+```
+
+# Arithmetic Expressions
+
+```abnf
+arithmetic-expression =/ "+" expression ; + %x43
+arithmetic-expression =/ ( "-" / "–" ) expression ; - %x45 – %x2212
+arithmetic-expression = expression "%" expression ; % %x37
+arithmetic-expression =/ expression ( "*" / "×" ) expression ; * %x42 ×  %xD7
+arithmetic-expression =/ expression "+" expression ; + %x43
+arithmetic-expression =/ expression ( "-" / "–" ) expression ; - %x45 – %x2212
+arithmetic-expression =/ expression ( "/" / "÷" ) expression ; / %x47 ÷ %F7
+arithmetic-expression = expression "//" expression ; // %47 %47
+```
+
+An `arithmetic-expression` enables simple computations using the four basic operations,
+as well as the modulo and integer-division operations.
+
+To support arithmetic operations, the following operators are available:
+
+- `+` addition operator
+- `-` subtraction operator
+- `*` multiplication operator
+- `/` division operator
+- `%` modulo operator
+- `//` integer division operator
+
+Proper mathematical operators are also supported using the following UNICODE characters:
+
+- `–` (U+2212 MINUS SIGN)
+- `÷` (U+00F7 DIVISION SIGN)
+- `×` (U+00D7 MULTIPLY SIGN)
+
+Arithmetic operations adhere to the usual precedence rules, from lowest to highest:
+
+- `-` subtraction operator and `+` addition operator
+- `/` division,  `*` multiplication, `%` modulo and `//` integer division operators
+
+In the absence of parentheses, operators of the same level of precedence are evaluated from left to right.
+Arithmetic operators have higher precedence than comparison operators and lower precedence than the `.` "dot" `sub-expression` token separator.
+
+## Examples
+
+```code
+search(a + b, {"a": 1, "b": 2}) -> 3
+search(a - b, {"a": 1, "b": 2}) -> -1
+search(a * b, {"a": 2, "b": 4}) -> 8
+search(a / b, {"a": 2, "b": 3}) -> 0.666666666666667
+search(a % b, {"a": 10, "b": 3}) -> 1
+search(a // b, {"a": 10, "b": 3}) -> 3
+search(a.b + cd, {"a": {"b": 1}, "c": {"d": 2}}) -> 3
+```
+
+Since `arithmetic-expression` is not valid on the right-hand-side of a `sub-expression`, a `pipe-expression` can be used instead:
+
+```code
+search({ab: a.b, cd: c.d} | ab + cd, {"a": {"b": 1}, "c": {"d": 2}}) -> 3
+```
+
+# Parenthetical Expressions
+
+A `paren-expression` allows a user to override the precedence order of an `expression`, `e`.g. (a || b) && c.
+
+```abnf
+paren-expression  = "(" expression ")"
+```
+
+## Examples
+
+```code
+search(foo[?(a == `1` || b ==`2`) && c == `5`],
+       {"foo": [{"a": 1, "b": 2, "c": 3}, {"a": 3, "b": 4}]}) -> []
+```
+
+# Index Expressions
+
+```abnf
+index-expression  = expression bracket-specifier / bracket-specifier
+bracket-specifier = "[" (number / slice-expression) "]"
+```
+
+An `index-expression` is used to access elements in a list. Indexing is 0 based, the index of 0 refers to the first
+element of the list. A negative `number` is a valid index. A negative `number` indicates that indexing is relative to the
+end of the list, specifically:
+
+```spec
+negative-index == (length of array) + negative-index
+```
+
+Given an array of length N, an index of -1 would be equal to a positive index of N - 1, which is the last element of
+the list. If an index `expression` refers to an index that is greater than the length of the array, a value of `null` is returned.
+
+For the grammar rule `expression` `bracket-specifier` the `expression` is first evaluated, and then return value from the
+`expression` is given as input to the `bracket-specifier`.
+
+Using a "*" character within a `bracket-specifier` is discussed below in the wildcard expressions section.
+
+## Flatten Operator
+
+```abnf
+
+bracket-specifier =/ "[]"
+```
+
+When the character sequence [] is provided as a bracket specifier, then a flattening operation occurs on the current
+result. The flattening operator will merge sublists in the current result into a single list. The flattening operator
+has the following semantics:
+
+- Create an empty result list.
+- Iterate over the elements of the current result.
+- If the current element is not a list, add to the end of the result list.
+- If the current element is a list, add each element of the current element to the end of the result list.
+- The result list is now the new current result.
+
+Once the flattening operation has been performed, subsequent operations are projected onto the flattened list with the
+same semantics as a wildcard `expression`. Thus the difference between [*] and [] is that [] will first flatten sublists
+in the current result.
+
+### Examples
+
+```code
+
+search([0], ["first", "second", "third"]) -> "first"
+search([-1], ["first", "second", "third"]) -> "third"
+search([100], ["first", "second", "third"]) -> null
+search(foo[0], {"foo": ["first", "second", "third"]}) -> "first"
+search(foo[100], {"foo": ["first", "second", "third"]}) -> null
+search(foo[0][0], {"foo": [[0, 1], [1, 2]]}) -> 0
+```
+
+## Slices
+
+A `slice-expression` allows you to select a subset of an array or a string. A slice has a `start`, `stop`, and `step` value. The
+general form of a slice is `[start:stop:step]`, but each component is optional and can be omitted.
+
+```abnf
+slice-expression  = [number] ":" [number] [ ":" [number] ]
+```
+
+```note
+Slices in JMESPath have the same semantics as python slices. If you're familiar with python slices, you're familiar with
+JMESPath slices.
+```
+
+Given a `start`, `stop`, and `step` value, the sub elements in an array or characters in a string are extracted as follows:
+
+- The first element in the extracted array or first character in the extracted string is the index denoted by `start`.
+- The last element in the extracted array or last character in the extracted string is the index denoted by `end - 1`.
+- The `step` value determines how many indices to skip after each element is selected from the array or each character is selected from the string.
+  The default `step` value of `1` will not skip any indices and will return a contiguous subset of the original array or a substring of the original string.
+  A `step` value greater than `1` will skip indices while extracting elements from an array or characters from a string. For instance, a `step` value of `2` will
+  skip every other element or character.
+  Negative `step` values start from the end of the array or string and extract elements or characters in reverse order.
+
+Slice expressions adhere to the following rules:
+
+- If a negative `start` position is given, it is calculated as the total length of the array or string `plus` the given `start` position.
+- If no `start` position is given, it is assumed to be `0` if the given `step` is greater than 0 or the end of the array or string if
+  the given `step` is less than `0`.
+- If a negative `stop` position is given, it is calculated as the total length of the array or string `plus` the given `stop` position.
+- If no `stop` position is given, it is assumed to be the length of the array or string if the given `step` is greater than `0` or `0` if
+  the given `step` is less than `0`.
+- If the given `step` is omitted, it it assumed to be `1`.
+- If the given `step` is `0`, an `invalid-value` error MUST be raised.
+- If the element being sliced is not an array or a string, the result is `null`.
+- If the element being sliced is an array or string and yields no results, the result MUST be an empty array.
+
+### Examples
+
+```code
+search([0:4:1], [0, 1, 2, 3]) -> [0, 1, 2, 3]
+search([0:4], [0, 1, 2, 3]) -> [0, 1, 2, 3]
+search([0:3], [0, 1, 2, 3]) -> [0, 1, 2]
+search([:2], [0, 1, 2, 3]) -> [0, 1]
+search([::2], [0, 1, 2, 3]) -> [0, 2]
+search([::-1], [0, 1, 2, 3]) -> [3, 2, 1, 0]
+search([-2:], [0, 1, 2, 3]) -> [2, 3]
+```
+
+Slicing operates on strings exactly as if a string were thought of as an array of characters.
+
+```code
+search(foo[0:4], {"foo": "hello, world!"}) -> "hell"
+search([::], "raw-string") -> "raw-string"
+search([::2], "raw-string") -> "rwsrn"
+search([::-1], "raw-string") -> "gnirts-war"
+```
+
+# MultiSelect List
+
+A `multi-select-list` `expression` is used to extract a subset of elements from a JSON hash. There are two version of multiselect,
+one in which the multiselect `expression` is enclosed in `{...}` and one which is enclosed in `[...]`. This section describes the `[...]` version.
+
+```abnf
+multi-select-list = "[" ( expression *( "," expression ) ) "]"
+```
+
+Within the start and closing characters is one or more non expressions separated by a comma. Each
+`expression` will be evaluated against the JSON document. Each returned element will be the result of evaluating the
+`expression`. A `multi-select-list` with N expressions will result in a list of length N. Given a multiselect `expression`
+`[expr-1,expr-2,...,expr-n]`, the evaluated `expression` will return `[evaluate(expr-1), evaluate(expr-2), ..., evaluate(expr-n)]`.
+
+## Examples
+
+```code
+search([foo,bar], {"foo": "a", "bar": "b", "baz": "c"}) -> ["a", "b"]
+search([foo,bar[0]], {"foo": "a", "bar": ["b"], "baz": "c"}) -> ["a", "b"]
+search([foo,bar.baz], {"foo": "a", "bar": {"baz": "b"}}) -> ["a", "b"]
+search([foo,baz], {"foo": "a", "bar": "b"}) -> ["a", null]
+```
+
+# MultiSelect Hash
+
+```abnf
+multi-select-hash = "{" ( keyval-expr *( "," keyval-expr ) ) "}"
+keyval-expr       = identifier ":" expression
+```
+
+A `multi-select-hash` `expression` is similar to a `multi-select-list` `expression`, except that a hash is created instead of a
+list. A `multi-select-hash` `expression` also requires key names to be provided, as specified in the `keyval-expr` rule.
+Given the following rule:
+
+```abnf
+keyval-expr       = identifier ":" expression
+```
+
+The `identifier` is used as the key name and the result of evaluating the `expression` is the value associated with the `identifier` key.
+
+Each `keyval-expr` within the `multi-select-hash` will correspond to a single key value pair in the created hash.
+
+## Examples
+
+Given a `multi-select-hash` `expression` `{foo: one.two, bar: bar}` and the data `{"bar": "bar", {"one": {"two": "one-two"}}}`,
+the `expression` is evaluated as follows:
+
+- A hash is created: {}
+- A key foo is created whose value is the result of evaluating one.two against the provided JSON document: `{"foo": evaluate(one.two, <data>)}`
+- A key bar is created whose value is the result of evaluting the `expression` bar against the provided JSON document.
+
+The final result will be: `{"foo": "one-two", "bar": "bar"}`.
+
+Additional examples:
+
+```code
+search({foo: foo, bar: bar}, {"foo": "a", "bar": "b", "baz": "c"})
+              -> {"foo": "a", "bar": "b"}
+search({foo: foo, firstbar: bar[0]}, {"foo": "a", "bar": ["b"]})
+              -> {"foo": "a", "firstbar": "b"}
+search({foo: foo, "bar.baz": bar.baz}, {"foo": "a", "bar": {"baz": "b"}})
+              -> {"foo": "a", "bar.baz": "b"}
+search({foo: foo, baz: baz}, {"foo": "a", "bar": "b"})
+              -> {"foo": "a", "baz": null}
+```
+
+# Wildcard Expressions
+
+```abnf
+expression        =/ "*"
+bracket-specifier =/ "[" "*" "]"
+```
+
+A wildcard `expression` is a `expression` of either `*` or `[*]`. A wildcard `expression` can return multiple elements, and the
+remaining expressions are evaluated against each returned element from a wildcard `expression`. The `[*]` syntax applies to
+a list type and the `*`syntax applies to a hash type.
+
+The `[*]` syntax (referred to as a list wildcard `expression`) will return all the elements in a list. Any subsequent
+expressions will be evaluated against each individual element. Given an `expression` `[*].child-expr`, and a list of N
+elements, the evaluation of this `expression` would be `[child-expr(el-0), child-expr(el-2), ..., child-expr(el-N)]`.
+This is referred to as a projection, and the child-expr `expression` is projected onto the elements of the resulting list.
+
+Once a projection has been created, all subsequent expressions are projected onto the resulting list.
+
+The `*` syntax (referred to as a hash wildcard `expression`) will return a list of the hash element's values. Any subsequent
+`expression` will be evaluated against each individual element in the list (this is also referred to as a projection).
+
+Note that if any subsequent `expression` after a wildcard `expression` returns a `null` value, it is omitted from the final
+result list.
+
+A list wildcard `expression` is only valid for the JSON array type. If a list wildcard `expression` is applied to any other
+JSON type, a value of `null` is returned.
+
+Similarly, a hash wildcard `expression` is only valid for the JSON object type. If a hash wildcard `expression` is applied
+to any other JSON type, a value of `null` is returned. Note that JSON hashes are explicitly defined as unordered.
+Therefore a hash wildcard `expression` can return the values associated with the hash in any order. Implementations
+are not required to return the hash values in any specific order.
+
+## Examples
+
+```code
+search([*].foo, [{"foo": 1}, {"foo": 2}, {"foo": 3}]) -> [1, 2, 3]
+search([*].foo, [{"foo": 1}, {"foo": 2}, {"bar": 3}]) -> [1, 2]
+search('*.foo', {"a": {"foo": 1}, "b": {"foo": 2}, "c": {"bar": 1}}) -> [1, 2]
+```
+
+# Filter Expressions
+
+```abnf
+filter-expression = "[?" expression "]"
+bracket-specifier =/ filter-expression
+```
+
+A `filter-expression` provides a way to select JSON elements based on a comparison to another `expression`. A filter
+`expression` is evaluated as follows: for each element in an array evaluate the `expression` against the element. If the
+`expression` evaluates to a truth-like value, the item (in its entirety) is added to the result list. Otherwise it is
+excluded from the result list. A filter `expression` is only defined for a JSON array. Attempting to evaluate a filter
+`expression` against any other type will return `null`.
+
+## Comparison Operators
+
+```abnf
+comparator-expression = expression comparator expression
+comparator        = "<" / "<=" / "==" / ">=" / ">" / "!="
+```
+
+The following operations are supported:
+
+- `==`, tests for equality.
+- `!=`, tests for inequality.
+- `<,` less than.
+- `<=`, less than or equal to.
+- `>,` greater than.
+- `>=`, greater than or equal to.
+
+The behavior of each operation is dependent on the type of each evaluated `expression`.
+
+The comparison semantics for each operator are defined below based on the corresponding JSON type:
+
+## Equality Operators
+
+For `string`/`number`/`true`/`false`/`null` types, equality is an exact match. A string is equal to another string if
+they they have the exact sequence of code points. The `literal` values `true`/`false`/`null` are only equal to their own `literal`
+values. Two JSON objects are equal if they have the same set of keys and values (given two JSON objects x and y, for each
+key value pair (i, j) in x, there exists an equivalent pair (i, j) in y). Two JSON arrays are equal if they have equal
+elements in the same order (given two arrays x and y, for each i from 0 until length(x), x[i] == y[i]).
+
+## Ordering Operators
+
+Ordering operators `>`, `>=`, `<`, `<=` are only valid for numbers. Evaluating any other type with a comparison operator
+will yield a `null` value, which will result in the element being excluded from the result list. For example, given:
+
+```code
+search('foo[?a<b]', {"foo": [{"a": "char", "b": "char"},
+                             {"a": 2, "b": 1},
+                             {"a": 1, "b": 2}]}) -> [{"a": 1, "b": 2}]
+```
+
+The three elements in the foo list are evaluated against a < b. The first element resolves to the comparison "char" <
+"bar", and because these types are string, the `expression` results in `null`, so the first element is not included in the
+result list. The second element resolves to 2 < 1, which is `false`, so the second element is excluded from the result
+list. The third `expression` resolves to 1 < 2 which evaluates to `true`, so the third element is included in the list.
+The final result of that `expression` is `[{"a": 1, "b": 2}]`.
+
+## Examples
+
+```code
+search(foo[?bar==`10`], {"foo": [{"bar": 1}, {"bar": 10}]}) -> [{"bar": 10}]
+search([?bar==`10`], [{"bar": 1}, {"bar": 10}]) -> [{"bar": 10}]
+search(foo[?a==b], {"foo": [{"a": 1, "b": 2}, {"a": 2, "b": 2}]}) -> [{"a": 2, "b": 2}]
+```
+
+# Function Expressions
+
+```abnf
+function-expression = unquoted-string  ( no-args  / one-or-more-args )
+
+no-args             = "(" ")"
+one-or-more-args    = "(" ( function-arg *( "," function-arg ) ) ")"
+
+function-arg        = expression / expression-type
+```
+
+Functions allow users to easily transform and filter data in JMESPath expressions.
+
+## Data Types
+
+In order to support functions, a type system is needed. The JSON types are used:
+
+- `number` (integers and double-precision floating-point format in JSON)
+- string (a sequence of Unicode [code points](https://unicode.org/glossary/#code_point). Note that a code point is distinct to a [code unit](https://unicode.org/glossary/#code_unit))
+- boolean (`true` or `false`)
+- array (an ordered, sequence of values)
+- object (an unordered collection of key value pairs)
+- `null`
+
+There is also an additional type that is not a JSON type that's used in JMESPath functions:
+
+- `expression` (denoted by `&expression`)
+
+```abnf
+expression-type     = "&" expression
+```
+
+## Current Node
+
+The `current-node` token can be used to represent the current node being evaluated. The `current-node` token is useful
+for functions that require the current node being evaluated as an argument.
+
+```abnf
+current-node        = "@"
+```
+
+For example, the following `expression`
+creates an array containing the total `number` of elements in the foo object followed by the value of `foo["bar"]`.
+
+```jmespath
+foo[].[count(@), bar]
+```
+
+JMESPath assumes that all function arguments operate on the current node unless the argument is a `literal` or `number`
+token. Because of this, an `expression` such as @.bar would be equivalent to just bar, so the current node is only
+allowed as a bare `expression`.
+
+### Current node state
+
+At the start of an `expression`, the value of the current node is the data being evaluated by the JMESPath `expression`.
+As an `expression` is evaluated, the value the the current node represents MUST change to reflect the node currently
+being evaluated. When in a projection, the current node value must be changed to the node currently being evaluated
+by the projection.
+
+## Root Node
+
+The `root-node` token can be used to represent the original input JSON document.
+
+```abnf
+root-node           = "$"
+```
+
+As a JMESPath `expression` is being evaluated, the current scope changes.
+Given a simple sub `expression` such as `foo.bar`, first the `foo` `expression` is evaluated
+with the starting input JSON document, and the result of that `expression` is then used as
+the current scope when the `bar` element is evaluated.
+
+Once we’ve drilled down to a specific scope, the `root-node` token can be used
+to refer to the original JSON document.
+
+### Example
+
+Given a JSON document:
+
+```json
+{
+  "first_choice": "WA",
+  "states": [
+     {"name": "WA", "cities": ["Seattle", "Bellevue", "Olympia"]},
+     {"name": "CA", "cities": ["Los Angeles", "San Francisco"]},
+     {"name": "NY", "cities": ["New York City", "Albany"]}
+ ]
+}
+```
+
+We can retrieve the list of cities of the state corresponding to the `first_choice` key
+using the following `expression`:
+
+` states[? name == $.first_choice ].cities[] `
+
+# Let Expressions
+
+```abnf
+let-expression = "let" bindings "in" expression
+
+bindings = variable-binding *( "," variable-binding )
+variable-binding = variable-ref "=" expression
+variable-ref = "$" unquoted-string
+```
+
+A `let-expression` introduces lexical scoping and lets you bind variables that are evaluated In
+the context of a given lexical scope. This enables queries that can refer to elements defined
+outside of their current element
+
+## Examples of this new syntax
+
+- `` let $foo = bar in {a: myvar, b: $foo} ``
+- `` let $foo = baz[0] in bar[? baz == $foo ] | [0] ``
+- `` let $a = b, $c = d in bar[*].[$a, $c, foo, bar] ``
+
+# Function Evaluation
+
+Functions are evaluated in applicative order. Each argument must be an `expression`, each argument `expression` must be
+evaluated before evaluating the function. The function is then called with the evaluated function arguments. The result
+of the `function-expression` is the result returned by the function call. If a `function-expression` is evaluated for a
+function that does not exist, the JMESPath implementation must indicate to the caller that an `unknown-function` error
+occurred. How and when this error is raised is implementation specific, but implementations should indicate to the caller
+that this specific error occurred.
+
+Functions can have a specific arity, a range of valid – minimum and maximum – `number` of arguments or be variadic with a
+minimum `number` of arguments. If a `function-expression` is encountered where the arity does not match or the minimum `number`
+of arguments for a variadic function is not provided, then implementations must indicate to the caller that an `invalid-arity`
+error occurred. How and when this error is raised is implementation specific.
+
+Each function signature declares the types of its input parameters. If any type constraints are not met, implementations
+must indicate that an `invalid-type` error occurred.
+
+In order to accommodate type constraints, functions are provided to convert types to other types (to_string, to_number)
+which are defined below. No explicit type conversion happens unless a user specifically uses one of these type conversion
+functions.
+
+Function expressions are also allowed as the child element of a sub `expression`. This allows functions to be used with
+projections, which can enable functions to be applied to every element in a projection. For example, given the input
+data of `["1", "2", "3", "notanumber", true]`, the following `expression` can be used to convert (and filter) all elements
+to numbers:
+
+```code
+search([].to_number(@), ["1", "2", "3", "notanumber", true]) -> [1, 2, 3]
+```
+
+This provides a simple mechanism to explicitly convert types when needed.
+
+# Raw String Literals
+
+```abnf
+raw-string        = "'" *raw-string-char "'"
+
+raw-string-char   = (%x00-26 / %x28-5B / %x5D-10FFFF) / preserved-escape / raw-string-escape
+preserved-escape  = escape (%x00-26 / %x28-5B / %x5D-10FFFF)
+raw-string-escape = escape ("'" / escape)
+```
+
+A `raw-string` is an `expression` that allows for a `literal` string value to be specified. The result of evaluating the raw
+string `literal` `expression` is the `literal` string value. It is a simpler form of a `literal` `expression` that is special
+cased for strings. For example, the following expressions both evaluate to the same value: "foo":
+
+```code
+search(`"foo"`, "") -> "foo"
+search('foo', "") -> "foo"
+```
+
+As you can see in the examples above, it is meant as a more succinct form of the common scenario of specifying a `literal`
+string value.
+
+In addition, it does not perform any of the additional processing that JSON strings supports including:
+
+- Not expanding unicode escape sequences
+- Not expanding newline characters
+- Not expanding tab characters or any other escape sequences documented in RFC 4627 section 2.5.
+
+## Examples
+
+```code
+search('foo', "") -> "foo"
+search(' bar ', "") -> " bar "
+search('[baz]', "") -> "[baz]"
+search('\u03bB', "") -> "\\u03bB"
+search('foo␊bar', "") -> "foo\nbar"
+search('foo\␊bar', "") -> "foo\\\nbar"
+search('\\', "") -> "\\"
+```
+
+# Literal Expressions
+
+```abnf
+literal           = "`" json-text "`"
+```
+
+A `literal` `expression` is an `expression` that allows arbitrary JSON objects to be specified. This is useful in filter
+expressions as well as multi select hashes (to create arbitrary key value pairs), but is allowed anywhere an `expression`
+is allowed. The specification includes the ABNF for JSON, implementations should use an existing JSON parser to parse
+`literal` values. Note that the \` character must now be escaped in a json-value which means implementations need to
+handle this case before passing the resulting string to a JSON parser.
+
+```note
+When [JEP-12](https://github.com/jmespath-community/jmespath.spec/blob/main/jep-012-raw-string-literals.md)
+introduced raw string literals, a legacy behavior in which backtick literals
+containing invalid JSON text would be interpreted as if their contents were wrapped
+in double quotes (e.g., `` `foo` == `"foo"` ``) was deprecated but implementations
+were allowed to continue supporting it.
+
+In this version of the specification, that behavior has been fully removed.
+```
+
+For completeness, here is the grammar specification for JSON text:
+
+```abnf
+unquoted-string   = (%x41-5A / %x61-7A / %x5F) *(  ; A-Za-z_
+                        %x30-39  /  ; 0-9
+                        %x41-5A /  ; A-Z
+                        %x5F    /  ; _
+                        %x61-7A)   ; a-z
+quoted-string     = quotation-mark *(unescaped-char / escaped-char) quotation-mark
+unescaped-char    = %x20-21 / %x23-5B / %x5D-10FFFF
+escape            = %x5C   ;
+quotation-mark    = %x22   ; "
+escaped-char      = escape (
+                        %x22 /          ; "    quotation mark  U+0022
+                        %x5C /          ; \    reverse solidus U+005C
+                        %x2F /          ; /    solidus         U+002F
+                        %x62 /          ; b    backspace       U+0008
+                        %x66 /          ; f    form feed       U+000C
+                        %x6E /          ; n    line feed       U+000A
+                        %x72 /          ; r    carriage return U+000D
+                        %x74 /          ; t    tab             U+0009
+                        %x75 4HEXDIG )  ; uXXXX                U+XXXX
+
+json-text  = ws json-value ws
+ws         = *(
+                %x20 /              ; Space
+                %x09 /              ; Horizontal tab
+                %x0A /              ; Line feed or New line
+                %x0D )              ; Carriage return
+; `json-value` is any valid JSON value with the one exception that each
+; U+0060 GRAVE ACCENT '`' must be escaped with a preceding backslash.
+; While implementations are encouraged to use any existing JSON parser for this
+; section of the grammar (after handling the escaped characters), a complete
+; set of rules derived from RFC 8259 is included below:
+json-value = false / null / true / json-object / json-array /
+             json-number / json-string
+; JSON literals
+false = %x66.61.6c.73.65   ; false
+null  = %x6e.75.6c.6c      ; null
+true  = %x74.72.75.65      ; true
+; JSON strings
+json-string    = quotation-mark *( json-unescaped / json-escaped ) quotation-mark
+json-unescaped = %x20-21     / ; space or '!' (precedes U+0022 '"')
+                 %x23-5B     / ; '#' through '[' (precedes U+005C '\')
+                 %x5D-5F     / ; ']' through '_' (precedes U+0060 '`')
+                 %x61-10FFFF   ; 'a' and all following code points
+json-escaped   = escaped-char / (escape "`")
+; JSON arrays
+json-array      = begin-array [ json-value *( value-separator json-value ) ] end-array
+begin-array     = ws %x5B ws  ; [ left square bracket
+end-array       = ws %x5D ws  ; ] right square bracket
+value-separator = ws %x2C ws  ; , comma
+; JSON objects
+json-object    = begin-object [ member *( value-separator member ) ] end-object
+begin-object   = ws %x7B ws  ; { left curly bracket
+end-object     = ws %x7D ws  ; } right curly bracket
+member         = json-string name-separator json-value
+name-separator = ws %x3A ws  ; : colon
+; JSON numbers
+json-number   = [ minus ] int [ frac ] [ exp ]
+decimal-point = %x2E                 ; .
+digit1-9      = %x31-39              ; 1-9
+e             = %x65 / %x45          ; e E
+exp           = e [ minus / plus ] 1*digit
+frac          = decimal-point 1*digit
+int           = zero / ( digit1-9 *digit )
+minus         = %x2D                 ; -
+plus          = %x2B                 ; +
+zero          = %x30                 ; 0
+
+```
+
+## Examples
+
+```code
+search(`"foo"`, "anything") -> "foo"
+search(`"foo\`bar"`, "anything") -> "foo`bar"
+search(`[1, 2]`, "anything") -> [1, 2]
+search(`true`, "anything") -> true
+search(`{"a": "b"}`.a, "anything") -> "b"
+search({first: a, type: `"mytype"`}, {"a": "b", "c": "d"}) -> {"first": "b", "type": "mytype"}
+```
+
+# Identifiers
+
+An `identifier` is the most basic `expression` and can be used to extract a single element from a JSON document.
+
+```abnf
+number            = ["-"] 1*digit
+digit             = %x30-39 ; 0-9
+identifier        = unquoted-string / quoted-string
+```
+
+The return value for an `identifier` is the value associated with the `identifier`. If the `identifier` does not exist in the
+JSON document, than a `null` value is returned.
+From the grammar rule listed above identifiers can be one or more characters, and must start with A-Za-z_.
+An `identifier` can also be quoted. This is necessary when an `identifier` has characters not specified in the
+`unquoted-string` grammar rule. In this situation, an `identifier` is specified with a double quote, followed by any `number`
+of `unescaped-char` or `escaped-char` characters, followed by a double quote. The `quoted-string` rule is the same grammar
+rule as a JSON string, so any valid string can be used between double quoted, include JSON supported escape sequences,
+and six character unicode escape sequences.
+Note that any `identifier` that does not start with A-Za-z_ must be quoted.
+
+## Examples
+
+```code
+search(foo, {"foo": "value"}) -> "value"
+search(bar, {"foo": "value"}) -> null
+search(foo, {"foo": [0, 1, 2]}) -> [0, 1, 2]
+search("with space", {"with space": "value"}) -> "value"
+search("special chars: !@#", {"special chars: !@#": "value"}) -> "value"
+search("quote\"char", {"quote\"char": "value"}) -> "value"
+search("\u2713", {"\u2713": "value"}) -> "value"
+```

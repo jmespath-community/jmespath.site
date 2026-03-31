@@ -1,0 +1,39 @@
+---
+---
+<div class="site-banner" role="banner" aria-label="JMESPath Community banner">
+  <img src="/static/logo.svg" alt="JMESPath Community logo" />
+</div>
+
+<style>
+.site-banner {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  background: var(--bg);
+  /* reduced vertical padding for compactness */
+  padding: 0.25rem 0; /* ~4px top & bottom */
+  align-items: center;
+  overflow: hidden;
+}
+
+/* Constrain height directly so the logo cannot push the banner tall on large viewports */
+.site-banner img {
+  max-width: 1200px;
+  /* prefer intrinsic width scaling but clamp height */
+  max-height: 36px;       /* DESKTOP target: 36px */
+  height: auto;
+  width: auto;            /* avoid forcing full-width scaling which increases height */
+  object-fit: contain;
+  display: block;
+}
+
+/* Mobile / small viewport adjustments */
+@media (max-width: 768px) {
+  .site-banner {
+    padding: 0.125rem 0;  /* ~2px top & bottom */
+  }
+  .site-banner img {
+    max-height: 28px;     /* MOBILE target: 28px */
+  }
+}
+</style>

@@ -1,0 +1,604 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import JMESPathDemo from "../components/JMESPathDemo.astro";
+
+// Data for first example: Filters and Multiselect Lists
+const dataPeople1 = `{
+  "people": [
+    {
+      "age": 20,
+      "other": "foo",
+      "name": "Bob"
+    },
+    {
+      "age": 25,
+      "other": "bar",
+      "name": "Fred"
+    },
+    {
+      "age": 30,
+      "other": "baz",
+      "name": "George"
+    }
+  ]
+}`;
+
+// Data for second example: Filters and Multiselect Hashes
+const dataPeople2 = `{
+  "people": [
+    {
+      "age": 20,
+      "other": "foo",
+      "name": "Bob"
+    },
+    {
+      "age": 25,
+      "other": "bar",
+      "name": "Fred"
+    },
+    {
+      "age": 30,
+      "other": "baz",
+      "name": "George"
+    }
+  ]
+}`;
+
+// Data for third example: Multiselect with tags
+const dataPeopleWithTags = `{
+  "people": [
+    {
+      "age": 20,
+      "tags": [
+        "a",
+        "b",
+        "c"
+      ],
+      "name": "Bob"
+    },
+    {
+      "age": 25,
+      "tags": [
+        "d",
+        "e",
+        "f"
+      ],
+      "name": "Fred"
+    },
+    {
+      "age": 30,
+      "tags": [
+        "g",
+        "h",
+        "i"
+      ],
+      "name": "George"
+    }
+  ]
+}`;
+
+// Data for nested data example
+const dataReservations = `{
+  "reservations": [
+    {
+      "instances": [
+        {
+          "type": "small",
+          "state": {
+            "name": "running"
+          },
+          "tags": [
+            {
+              "Key": "Name",
+              "Values": [
+                "Web"
+              ]
+            },
+            {
+              "Key": "version",
+              "Values": [
+                "1"
+              ]
+            }
+          ]
+        },
+        {
+          "type": "large",
+          "state": {
+            "name": "stopped"
+          },
+          "tags": [
+            {
+              "Key": "Name",
+              "Values": [
+                "Web"
+              ]
+            },
+            {
+              "Key": "version",
+              "Values": [
+                "1"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "instances": [
+        {
+          "type": "medium",
+          "state": {
+            "name": "terminated"
+          },
+          "tags": [
+            {
+              "Key": "Name",
+              "Values": [
+                "Web"
+              ]
+            },
+            {
+              "Key": "version",
+              "Values": [
+                "1"
+              ]
+            }
+          ]
+        },
+        {
+          "type": "xlarge",
+          "state": {
+            "name": "running"
+          },
+          "tags": [
+            {
+              "Key": "Name",
+              "Values": [
+                "DB"
+              ]
+            },
+            {
+              "Key": "version",
+              "Values": [
+                "1"
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}`;
+
+// Data for filtering nested data example
+const dataPeopleNested = `{
+  "people": [
+    {
+      "general": {
+        "id": 100,
+        "age": 20,
+        "other": "foo",
+        "name": "Bob"
+      },
+      "history": {
+        "first_login": "2014-01-01",
+        "last_login": "2014-01-02"
+      }
+    },
+    {
+      "general": {
+        "id": 101,
+        "age": 30,
+        "other": "bar",
+        "name": "Bill"
+      },
+      "history": {
+        "first_login": "2014-05-01",
+        "last_login": "2014-05-02"
+      }
+    }
+  ]
+}`;
+
+// Data for sort_by example
+const dataContents = `{
+  "Contents": [
+    {
+      "Date": "2014-12-21T05:18:08.000Z",
+      "Key": "logs/bb",
+      "Size": 303
+    },
+    {
+      "Date": "2014-12-20T05:19:10.000Z",
+      "Key": "logs/aa",
+      "Size": 308
+    },
+    {
+      "Date": "2014-12-20T05:19:12.000Z",
+      "Key": "logs/qux",
+      "Size": 297
+    },
+    {
+      "Date": "2014-11-20T05:22:23.000Z",
+      "Key": "logs/baz",
+      "Size": 329
+    },
+    {
+      "Date": "2014-12-20T05:25:24.000Z",
+      "Key": "logs/bar",
+      "Size": 604
+    },
+    {
+      "Date": "2014-12-20T05:27:12.000Z",
+      "Key": "logs/foo",
+      "Size": 647
+    }
+  ]
+}`;
+
+// Data for main page pipe example
+const dataLocations = `{
+  "locations": [
+    {
+      "name": "Seattle",
+      "state": "WA"
+    },
+    {
+      "name": "New York",
+      "state": "NY"
+    },
+    {
+      "name": "Bellevue",
+      "state": "WA"
+    },
+    {
+      "name": "Olympia",
+      "state": "WA"
+    }
+  ]
+}`;
+---
+
+<BaseLayout title="Examples" pageType="shared">
+  <div class="examples-page">
+    <h1>Filters and Multiselect Lists</h1>
+
+    <p>
+      One of the most common usage scenarios for JMESPath is being able to take
+      a complex JSON document and simplify it down. The main features at work
+      here are filters and multiselects. In this example below, we're taking
+      the array of people and, for any element with an age key whose value is
+      greater than 20, we're creating a sub list of the name and age values.
+    </p>
+
+    <JMESPathDemo
+      expression="people[?age > `20`].[name, age]"
+      data={dataPeople1}
+      result=""
+      alwaysExpanded={true}
+    />
+
+    <h1>Filters and Multiselect Hashes</h1>
+
+    <p>
+      In the previous example we were taking an array of hashes, and simplifying
+      down to an array of two element arrays containing a name and an age.
+      We're also only including list elements where the <code>age</code> key is
+      greater than <code>20</code>. If instead we want to create the same hash
+      structure but only include the <code>age</code> and <code>name</code> key,
+      we can instead say:
+    </p>
+
+    <JMESPathDemo
+      expression="people[?age > `20`].{name: name, age: age}"
+      data={dataPeople2}
+      result=""
+      alwaysExpanded={true}
+    />
+
+    <p>
+      The last half of the above expression contains key value pairs which have
+      the general form <code>keyname: &lt;expression&gt;</code>. In the above
+      expression we're just using a field as an expression, but they can be
+      more advanced expressions. For example:
+    </p>
+
+    <JMESPathDemo
+      expression="people[*].{name: name, tags: tags[0]}"
+      data={dataPeopleWithTags}
+      result=""
+      alwaysExpanded={true}
+    />
+
+    <p>
+      Notice in the above example instead of applying a filter expression
+      (<code>[? &lt;expr&gt; ]</code>), we're selecting all array elements via
+      <code>[*]</code>.
+    </p>
+
+    <h1>Working with Nested Data</h1>
+
+    <JMESPathDemo
+      expression="reservations[].instances[].[tags[?Key=='Name'].Values[] | [0], type, state.name]"
+      data={dataReservations}
+      result=""
+      alwaysExpanded={true}
+    />
+
+    <p>
+      The above example combines several JMESPath features including the
+      <a href="/specification/latest/#spec-flatten">flatten</a> operator,
+      multiselect lists, filters, and pipes.
+    </p>
+
+    <p>
+      The input data contains a top level key, "reservations", which is a list.
+      Within each list, there is an "instances" key, which is also a list.
+    </p>
+
+    <p>
+      The first thing we're doing here is creating a single list from multiple
+      lists of instances. By using the
+      <a href="/specification/latest/#spec-flatten">flatten</a> operator we can
+      take the two instances from the first list and the two instances from the
+      second list, and combine them into a single list. Try changing the above
+      expression to just <code>reservations[].instances[]</code> to see what
+      this flattened list looks like. Everything to the right of the
+      <code>reservations[].instances[]</code> is about taking the flattened list
+      and paring it down to contain only the data that we want. This expression
+      is taking each element in the original list and transforming it into a
+      three element sublist. The three elements are:
+    </p>
+
+    <ul>
+      <li>
+        In the <code>tags</code> list, select the first element in the flattened
+        <code>Values</code> list whose <code>Key</code> has a value of
+        <code>Name</code>.
+      </li>
+      <li>The <code>type</code></li>
+      <li>The <code>state.name</code> of each instance.</li>
+    </ul>
+
+    <p>
+      The most interesting of those three expressions is the
+      <code
+        >tags[?Key=='Name'].Values[] | [0]</code
+      > part. Let's examine that further.
+    </p>
+
+    <p>
+      The first thing to notice is that we're filtering down the list associated
+      with the <code>tags</code> key. The <code>tags[?Key==`Name`]</code> tells
+      us to only include list elements that contain a <code>Key</code> whose
+      value is <code>Name</code>. From those filtered list elements we're going
+      to take the <code>Values</code> key and flatten the list. Finally, the
+      <code>| [0]</code> will take the entire list and extract the 0th element.
+    </p>
+
+    <h2>Filtering and Selecting Nested Data</h2>
+
+    <p>
+      In this example, we're going to look at how you can filter nested hashes.
+    </p>
+
+    <JMESPathDemo
+      expression="people[?general.id==`100`].general | [0]"
+      data={dataPeopleNested}
+      result=""
+      alwaysExpanded={true}
+    />
+
+    <p>
+      In this example we're searching through the <code>people</code> array.
+      Each element in this array contains a hash of two elements, and each value
+      in the hash is itself a hash. We're trying to retrieve the value of the
+      <code>general</code> key that contains an <code>id</code> key with a value
+      of <code>100</code>.
+    </p>
+
+    <p>
+      If we just had the expression <code>people[?general.id==`100`]</code>, we'd
+      have a result of a filtered array containing one element with the entire
+      person object.
+    </p>
+
+    <p>
+      From there, we then uses a pipe (<code>|</code>) to stop projections so
+      that we can finally select the first element (<code>[0]</code>). Note that
+      we are making the assumption that there's only one hash that contains an
+      <code>id</code> of <code>100</code>.
+    </p>
+
+    <p>
+      Finally, it's worth mentioning there is more than one way to write this
+      expression. In this example we've decided that after we filter the list
+      we're going to select the value of the <code>general</code> key and then
+      select the first element in that list. We could also reverse the order of
+      those operations, we could have taken the filtered list, selected the
+      first element, and then extracted the value associated with the
+      <code>general</code> key. That expression would be:
+    </p>
+
+    <pre><code>people[?general.id==`100`] | [0].general</code></pre>
+
+    <p>Both versions are equally valid.</p>
+
+    <h1>Using Functions</h1>
+
+    <p>
+      JMESPath functions give you a lot of power and flexibility when working
+      with JMESPath expressions. Below are some common expressions and functions
+      used in JMESPath.
+    </p>
+
+    <h2>sort_by</h2>
+
+    <JMESPathDemo
+      expression="sort_by(Contents, &Date)[*].{Key: Key, Size: Size}"
+      data={dataContents}
+      result=""
+      alwaysExpanded={true}
+    />
+
+    <p>
+      The first interesting thing here if the use of the function
+      <code>sort_by</code>. In this example we are sorting the
+      <code>Contents</code> array by the value of each <code>Date</code> key in
+      each element in the <code>Contents</code> array. The <code>sort_by</code>
+      function takes two arguments. The first argument is an array, and the
+      second argument describes the key that should be used to sort the array.
+    </p>
+
+    <p>
+      The second interesting thing in this expression is that the second argument
+      starts with <code>&</code>, which creates an expression type. Think of
+      this conceptually as a reference to an expression that can be evaluated
+      later. If you are familiar with lambda and anonymous functions, expression
+      types are similar. The reason we use <code>&Date</code> instead of
+      <code>Date</code> is because if the expression is <code>Date</code>, it
+      would be evaluated before calling the function, and given there's no
+      <code>Date</code> key in the outer hash, the second argument would evaluate
+      to <code>null</code>. Check out the specification for more information on
+      how functions are evaluated in JMESPath. Also, note that we're taking
+      advantage of the fact that the dates are in ISO 8601 format, which can be
+      sorted lexicographically.
+    </p>
+
+    <p>
+      And finally, the last interesting thing in this expression is the
+      <code>[*]</code> immediately after the <code>sort_by</code> function call.
+      The reason for this is that we want to apply the multiselect hash, the
+      second half of the expression, to each element in the sorted array. In
+      order to do this we need a projection. The <code>[*]</code> does exactly
+      that, it takes the input array and creates a projection such that the
+      multiselect hash <code>{`{Key: Key, Size: Size}`}</code> will be
+      applied to each element in the list.
+    </p>
+
+    <p>
+      There are other functions that take expression types that are similar to
+      <code>sort_by</code> including
+      <a href="/specification/latest/#functions-min_by">min_by</a> and
+      <a href="/specification/latest/#functions-max_by">max_by</a>.
+    </p>
+
+    <h1>Pipes</h1>
+
+    <p>
+      Pipe expression are useful for stopping projections. They can also be used
+      to group expressions.
+    </p>
+
+    <h2>Main Page</h2>
+
+    <p>
+      Let's look at a modified version of the expression on the JMESPath home
+      page.
+    </p>
+
+    <JMESPathDemo
+      expression="locations[?state == 'WA'].name | sort(@)[-2:] | {WashingtonCities: join(', ', @)}"
+      data={dataLocations}
+      result=""
+      alwaysExpanded={true}
+    />
+
+    <p>
+      We can think of this JMESPath expression as having three components, each
+      separated by the pipe character <code>|</code>. The first expression is
+      familiar to us, it's similar to the first example on this page. The second
+      part of the expression, <code>sort(@)</code>, is similar to the
+      <code>sort_by</code> function we saw in the previous section. The
+      <code>@</code> token is used to refer to the current element. The
+      <a href="/specification/latest/#functions-sort">sort</a> function takes a
+      single parameter which is an array. If the input JSON document was a hash,
+      and we wanted to sort the <code>foo</code> key, which was an array, we
+      could just use <code>sort(foo)</code>. In this scenario, the input JSON
+      document is the array we want to sort. To refer to this value, we use the
+      current element, <code>@</code>, to indicate this. We're also only taking
+      a subset of the sorted array. We're using a slice (<code>[-2:]</code>) to
+      indicate that we only want the last two elements in the sorted array to be
+      passed through to the final third of this expression.
+    </p>
+
+    <p>
+      And finally, the third part of the expression,
+      <code>{`{WashingtonCities: join(', ', @)}`}</code>, creates a multiselect
+      hash. It takes as input, the list of sorted city names, and produces a
+      hash with a single key, <code>WashingtonCities</code>, whose values are
+      the input list (denoted by <code>@</code>) as a string separated by a
+      comma.
+    </p>
+  </div>
+</BaseLayout>
+
+<style>
+  .examples-page {
+    max-width: 56rem;
+    margin: 0 auto;
+    padding: 2rem 1rem;
+  }
+
+  .examples-page h1 {
+    font-size: 2rem;
+    font-weight: bold;
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+  }
+
+  .examples-page h2 {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-top: 1.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .examples-page p {
+    margin-bottom: 1rem;
+    line-height: 1.7;
+  }
+
+  .examples-page ul {
+    margin-bottom: 1rem;
+    padding-left: 1.5rem;
+    list-style-type: disc;
+  }
+
+  .examples-page li {
+    margin-bottom: 0.5rem;
+    line-height: 1.7;
+  }
+
+  .examples-page code {
+    background-color: #f3f4f6;
+    border-radius: 0.25rem;
+    padding: 0.125rem 0.25rem;
+    font-family: monospace;
+    font-size: 0.875em;
+  }
+
+  .examples-page pre {
+    background-color: #f3f4f6;
+    border-radius: 0.375rem;
+    padding: 1rem;
+    overflow-x: auto;
+    margin-bottom: 1rem;
+  }
+
+  .examples-page pre code {
+    background-color: transparent;
+    padding: 0;
+    font-size: 0.875rem;
+  }
+
+  .examples-page a {
+    color: #2563eb;
+    text-decoration: underline;
+  }
+
+  .examples-page a:hover {
+    color: #1d4ed8;
+  }
+</style>

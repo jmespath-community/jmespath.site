@@ -1,0 +1,403 @@
+---
+import "../styles/global.css";
+import Banner from "../components/Banner.astro";
+import {
+	versions,
+	getVersionSlugs,
+	getDefaultVersion,
+} from "../config/versions";
+
+// Build a compact CDN config for the client-side version-switcher.
+const versionsCdnConfig = Object.fromEntries(
+	Object.entries(versions).map(([slug, cfg]) => [
+		slug,
+		{ url: cfg.cdn.url, integrity: cfg.cdn.integrity },
+	]),
+);
+
+interface Props {
+	title: string;
+	currentVersion?: string;
+	pageType?: "shared" | "versioned";
+}
+
+const { title, currentVersion, pageType = "shared" } = Astro.props;
+const currentPath = Astro.url.pathname;
+const versionSlugs = getVersionSlugs();
+const resolvedVersion = currentVersion ?? getDefaultVersion();
+---
+
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>{title} — JMESPath</title>
+		<link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+		<!-- Versions CDN config for client-side version-switcher -->
+		<script
+			is:inline
+			type="application/json"
+			id="jmespath-versions-config"
+			set:html={JSON.stringify(versionsCdnConfig)}
+		></script>
+	</head>
+	<body>
+		<header>
+			<Banner />
+			<nav aria-label="Main navigation">
+				<div class="nav-container">
+					<div class="nav-logo">
+						<a href="/" aria-label="JMESPath home">
+							<span class="logo-text">JMESPath</span>
+						</a>
+					</div>
+
+					<div class="nav-links" id="nav-links" role="menubar">
+						<a
+							href="/tutorial/"
+							role="menuitem"
+							aria-current={currentPath.startsWith("/tutorial") ? "page" : undefined}
+							class:list={[{ active: currentPath.startsWith("/tutorial") }]}
+						>Tutorial</a>
+						<a
+							href="/examples/"
+							role="menuitem"
+							aria-current={currentPath.startsWith("/examples") ? "page" : undefined}
+							class:list={[{ active: currentPath.startsWith("/examples") }]}
+						>Examples</a>
+						<a
+							href="/libraries/"
+							role="menuitem"
+							aria-current={currentPath.startsWith("/libraries") ? "page" : undefined}
+							class:list={[{ active: currentPath.startsWith("/libraries") }]}
+						>Libraries</a>
+						<a
+							href={`/specification/${resolvedVersion}/`}
+							role="menuitem"
+							aria-current={currentPath.startsWith("/specification") ? "page" : undefined}
+							class:list={[{ active: currentPath.startsWith("/specification") }]}
+						>Specification</a>
+						<a
+							href={`/functions/${resolvedVersion}/`}
+							role="menuitem"
+							aria-current={currentPath.startsWith("/functions") ? "page" : undefined}
+							class:list={[{ active: currentPath.startsWith("/functions") }]}
+						>Functions</a>
+					</div>
+
+					<div class="nav-version">
+						<label for="version-select" class="sr-only">Version</label>
+						<select
+							id="version-select"
+							name="version"
+							data-page-type={pageType}
+							data-current-version={resolvedVersion}
+						>
+							{
+								versionSlugs.map((slug) => (
+									<option value={slug} selected={slug === resolvedVersion}>
+										{versions[slug].label}
+									</option>
+								))
+							}
+						</select>
+					</div>
+
+					<button
+						class="hamburger"
+						aria-label="Toggle navigation menu"
+						aria-expanded="false"
+						aria-controls="nav-links"
+						type="button"
+					>
+						<span></span>
+						<span></span>
+						<span></span>
+					</button>
+				</div>
+			</nav>
+		</header>
+
+		<main>
+			<slot />
+		</main>
+
+		<footer>
+			<div class="footer-container">
+				<p>&copy; {new Date().getFullYear()} JMESPath Contributors</p>
+				<a
+					href="https://github.com/jmespath/jmespath.site"
+					target="_blank"
+					rel="noopener noreferrer"
+				>GitHub</a>
+			</div>
+		</footer>
+
+		<script>
+			import "../scripts/version-switcher";
+		</script>
+
+		<script>
+			// Hamburger toggle
+			const hamburger = document.querySelector(
+				".hamburger",
+			) as HTMLButtonElement | null;
+			const navLinks = document.getElementById("nav-links");
+			if (hamburger && navLinks) {
+				hamburger.addEventListener("click", () => {
+					const expanded = hamburger.getAttribute("aria-expanded") === "true";
+					hamburger.setAttribute("aria-expanded", String(!expanded));
+					navLinks.classList.toggle("open");
+				});
+			}
+		</script>
+	</body>
+</html>
+
+<style>
+	/* ===== Navigation ===== */
+	header {
+		background: var(--nav-bg, #1a1a2e);
+		color: var(--nav-fg, #fff);
+		position: sticky;
+		top: 0;
+		z-index: 100;
+		box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+	}
+
+	.nav-container {
+		display: flex;
+		align-items: center;
+		gap: 0.5rem;
+		max-width: 1200px;
+		margin: 0 auto;
+		padding: 0 1rem;
+		height: 3.5rem;
+	}
+
+	.nav-logo a {
+		color: inherit;
+		text-decoration: none;
+		font-weight: 700;
+		font-size: 1.2rem;
+		white-space: nowrap;
+		padding: 0.4rem 0;
+	}
+
+	.logo-text {
+		letter-spacing: 0.02em;
+	}
+
+	.nav-links {
+		display: flex;
+		gap: 0.25rem;
+		align-items: center;
+		flex: 1;
+		margin-left: 1.5rem;
+	}
+
+	.nav-links a {
+		color: rgba(255, 255, 255, 0.8);
+		text-decoration: none;
+		padding: 0.4rem 0.65rem;
+		border-radius: 4px;
+		font-size: 0.9rem;
+		transition:
+			background 0.15s,
+			color 0.15s;
+		white-space: nowrap;
+	}
+
+	.nav-links a:hover,
+	.nav-links a:focus {
+		background: rgba(255, 255, 255, 0.12);
+		color: #fff;
+		outline: none;
+	}
+
+	.nav-links a.active {
+		background: rgba(255, 255, 255, 0.22);
+		color: #fff;
+		font-weight: 600;
+	}
+
+	.nav-version {
+		margin-left: auto;
+	}
+
+	#version-select {
+		background: rgba(255, 255, 255, 0.1);
+		color: #fff;
+		border: 1px solid rgba(255, 255, 255, 0.3);
+		border-radius: 4px;
+		padding: 0.3rem 0.5rem;
+		font-size: 0.85rem;
+		cursor: pointer;
+	}
+
+	#version-select option {
+		background: #1a1a2e;
+		color: #fff;
+	}
+
+	.hamburger {
+		display: none;
+		flex-direction: column;
+		gap: 5px;
+		background: none;
+		border: none;
+		cursor: pointer;
+		padding: 0.5rem;
+	}
+
+	.hamburger span {
+		display: block;
+		width: 24px;
+		height: 2px;
+		background: #fff;
+		border-radius: 2px;
+		transition:
+			transform 0.2s,
+			opacity 0.2s;
+	}
+
+	.sr-only {
+		position: absolute;
+		width: 1px;
+		height: 1px;
+		padding: 0;
+		margin: -1px;
+		overflow: hidden;
+		clip: rect(0, 0, 0, 0);
+		white-space: nowrap;
+		border: 0;
+	}
+
+	/* ===== Main ===== */
+	main {
+		max-width: 1200px;
+		margin: 0 auto;
+		padding: 2rem 1rem;
+	}
+
+	/* ===== Footer ===== */
+	footer {
+		background: var(--footer-bg, #f5f5f5);
+		border-top: 1px solid #e0e0e0;
+		margin-top: 4rem;
+		padding: 1.5rem 1rem;
+	}
+
+	.footer-container {
+		max-width: 1200px;
+		margin: 0 auto;
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		font-size: 0.875rem;
+		color: #666;
+	}
+
+	.footer-container p {
+		margin: 0;
+	}
+
+	.footer-container a {
+		color: #555;
+		text-decoration: none;
+	}
+
+	.footer-container a:hover {
+		text-decoration: underline;
+	}
+
+	/* ===== Responsive ===== */
+	@media (max-width: 768px) {
+		.hamburger {
+			display: flex;
+			order: 3;
+			margin-left: 0.5rem;
+		}
+
+		.nav-container {
+			flex-wrap: wrap;
+			height: auto;
+			padding: 0.6rem 1rem;
+		}
+
+		.nav-logo {
+			flex: 1;
+		}
+
+		.nav-version {
+			order: 2;
+			margin-left: 0;
+		}
+
+		.nav-links {
+			display: none;
+			flex-direction: column;
+			align-items: flex-start;
+			width: 100%;
+			order: 4;
+			margin-left: 0;
+			padding: 0.5rem 0;
+			border-top: 1px solid rgba(255, 255, 255, 0.12);
+		}
+
+		.nav-links.open {
+			display: flex;
+		}
+
+		.nav-links a {
+			width: 100%;
+			padding: 0.65rem 0.5rem;
+		}
+	}
+
+/* ===== Compact header overrides ===== */
+.site-banner {
+  padding: 0.25rem 0; /* reduce banner vertical padding */
+}
+.site-banner img {
+  max-height: 36px; /* clamp desktop banner height */
+  width: auto;
+  display: block;
+}
+
+/* Reduce nav height and tighten paddings for compact header */
+.nav-container {
+  height: 3rem; /* 48px */
+}
+
+.nav-logo a {
+  font-size: 1.05rem;
+  padding: 0.25rem 0;
+}
+
+.nav-links a {
+  padding: 0.25rem 0.65rem;
+  font-size: 0.9rem;
+}
+
+.hamburger {
+  padding: 0.4rem;
+}
+
+@media (max-width: 768px) {
+  .site-banner {
+    padding: 0.125rem 0;
+  }
+  .site-banner img {
+    max-height: 28px;
+  }
+  .nav-container {
+    padding: 0.55rem 1rem; /* slightly reduced */
+  }
+  .nav-links a {
+    padding: 0.6rem 0.5rem;
+  }
+}
+
+</style>
