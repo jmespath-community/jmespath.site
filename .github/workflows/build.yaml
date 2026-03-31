@@ -3,6 +3,7 @@ on:
   push:
     branches:
       - main
+  pull_request:
   workflow_dispatch: {}
 
 jobs:
@@ -10,59 +11,49 @@ jobs:
     runs-on: ubuntu-latest
     steps:
 
-    ## checkout prerequisites
+    ## checkout & setup
 
-    - name: 📚 Checkout site
-      uses: actions/checkout@v3
+    - name: 📚 Checkout repository
+      uses: actions/checkout@v4
 
-    - name: 📚 Checkout spec
-      uses: actions/checkout@v3
+    - name: 📦 Setup pnpm
+      uses: pnpm/action-setup@v4
       with:
-        repository: jmespath-community/jmespath.spec.git
-        ref: main
-        path: spec
+        version: 9
 
-    - name: 📚 Checkout wiki
-      uses: actions/checkout@v3
+    - name: 🟢 Setup Node.js
+      uses: actions/setup-node@v4
       with:
-        repository: jmespath-community/jmespath.spec.wiki.git
-        ref: master
-        path: content/wiki
+        node-version: 20
+        cache: pnpm
+        cache-dependency-path: app/pnpm-lock.yaml
 
-    ## install supporting software
+    - name: 📥 Install dependencies
+      run: pnpm -C app/ install
 
-    - name: 📘 Install ncat
-      run: 'sudo apt-get -y install ncat'
-
-    - name: 📘 Setup Hugo
-      uses: peaceiris/actions-hugo@v2
-      with:
-        hugo-version: 'latest'
-        extended: true
-
-    ## update home page
-
-    - name: 📃 Checkout site gh-pages branch
-      uses: actions/checkout@v3
-      with:
-        ref: gh-pages
-        path: build/
-        token: ${{ secrets.GITHUB_TOKEN }}
-
-    - name: 📃 Generate site pages
-      run:
-        .github/workflows/gh-pages.sh "${{ github.ref_name }}"
-      env:
-        OUTPUTDIR: "build/${{ github.ref_name }}"
-
-    ## publish home pages
-
-    - name: ✉ Deploy
-      if: github.ref == 'refs/heads/main'
+    - name: 🔧 Download jp binary
       run: |
-        git -C build/ config --local user.name Springcomp
-        git -C build/ config --local user.email springcomp@users.noreply.github.com
+        curl -sSL https://github.com/jmespath-community/jp/releases/download/v1.1.0/jp-linux-amd64 -o app/jp
+        chmod +x app/jp
 
-        git -C build/ add .
-        git -C build/ commit -m "Commit from GitHub Actions (Build)"
-        git -C build/ push origin gh-pages --force
+    ## quality checks
+
+    - name: 🎨 Format check
+      run: pnpm -C app/ run format
+
+    - name: 🔍 Lint check
+      run: pnpm -C app/ run lint
+
+    - name: 🔎 Type check
+      run: pnpm -C app/ run check
+
+    - name: 🏗️ Build
+      run: pnpm -C app/ run build
+
+    ## artifacts
+
+    - name: 📤 Upload build artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: dist
+        path: app/dist/
