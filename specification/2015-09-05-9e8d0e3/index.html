@@ -1,0 +1,708 @@
+<!DOCTYPE html><html lang="en" data-astro-cid-37fxchfa> <head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Specification — 2015-09-05-9e8d0e3 — JMESPath</title><link rel="icon" href="/favicon.svg" type="image/svg+xml"><!-- Versions CDN config for client-side version-switcher --><script type="application/json" id="jmespath-versions-config">{"latest":{"url":"https://jmespath.blob.core.windows.net/lib/v1.1.4/jmespath.umd.min.js","integrity":"sha384-j6O40Ai4K7WYsLIPv7PVGVN4i8M+DP244ldsCxzfKQAUOuVR+S5ZR3mZr0z6OOGt"},"2015-09-05-9e8d0e3":{"url":"https://jmespath.blob.core.windows.net/lib/v2015-09-05-9e8d0e3/jmespath.min.js","integrity":"sha384-Pb3pjju9BY7ahpWm+ev8GsRTP9tRwDSgIQwJoRhYjr9TY6aB+E7irR6Mc/ma6LcL"}}</script><link rel="stylesheet" href="/_astro/BaseLayout.Pi98jGX4.css">
+<style>.spec-page[data-astro-cid-maqyfiai]{display:flex;gap:2rem;align-items:flex-start}.spec-toc[data-astro-cid-maqyfiai]{flex:0 0 220px;position:sticky;top:4.5rem;max-height:calc(100vh - 5rem);overflow-y:auto;padding:1rem;background:#f8f9fa;border-radius:6px;border:1px solid #e0e0e0;font-size:.85rem}.spec-toc[data-astro-cid-maqyfiai] h2[data-astro-cid-maqyfiai]{margin:0 0 .75rem;font-size:.8rem;text-transform:uppercase;letter-spacing:.06em;color:#555}.spec-toc[data-astro-cid-maqyfiai] nav[data-astro-cid-maqyfiai] ul[data-astro-cid-maqyfiai]{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:.2rem}.spec-toc[data-astro-cid-maqyfiai] nav[data-astro-cid-maqyfiai] li[data-astro-cid-maqyfiai]{padding-left:0}.spec-toc[data-astro-cid-maqyfiai] nav[data-astro-cid-maqyfiai] li[data-astro-cid-maqyfiai][data-level="2"]{padding-left:1rem}.spec-toc[data-astro-cid-maqyfiai] nav[data-astro-cid-maqyfiai] li[data-astro-cid-maqyfiai][data-level="3"]{padding-left:2rem}.spec-toc[data-astro-cid-maqyfiai] nav[data-astro-cid-maqyfiai] a[data-astro-cid-maqyfiai]{display:block;color:#333;text-decoration:none;padding:.2rem .4rem;border-radius:3px;line-height:1.4;word-break:break-word}.spec-toc[data-astro-cid-maqyfiai] nav[data-astro-cid-maqyfiai] a[data-astro-cid-maqyfiai]:hover{background:#e8eaf6;color:#1a237e}.spec-content[data-astro-cid-maqyfiai]{flex:1;min-width:0;line-height:1.7}.spec-content[data-astro-cid-maqyfiai] h1[data-astro-cid-maqyfiai]{margin-top:0;font-size:2rem;color:#1a1a2e}.spec-content[data-astro-cid-maqyfiai] h2,.spec-content[data-astro-cid-maqyfiai] h3,.spec-content[data-astro-cid-maqyfiai] h4{margin-top:2rem;margin-bottom:.5rem;color:#1a1a2e}.spec-content[data-astro-cid-maqyfiai] p{margin:.6rem 0 1rem}.spec-content[data-astro-cid-maqyfiai] ul,.spec-content[data-astro-cid-maqyfiai] ol{padding-left:1.5rem;margin:.5rem 0 1rem}.spec-content[data-astro-cid-maqyfiai] li{margin:.25rem 0}.spec-content[data-astro-cid-maqyfiai] code{background:#f0f0f0;padding:.1em .35em;border-radius:3px;font-size:.9em;font-family:Fira Code,Consolas,Monaco,monospace}.spec-content[data-astro-cid-maqyfiai] pre{background:#f5f5f5;border:1px solid #e0e0e0;border-radius:6px;padding:1rem 1.25rem;overflow-x:auto;margin:.75rem 0 1.25rem}.spec-content[data-astro-cid-maqyfiai] pre code{background:none;padding:0;font-size:.875rem;line-height:1.6}.spec-content[data-astro-cid-maqyfiai] a{color:#1565c0;text-decoration:none}.spec-content[data-astro-cid-maqyfiai] a:hover{text-decoration:underline}.spec-rule-block[data-astro-cid-maqyfiai]{margin:1rem 0 1.5rem}.rule-section-heading[data-astro-cid-maqyfiai]{margin-top:2rem;margin-bottom:.25rem;font-size:1.3rem;color:#1a1a2e;padding-bottom:.25rem;border-bottom:1px solid #e0e0e0}.spec-rule-block[data-astro-cid-maqyfiai] pre[data-astro-cid-maqyfiai]{background:#1e1e2e;border:none;border-radius:6px;padding:1rem 1.25rem;overflow-x:auto;margin:.5rem 0}.spec-rule-block[data-astro-cid-maqyfiai] pre[data-astro-cid-maqyfiai] code[data-astro-cid-maqyfiai]{background:none;padding:0;font-size:.875rem;font-family:Fira Code,Consolas,Monaco,monospace;line-height:1.6;color:#cdd6f4}.rule-name{color:#89b4fa;font-weight:600}.literal{color:#a6e3a1}.comment{color:#6c7086;font-style:italic}@media(max-width:900px){.spec-page[data-astro-cid-maqyfiai]{flex-direction:column}.spec-toc[data-astro-cid-maqyfiai]{position:static;flex:none;width:100%;max-height:280px}}
+</style></head> <body data-astro-cid-37fxchfa> <header data-astro-cid-37fxchfa> <div class="site-banner" role="banner" aria-label="JMESPath Community banner" data-astro-cid-kggsjsm4> <img src="/static/logo.svg" alt="JMESPath Community logo" data-astro-cid-kggsjsm4> </div> <nav aria-label="Main navigation" data-astro-cid-37fxchfa> <div class="nav-container" data-astro-cid-37fxchfa> <div class="nav-logo" data-astro-cid-37fxchfa> <a href="/" aria-label="JMESPath home" data-astro-cid-37fxchfa> <span class="logo-text" data-astro-cid-37fxchfa>JMESPath</span> </a> </div> <div class="nav-links" id="nav-links" role="menubar" data-astro-cid-37fxchfa> <a href="/tutorial/" role="menuitem" data-astro-cid-37fxchfa>Tutorial</a> <a href="/examples/" role="menuitem" data-astro-cid-37fxchfa>Examples</a> <a href="/libraries/" role="menuitem" data-astro-cid-37fxchfa>Libraries</a> <a href="/specification/2015-09-05-9e8d0e3/" role="menuitem" aria-current="page" class="active" data-astro-cid-37fxchfa>Specification</a> <a href="/functions/2015-09-05-9e8d0e3/" role="menuitem" data-astro-cid-37fxchfa>Functions</a> </div> <div class="nav-version" data-astro-cid-37fxchfa> <label for="version-select" class="sr-only" data-astro-cid-37fxchfa>Version</label> <select id="version-select" name="version" data-page-type="versioned" data-current-version="2015-09-05-9e8d0e3" data-astro-cid-37fxchfa> <option value="latest" data-astro-cid-37fxchfa> Latest (v1.1.4) </option><option value="2015-09-05-9e8d0e3" selected data-astro-cid-37fxchfa> Legacy (2015-09-05) </option> </select> </div> <button class="hamburger" aria-label="Toggle navigation menu" aria-expanded="false" aria-controls="nav-links" type="button" data-astro-cid-37fxchfa> <span data-astro-cid-37fxchfa></span> <span data-astro-cid-37fxchfa></span> <span data-astro-cid-37fxchfa></span> </button> </div> </nav> </header> <main data-astro-cid-37fxchfa>  <div class="spec-page" data-astro-cid-maqyfiai>  <aside class="spec-toc" aria-label="Table of contents" data-astro-cid-maqyfiai> <h2 data-astro-cid-maqyfiai>Contents</h2> <nav data-astro-cid-maqyfiai> <ul data-astro-cid-maqyfiai> <li data-level="1" data-astro-cid-maqyfiai> <a href="#spec-errors" data-astro-cid-maqyfiai>Errors</a> </li><li data-level="1" data-astro-cid-maqyfiai> <a href="#spec-grammar" data-astro-cid-maqyfiai>Grammar</a> </li><li data-level="1" data-astro-cid-maqyfiai> <a href="#spec-sub-expressions" data-astro-cid-maqyfiai>Sub-expressions</a> </li><li data-level="1" data-astro-cid-maqyfiai> <a href="#spec-pipe-expressions" data-astro-cid-maqyfiai>Pipe Expressions</a> </li><li data-level="2" data-astro-cid-maqyfiai> <a href="#spec-examples" data-astro-cid-maqyfiai>Examples</a> </li><li data-level="1" data-astro-cid-maqyfiai> <a href="#spec-or-expressions" data-astro-cid-maqyfiai>Or Expressions</a> </li><li data-level="2" data-astro-cid-maqyfiai> <a href="#spec-examples" data-astro-cid-maqyfiai>Examples</a> </li><li data-level="1" data-astro-cid-maqyfiai> <a href="#spec-and-expressions" data-astro-cid-maqyfiai>And Expressions</a> </li><li data-level="2" data-astro-cid-maqyfiai> <a href="#spec-examples" data-astro-cid-maqyfiai>Examples</a> </li><li data-level="1" data-astro-cid-maqyfiai> <a href="#spec-not-expressions" data-astro-cid-maqyfiai>Not Expressions</a> </li><li data-level="2" data-astro-cid-maqyfiai> <a href="#spec-examples" data-astro-cid-maqyfiai>Examples</a> </li><li data-level="1" data-astro-cid-maqyfiai> <a href="#spec-parenthetical-expressions" data-astro-cid-maqyfiai>Parenthetical Expressions</a> </li><li data-level="2" data-astro-cid-maqyfiai> <a href="#spec-examples" data-astro-cid-maqyfiai>Examples</a> </li><li data-level="1" data-astro-cid-maqyfiai> <a href="#spec-index-expressions" data-astro-cid-maqyfiai>Index Expressions</a> </li><li data-level="2" data-astro-cid-maqyfiai> <a href="#spec-flatten-operator" data-astro-cid-maqyfiai>Flatten Operator</a> </li><li data-level="3" data-astro-cid-maqyfiai> <a href="#spec-examples" data-astro-cid-maqyfiai>Examples</a> </li><li data-level="2" data-astro-cid-maqyfiai> <a href="#spec-slices" data-astro-cid-maqyfiai>Slices</a> </li><li data-level="3" data-astro-cid-maqyfiai> <a href="#spec-examples" data-astro-cid-maqyfiai>Examples</a> </li><li data-level="1" data-astro-cid-maqyfiai> <a href="#spec-multiselect-list" data-astro-cid-maqyfiai>MultiSelect List</a> </li><li data-level="2" data-astro-cid-maqyfiai> <a href="#spec-examples" data-astro-cid-maqyfiai>Examples</a> </li><li data-level="1" data-astro-cid-maqyfiai> <a href="#spec-multiselect-hash" data-astro-cid-maqyfiai>MultiSelect Hash</a> </li><li data-level="2" data-astro-cid-maqyfiai> <a href="#spec-examples" data-astro-cid-maqyfiai>Examples</a> </li><li data-level="1" data-astro-cid-maqyfiai> <a href="#spec-wildcard-expressions" data-astro-cid-maqyfiai>Wildcard Expressions</a> </li><li data-level="2" data-astro-cid-maqyfiai> <a href="#spec-examples" data-astro-cid-maqyfiai>Examples</a> </li><li data-level="1" data-astro-cid-maqyfiai> <a href="#spec-filter-expressions" data-astro-cid-maqyfiai>Filter Expressions</a> </li><li data-level="2" data-astro-cid-maqyfiai> <a href="#spec-comparison-operators" data-astro-cid-maqyfiai>Comparison Operators</a> </li><li data-level="2" data-astro-cid-maqyfiai> <a href="#spec-equality-operators" data-astro-cid-maqyfiai>Equality Operators</a> </li><li data-level="2" data-astro-cid-maqyfiai> <a href="#spec-ordering-operators" data-astro-cid-maqyfiai>Ordering Operators</a> </li><li data-level="2" data-astro-cid-maqyfiai> <a href="#spec-examples" data-astro-cid-maqyfiai>Examples</a> </li><li data-level="1" data-astro-cid-maqyfiai> <a href="#spec-function-expressions" data-astro-cid-maqyfiai>Function Expressions</a> </li><li data-level="2" data-astro-cid-maqyfiai> <a href="#spec-data-types" data-astro-cid-maqyfiai>Data Types</a> </li><li data-level="2" data-astro-cid-maqyfiai> <a href="#spec-current-node" data-astro-cid-maqyfiai>Current Node</a> </li><li data-level="3" data-astro-cid-maqyfiai> <a href="#spec-current-node-state" data-astro-cid-maqyfiai>Current node state</a> </li><li data-level="1" data-astro-cid-maqyfiai> <a href="#spec-function-evaluation" data-astro-cid-maqyfiai>Function Evaluation</a> </li><li data-level="1" data-astro-cid-maqyfiai> <a href="#spec-raw-string-literals" data-astro-cid-maqyfiai>Raw String Literals</a> </li><li data-level="2" data-astro-cid-maqyfiai> <a href="#spec-examples" data-astro-cid-maqyfiai>Examples</a> </li><li data-level="1" data-astro-cid-maqyfiai> <a href="#spec-literal-expressions" data-astro-cid-maqyfiai>Literal Expressions</a> </li><li data-level="2" data-astro-cid-maqyfiai> <a href="#spec-examples" data-astro-cid-maqyfiai>Examples</a> </li><li data-level="1" data-astro-cid-maqyfiai> <a href="#spec-identifiers" data-astro-cid-maqyfiai>Identifiers</a> </li><li data-level="2" data-astro-cid-maqyfiai> <a href="#spec-examples" data-astro-cid-maqyfiai>Examples</a> </li> </ul> </nav> </aside> <article class="spec-content" data-astro-cid-maqyfiai> <h1 data-astro-cid-maqyfiai>JMESPath Specification</h1> <div class="spec-doc" data-astro-cid-maqyfiai><p>In this specification, examples are shown through the use of a search function. The syntax for this function is:</p>
+</div><div class="spec-code-block" data-astro-cid-maqyfiai> <div data-astro-cid-maqyfiai><pre><code class="language-code">search(&lt;jmespath expr&gt;, &lt;JSON document&gt;) -&gt; &lt;return value&gt;</code></pre></div> </div><div class="spec-doc" data-astro-cid-maqyfiai><p>For simplicity, the jmespath <code>expression</code> and the JSON document are not quoted. For example:</p>
+</div><div class="spec-code-block" data-astro-cid-maqyfiai> <div data-astro-cid-maqyfiai><pre><code class="language-code">search(<span style="color: #00d4ff;">foo</span>, <span style="color: #6c7086;">{</span><span style="color: #89b4fa;">&quot;foo&quot;</span><span style="color: #6c7086;">:</span> <span style="color: #a6e3a1;">&quot;bar&quot;</span><span style="color: #6c7086;">}</span>) → <span style="color: #a6e3a1;">&quot;bar&quot;</span></code></pre></div> </div><div class="spec-doc" data-astro-cid-maqyfiai><p>The result of applying a JMESPath <code>expression</code> against a JSON document will always result in valid JSON, provided there
+are no errors during the evaluation process. Structured data in, structured data out.</p>
+<p>This also means that, with the exception of JMESPath <code>expression</code> types, JMESPath only supports the same types supported by JSON:</p>
+<ul>
+<li><code>number</code> (integers and double-precision floating-point format in JSON)</li>
+<li>string (a sequence of Unicode <a href="https://unicode.org/glossary/#code_point">code points</a>. Note that a code point is distinct to a <a href="https://unicode.org/glossary/#code_unit">code unit</a>)</li>
+<li>boolean (<code>true</code> or <code>false</code>)</li>
+<li>array (an ordered, sequence of values)</li>
+<li>object (an unordered collection of key value pairs)</li>
+<li><code>null</code></li>
+</ul>
+<p>Expression types are discussed in the <a href="#function-expressions">Function Expressions</a> section.</p>
+<p>Implementations can map the corresponding JSON types to their language equivalent. For example, a JSON <code>null</code> could map to
+None in python, and nil in ruby and go.</p>
+<h1 id="spec-errors">Errors</h1>
+<p>Errors may be raised during the JMEspath evaluation process. How and when errors are raised is implementation specific,
+but implementations should indicate to the caller when errors have occurred.</p>
+<p>The following errors are defined:</p>
+<ul>
+<li><code>invalid-arity</code> is raised when an invalid <code>number</code> of function arguments is encountered during the evaluation process.</li>
+<li><code>invalid-type</code> is raised when an invalid type is encountered during the evaluation process.</li>
+<li><code>invalid-value</code> is raised when an invalid value is encountered during the evaluation process.</li>
+<li><code>unknown-function</code> is raised when an unknown function is encountered during the evaluation process.</li>
+</ul>
+<h1 id="spec-grammar">Grammar</h1>
+<p>JMESPath grammar is specified using ABNF, as described in RFC4234</p>
+</div><div class="spec-rule-block" data-astro-cid-maqyfiai>  <pre data-astro-cid-maqyfiai><code class="language-abnf" data-astro-cid-maqyfiai><span class="abnf-line" data-astro-cid-maqyfiai>
+</span><span class="abnf-line" data-astro-cid-maqyfiai><span class="rule-name">expression</span>        = sub-expression / index-expression  / comparator-expression
+</span><span class="abnf-line" data-astro-cid-maqyfiai><span class="rule-name">expression</span>        =/ or-expression / identifier
+</span><span class="abnf-line" data-astro-cid-maqyfiai><span class="rule-name">expression</span>        =/ and-expression / not-expression / paren-expression
+</span><span class="abnf-line" data-astro-cid-maqyfiai><span class="rule-name">expression</span>        =/ multi-select-list / multi-select-hash / literal
+</span><span class="abnf-line" data-astro-cid-maqyfiai><span class="rule-name">expression</span>        =/ function-expression / pipe-expression / raw-string
+</span><span class="abnf-line" data-astro-cid-maqyfiai><span class="rule-name">expression</span>        =/ list-filter-expr / current-node
+</span><span class="abnf-line" data-astro-cid-maqyfiai>
+</span><span class="abnf-line" data-astro-cid-maqyfiai><span class="rule-name">sub-expression</span>    = expression <span class="literal">&quot;.&quot;</span> ( identifier / multi-select-list / multi-select-hash / function-expression / <span class="literal">&quot;*&quot;</span> )
+</span><span class="abnf-line" data-astro-cid-maqyfiai>
+</span><span class="abnf-line" data-astro-cid-maqyfiai><span class="rule-name">pipe-expression</span>   = expression <span class="literal">&quot;|&quot;</span> expression
+</span><span class="abnf-line" data-astro-cid-maqyfiai>
+</span><span class="abnf-line" data-astro-cid-maqyfiai><span class="rule-name">or-expression</span>     = expression <span class="literal">&quot;||&quot;</span> expression
+</span><span class="abnf-line" data-astro-cid-maqyfiai>
+</span><span class="abnf-line" data-astro-cid-maqyfiai><span class="rule-name">and-expression</span>    = expression &quot;&amp;&amp;&quot; expression
+</span><span class="abnf-line" data-astro-cid-maqyfiai>
+</span><span class="abnf-line" data-astro-cid-maqyfiai><span class="rule-name">not-expression</span>    = <span class="literal">&quot;!&quot;</span> expression
+</span><span class="abnf-line" data-astro-cid-maqyfiai>
+</span><span class="abnf-line" data-astro-cid-maqyfiai><span class="rule-name">paren-expression</span>  = <span class="literal">&quot;(&quot;</span> expression <span class="literal">&quot;)&quot;</span>
+</span><span class="abnf-line" data-astro-cid-maqyfiai>
+</span><span class="abnf-line" data-astro-cid-maqyfiai><span class="rule-name">index-expression</span>  = expression bracket-specifier / bracket-specifier
+</span><span class="abnf-line" data-astro-cid-maqyfiai><span class="rule-name">bracket-specifier</span> = <span class="literal">&quot;[&quot;</span> (number / slice-expression) <span class="literal">&quot;]&quot;</span>
+</span><span class="abnf-line" data-astro-cid-maqyfiai>
+</span><span class="abnf-line" data-astro-cid-maqyfiai><span class="rule-name">bracket-specifier</span> =/ <span class="literal">&quot;[]&quot;</span>
+</span><span class="abnf-line" data-astro-cid-maqyfiai>
+</span><span class="abnf-line" data-astro-cid-maqyfiai><span class="rule-name">slice-expression</span>  = [number] <span class="literal">&quot;:&quot;</span> [number] [ <span class="literal">&quot;:&quot;</span> [number] ]
+</span><span class="abnf-line" data-astro-cid-maqyfiai>
+</span><span class="abnf-line" data-astro-cid-maqyfiai><span class="rule-name">multi-select-list</span> = <span class="literal">&quot;[&quot;</span> ( expression *( <span class="literal">&quot;,&quot;</span> expression ) ) <span class="literal">&quot;]&quot;</span>
+</span><span class="abnf-line" data-astro-cid-maqyfiai>
+</span><span class="abnf-line" data-astro-cid-maqyfiai><span class="rule-name">multi-select-hash</span> = <span class="literal">&quot;{&quot;</span> ( keyval-expr *( <span class="literal">&quot;,&quot;</span> keyval-expr ) ) <span class="literal">&quot;}&quot;</span>
+</span><span class="abnf-line" data-astro-cid-maqyfiai><span class="rule-name">keyval-expr</span>       = identifier <span class="literal">&quot;:&quot;</span> expression
+</span><span class="abnf-line" data-astro-cid-maqyfiai>
+</span><span class="abnf-line" data-astro-cid-maqyfiai><span class="rule-name">expression</span>        =/ <span class="literal">&quot;*&quot;</span>
+</span><span class="abnf-line" data-astro-cid-maqyfiai><span class="rule-name">bracket-specifier</span> =/ <span class="literal">&quot;[&quot;</span> <span class="literal">&quot;*&quot;</span> <span class="literal">&quot;]&quot;</span>
+</span><span class="abnf-line" data-astro-cid-maqyfiai>
+</span><span class="abnf-line" data-astro-cid-maqyfiai><span class="rule-name">list-filter-expr</span> = <span class="literal">&quot;[?&quot;</span> expression <span class="literal">&quot;]&quot;</span>
+</span><span class="abnf-line" data-astro-cid-maqyfiai>
+</span><span class="abnf-line" data-astro-cid-maqyfiai><span class="rule-name">comparator-expression</span> = expression comparator expression
+</span><span class="abnf-line" data-astro-cid-maqyfiai><span class="rule-name">comparator</span>        = &quot;&lt;<span class="literal">&quot; / &quot;</span>&lt;=<span class="literal">&quot; / &quot;</span>==<span class="literal">&quot; / &quot;</span>&gt;=<span class="literal">&quot; / &quot;</span>&gt;<span class="literal">&quot; / &quot;</span>!=&quot;
+</span><span class="abnf-line" data-astro-cid-maqyfiai>
+</span><span class="abnf-line" data-astro-cid-maqyfiai><span class="rule-name">function-expression</span> = unquoted-string  ( no-args  / one-or-more-args )
+</span><span class="abnf-line" data-astro-cid-maqyfiai>
+</span><span class="abnf-line" data-astro-cid-maqyfiai><span class="rule-name">no-args</span>             = <span class="literal">&quot;(&quot;</span> <span class="literal">&quot;)&quot;</span>
+</span><span class="abnf-line" data-astro-cid-maqyfiai><span class="rule-name">one-or-more-args</span>    = <span class="literal">&quot;(&quot;</span> ( function-arg *( <span class="literal">&quot;,&quot;</span> function-arg ) ) <span class="literal">&quot;)&quot;</span>
+</span><span class="abnf-line" data-astro-cid-maqyfiai>
+</span><span class="abnf-line" data-astro-cid-maqyfiai><span class="rule-name">function-arg</span>        = expression / expression-type
+</span><span class="abnf-line" data-astro-cid-maqyfiai>
+</span><span class="abnf-line" data-astro-cid-maqyfiai><span class="rule-name">expression-type</span>     = &quot;&amp;&quot; expression
+</span><span class="abnf-line" data-astro-cid-maqyfiai>
+</span><span class="abnf-line" data-astro-cid-maqyfiai><span class="rule-name">current-node</span>        = <span class="literal">&quot;@&quot;</span>
+</span><span class="abnf-line" data-astro-cid-maqyfiai>
+</span><span class="abnf-line" data-astro-cid-maqyfiai><span class="rule-name">raw-string</span>        = &quot;&#39;<span class="literal">&quot; *raw-string-char &quot;</span>&#39;&quot;
+</span><span class="abnf-line" data-astro-cid-maqyfiai>
+</span><span class="abnf-line" data-astro-cid-maqyfiai><span class="rule-name">raw-string-char</span>   = (%x20-26 / %x28-5B / %x5D-10FFFF) / preserved-escape / raw-string-escape
+</span><span class="abnf-line" data-astro-cid-maqyfiai><span class="rule-name">preserved-escape</span>  = escape (%x20-26 / %x28-5B / %x5D-10FFFF)
+</span><span class="abnf-line" data-astro-cid-maqyfiai><span class="rule-name">raw-string-escape</span> = escape (&quot;&#39;&quot; / escape)
+</span><span class="abnf-line" data-astro-cid-maqyfiai>
+</span><span class="abnf-line" data-astro-cid-maqyfiai><span class="rule-name">literal</span>           = <span class="literal">&quot;`&quot;</span> json-text <span class="literal">&quot;`&quot;</span>
+</span><span class="abnf-line" data-astro-cid-maqyfiai>
+</span><span class="abnf-line" data-astro-cid-maqyfiai><span class="rule-name">unquoted-string</span>   = (%x41-5A / %x61-7A / %x5F) *(  <span class="comment">; A-Za-z_</span>
+</span><span class="abnf-line" data-astro-cid-maqyfiai>                        %x30-39  /  <span class="comment">; 0-9</span>
+</span><span class="abnf-line" data-astro-cid-maqyfiai>                        %x41-5A /  <span class="comment">; A-Z</span>
+</span><span class="abnf-line" data-astro-cid-maqyfiai>                        %x5F    /  <span class="comment">; _</span>
+</span><span class="abnf-line" data-astro-cid-maqyfiai>                        %x61-7A)   <span class="comment">; a-z</span>
+</span><span class="abnf-line" data-astro-cid-maqyfiai><span class="rule-name">quoted-string</span>     = quotation-mark 1*(unescaped-char / escaped-char) quotation-mark
+</span><span class="abnf-line" data-astro-cid-maqyfiai><span class="rule-name">unescaped-char</span>    = %x20-21 / %x23-5B / %x5D-10FFFF
+</span><span class="abnf-line" data-astro-cid-maqyfiai><span class="rule-name">escape</span>            = <span class="literal">&quot;\\&quot;</span>   <span class="comment">;</span>
+</span><span class="abnf-line" data-astro-cid-maqyfiai><span class="rule-name">quotation-mark</span>    = %x22   <span class="comment">; &quot;</span>
+</span><span class="abnf-line" data-astro-cid-maqyfiai><span class="rule-name">escaped-char</span>      = escape (
+</span><span class="abnf-line" data-astro-cid-maqyfiai>                        %x22 /          <span class="comment">; &quot;    quotation mark  U+0022</span>
+</span><span class="abnf-line" data-astro-cid-maqyfiai>                        %x5C /          <span class="comment">; \    reverse solidus U+005C</span>
+</span><span class="abnf-line" data-astro-cid-maqyfiai>                        %x2F /          <span class="comment">; /    solidus         U+002F</span>
+</span><span class="abnf-line" data-astro-cid-maqyfiai>                        %x62 /          <span class="comment">; b    backspace       U+0008</span>
+</span><span class="abnf-line" data-astro-cid-maqyfiai>                        %x66 /          <span class="comment">; f    form feed       U+000C</span>
+</span><span class="abnf-line" data-astro-cid-maqyfiai>                        %x6E /          <span class="comment">; n    line feed       U+000A</span>
+</span><span class="abnf-line" data-astro-cid-maqyfiai>                        %x72 /          <span class="comment">; r    carriage return U+000D</span>
+</span><span class="abnf-line" data-astro-cid-maqyfiai>                        %x74 /          <span class="comment">; t    tab             U+0009</span>
+</span><span class="abnf-line" data-astro-cid-maqyfiai>                        %x75 4HEXDIG )  <span class="comment">; uXXXX                U+XXXX</span>
+</span><span class="abnf-line" data-astro-cid-maqyfiai>
+</span><span class="abnf-line" data-astro-cid-maqyfiai><span class="rule-name">json-text</span>  = ws json-value ws
+</span><span class="abnf-line" data-astro-cid-maqyfiai><span class="rule-name">ws</span>         = *(
+</span><span class="abnf-line" data-astro-cid-maqyfiai>                %x20 /              <span class="comment">; Space</span>
+</span><span class="abnf-line" data-astro-cid-maqyfiai>                %x09 /              <span class="comment">; Horizontal tab</span>
+</span><span class="abnf-line" data-astro-cid-maqyfiai>                %x0A /              <span class="comment">; Line feed or New line</span>
+</span><span class="abnf-line" data-astro-cid-maqyfiai>                %x0D )              <span class="comment">; Carriage return</span>
+</span><span class="abnf-line" data-astro-cid-maqyfiai><span class="comment">; `json-value` is any valid JSON value with the one exception that each</span>
+</span><span class="abnf-line" data-astro-cid-maqyfiai><span class="comment">; U+0060 GRAVE ACCENT &#39;`&#39; must be escaped with a preceding backslash.</span>
+</span><span class="abnf-line" data-astro-cid-maqyfiai><span class="comment">; While implementations are encouraged to use any existing JSON parser for this</span>
+</span><span class="abnf-line" data-astro-cid-maqyfiai><span class="comment">; section of the grammar (after handling the escaped characters), a complete</span>
+</span><span class="abnf-line" data-astro-cid-maqyfiai><span class="comment">; set of rules derived from RFC 8259 is included below:</span>
+</span><span class="abnf-line" data-astro-cid-maqyfiai><span class="rule-name">json-value</span> = false / null / true / json-object / json-array /
+</span><span class="abnf-line" data-astro-cid-maqyfiai>             json-number / json-string
+</span><span class="abnf-line" data-astro-cid-maqyfiai><span class="comment">; JSON literals</span>
+</span><span class="abnf-line" data-astro-cid-maqyfiai><span class="rule-name">false</span> = %x66.61.6c.73.65   <span class="comment">; false</span>
+</span><span class="abnf-line" data-astro-cid-maqyfiai><span class="rule-name">null</span>  = %x6e.75.6c.6c      <span class="comment">; null</span>
+</span><span class="abnf-line" data-astro-cid-maqyfiai><span class="rule-name">true</span>  = %x74.72.75.65      <span class="comment">; true</span>
+</span><span class="abnf-line" data-astro-cid-maqyfiai><span class="comment">; JSON strings</span>
+</span><span class="abnf-line" data-astro-cid-maqyfiai><span class="rule-name">json-string</span>    = quotation-mark *( json-unescaped / json-escaped ) quotation-mark
+</span><span class="abnf-line" data-astro-cid-maqyfiai><span class="rule-name">json-unescaped</span> = %x20-21     / <span class="comment">; space or &#39;!&#39; (precedes U+0022 &#39;&quot;&#39;)</span>
+</span><span class="abnf-line" data-astro-cid-maqyfiai>                 %x23-5B     / <span class="comment">; &#39;#&#39; through &#39;[&#39; (precedes U+005C &#39;\&#39;)</span>
+</span><span class="abnf-line" data-astro-cid-maqyfiai>                 %x5D-5F     / <span class="comment">; &#39;]&#39; through &#39;_&#39; (precedes U+0060 &#39;`&#39;)</span>
+</span><span class="abnf-line" data-astro-cid-maqyfiai>                 %x61-10FFFF   <span class="comment">; &#39;a&#39; and all following code points</span>
+</span><span class="abnf-line" data-astro-cid-maqyfiai><span class="rule-name">json-escaped</span>   = escaped-char / (escape <span class="literal">&quot;`&quot;</span>)
+</span><span class="abnf-line" data-astro-cid-maqyfiai><span class="comment">; JSON arrays</span>
+</span><span class="abnf-line" data-astro-cid-maqyfiai><span class="rule-name">json-array</span>      = begin-array [ json-value *( value-separator json-value ) ] end-array
+</span><span class="abnf-line" data-astro-cid-maqyfiai><span class="rule-name">begin-array</span>     = ws %x5B ws  <span class="comment">; [ left square bracket</span>
+</span><span class="abnf-line" data-astro-cid-maqyfiai><span class="rule-name">end-array</span>       = ws %x5D ws  <span class="comment">; ] right square bracket</span>
+</span><span class="abnf-line" data-astro-cid-maqyfiai><span class="rule-name">value-separator</span> = ws %x2C ws  <span class="comment">; , comma</span>
+</span><span class="abnf-line" data-astro-cid-maqyfiai><span class="comment">; JSON objects</span>
+</span><span class="abnf-line" data-astro-cid-maqyfiai><span class="rule-name">json-object</span>    = begin-object [ member *( value-separator member ) ] end-object
+</span><span class="abnf-line" data-astro-cid-maqyfiai><span class="rule-name">begin-object</span>   = ws %x7B ws  <span class="comment">; { left curly bracket</span>
+</span><span class="abnf-line" data-astro-cid-maqyfiai><span class="rule-name">end-object</span>     = ws %x7D ws  <span class="comment">; } right curly bracket</span>
+</span><span class="abnf-line" data-astro-cid-maqyfiai><span class="rule-name">member</span>         = json-string name-separator json-value
+</span><span class="abnf-line" data-astro-cid-maqyfiai><span class="rule-name">name-separator</span> = ws %x3A ws  <span class="comment">; : colon</span>
+</span><span class="abnf-line" data-astro-cid-maqyfiai><span class="comment">; JSON numbers</span>
+</span><span class="abnf-line" data-astro-cid-maqyfiai><span class="rule-name">json-number</span>   = [ minus ] int [ frac ] [ exp ]
+</span><span class="abnf-line" data-astro-cid-maqyfiai><span class="rule-name">decimal-point</span> = %x2E                 <span class="comment">; .</span>
+</span><span class="abnf-line" data-astro-cid-maqyfiai><span class="rule-name">digit1-9</span>      = %x31-39              <span class="comment">; 1-9</span>
+</span><span class="abnf-line" data-astro-cid-maqyfiai><span class="rule-name">e</span>             = %x65 / %x45          <span class="comment">; e E</span>
+</span><span class="abnf-line" data-astro-cid-maqyfiai><span class="rule-name">exp</span>           = e [ minus / plus ] 1*digit
+</span><span class="abnf-line" data-astro-cid-maqyfiai><span class="rule-name">frac</span>          = decimal-point 1*digit
+</span><span class="abnf-line" data-astro-cid-maqyfiai><span class="rule-name">int</span>           = zero / ( digit1-9 *digit )
+</span><span class="abnf-line" data-astro-cid-maqyfiai><span class="rule-name">minus</span>         = %x2D                 <span class="comment">; -</span>
+</span><span class="abnf-line" data-astro-cid-maqyfiai><span class="rule-name">plus</span>          = %x2B                 <span class="comment">; +</span>
+</span><span class="abnf-line" data-astro-cid-maqyfiai><span class="rule-name">zero</span>          = %x30                 <span class="comment">; 0</span>
+</span><span class="abnf-line" data-astro-cid-maqyfiai>
+</span><span class="abnf-line" data-astro-cid-maqyfiai><span class="rule-name">number</span>            = [<span class="literal">&quot;-&quot;</span>] 1*digit
+</span><span class="abnf-line" data-astro-cid-maqyfiai><span class="rule-name">digit</span>             = %x30-39 <span class="comment">; 0-9</span>
+</span><span class="abnf-line" data-astro-cid-maqyfiai><span class="rule-name">identifier</span>        = unquoted-string / quoted-string
+</span><span class="abnf-line" data-astro-cid-maqyfiai>
+</span></code></pre> </div><div class="spec-doc" data-astro-cid-maqyfiai><p>In addition to the grammar, there is the following token precedence that goes from weakest to tightest binding:</p>
+<ul>
+<li>pipe: <code>|</code></li>
+<li>or: <code>||</code></li>
+<li>and: <code>&amp;&amp;</code></li>
+<li>unary not: <code>!</code></li>
+<li>rbracket: <code>]</code></li>
+</ul>
+<h1 id="spec-sub-expressions">Sub-expressions</h1>
+<p>A <code>sub-expression</code> is a combination of two expressions separated by the &#39;.&#39; char.</p>
+</div><div class="spec-rule-block" data-astro-cid-maqyfiai>  <pre data-astro-cid-maqyfiai><code class="language-abnf" data-astro-cid-maqyfiai><span class="abnf-line" data-astro-cid-maqyfiai>
+</span><span class="abnf-line" data-astro-cid-maqyfiai><span class="rule-name">expression</span>        = sub-expression / index-expression  / comparator-expression
+</span><span class="abnf-line" data-astro-cid-maqyfiai><span class="rule-name">expression</span>        =/ or-expression / identifier
+</span><span class="abnf-line" data-astro-cid-maqyfiai><span class="rule-name">expression</span>        =/ and-expression / not-expression / paren-expression
+</span><span class="abnf-line" data-astro-cid-maqyfiai><span class="rule-name">expression</span>        =/ multi-select-list / multi-select-hash / literal
+</span><span class="abnf-line" data-astro-cid-maqyfiai><span class="rule-name">expression</span>        =/ function-expression / pipe-expression / raw-string
+</span><span class="abnf-line" data-astro-cid-maqyfiai><span class="rule-name">expression</span>        =/ list-filter-expr / current-node
+</span><span class="abnf-line" data-astro-cid-maqyfiai>
+</span><span class="abnf-line" data-astro-cid-maqyfiai><span class="rule-name">sub-expression</span>    = expression <span class="literal">&quot;.&quot;</span> ( identifier / multi-select-list / multi-select-hash / function-expression / <span class="literal">&quot;*&quot;</span> )
+</span><span class="abnf-line" data-astro-cid-maqyfiai>
+</span></code></pre> </div><div class="spec-doc" data-astro-cid-maqyfiai><p>A <code>sub-expression</code> is evaluated as follows:</p>
+<ul>
+<li>Evaluate the <code>expression</code> on the left with the original JSON document.</li>
+<li>Evaluate the <code>expression</code> on the right with the result of the left <code>expression</code> evaluation.</li>
+</ul>
+<p>In pseudocode:</p>
+</div><div class="spec-code-block" data-astro-cid-maqyfiai> <div data-astro-cid-maqyfiai><pre><code class="language-code">left-evaluation = search(left-expression, original-json-document)
+if left-evaluation is `null` then result = `null`
+else result = search(right-expression, left-evaluation)</code></pre></div> </div><div class="spec-doc" data-astro-cid-maqyfiai><p>A <code>sub-expression</code> is itself an <code>expression</code>, so there can be multiple levels of sub-expressions: grandparent.parent.child.
+Examples</p>
+<p>Given a JSON document: <code>{&quot;foo&quot;: {&quot;bar&quot;: &quot;baz&quot;}}</code>, and a jmespath <code>expression</code>: foo.bar, the evaluation process would be:</p>
+</div><div class="spec-code-block" data-astro-cid-maqyfiai> <div data-astro-cid-maqyfiai><pre><code class="language-code">left-evaluation = search(<span style="color: #00d4ff;">&quot;foo&quot;</span>, <span style="color: #6c7086;">{</span><span style="color: #89b4fa;">&quot;foo&quot;</span><span style="color: #6c7086;">:</span> <span style="color: #6c7086;">{</span><span style="color: #89b4fa;">&quot;bar&quot;</span><span style="color: #6c7086;">:</span> <span style="color: #a6e3a1;">&quot;baz&quot;</span><span style="color: #6c7086;">}</span><span style="color: #6c7086;">}</span>) → <span style="color: #6c7086;">{</span><span style="color: #89b4fa;">&quot;bar&quot;</span><span style="color: #6c7086;">:</span> <span style="color: #a6e3a1;">&quot;baz&quot;</span><span style="color: #6c7086;">}</span>
+result = search(<span style="color: #00d4ff;">&quot;bar&quot;</span>, <span style="color: #6c7086;">{</span><span style="color: #89b4fa;">&quot;bar&quot;</span><span style="color: #6c7086;">:</span> <span style="color: #a6e3a1;">&quot;baz&quot;</span><span style="color: #6c7086;">}</span>) → <span style="color: #a6e3a1;">&quot;baz&quot;</span></code></pre></div> </div><div class="spec-doc" data-astro-cid-maqyfiai><p>The final result in this example is &quot;baz&quot;.</p>
+<p>Additional examples:</p>
+</div><div class="spec-code-block" data-astro-cid-maqyfiai> <div data-astro-cid-maqyfiai><pre><code class="language-code">search(<span style="color: #00d4ff;">foo.bar</span>, <span style="color: #6c7086;">{</span><span style="color: #89b4fa;">&quot;foo&quot;</span><span style="color: #6c7086;">:</span> <span style="color: #6c7086;">{</span><span style="color: #89b4fa;">&quot;bar&quot;</span><span style="color: #6c7086;">:</span> <span style="color: #a6e3a1;">&quot;value&quot;</span><span style="color: #6c7086;">}</span><span style="color: #6c7086;">}</span>) → <span style="color: #a6e3a1;">&quot;value&quot;</span>
+search(<span style="color: #00d4ff;">foo.&quot;bar&quot;</span>, <span style="color: #6c7086;">{</span><span style="color: #89b4fa;">&quot;foo&quot;</span><span style="color: #6c7086;">:</span> <span style="color: #6c7086;">{</span><span style="color: #89b4fa;">&quot;bar&quot;</span><span style="color: #6c7086;">:</span> <span style="color: #a6e3a1;">&quot;value&quot;</span><span style="color: #6c7086;">}</span><span style="color: #6c7086;">}</span>) → <span style="color: #a6e3a1;">&quot;value&quot;</span>
+search(<span style="color: #00d4ff;">foo.bar</span>, <span style="color: #6c7086;">{</span><span style="color: #89b4fa;">&quot;foo&quot;</span><span style="color: #6c7086;">:</span> <span style="color: #6c7086;">{</span><span style="color: #89b4fa;">&quot;baz&quot;</span><span style="color: #6c7086;">:</span> <span style="color: #a6e3a1;">&quot;value&quot;</span><span style="color: #6c7086;">}</span><span style="color: #6c7086;">}</span>) → <span style="color: #f5c2de;">null</span>
+search(<span style="color: #00d4ff;">foo.bar.baz</span>, <span style="color: #6c7086;">{</span><span style="color: #89b4fa;">&quot;foo&quot;</span><span style="color: #6c7086;">:</span> <span style="color: #6c7086;">{</span><span style="color: #89b4fa;">&quot;bar&quot;</span><span style="color: #6c7086;">:</span> <span style="color: #6c7086;">{</span><span style="color: #89b4fa;">&quot;baz&quot;</span><span style="color: #6c7086;">:</span> <span style="color: #a6e3a1;">&quot;value&quot;</span><span style="color: #6c7086;">}</span><span style="color: #6c7086;">}</span><span style="color: #6c7086;">}</span>) → <span style="color: #a6e3a1;">&quot;value&quot;</span></code></pre></div> </div><div class="spec-doc" data-astro-cid-maqyfiai><h1 id="spec-pipe-expressions">Pipe Expressions</h1>
+<p>A <code>pipe-expression</code> combines two expressions, separated by the <code>|</code> character.
+It is similar to a <code>sub-expression</code> with a few important distinctions:</p>
+</div><div class="spec-rule-block" data-astro-cid-maqyfiai>  <pre data-astro-cid-maqyfiai><code class="language-abnf" data-astro-cid-maqyfiai><span class="abnf-line" data-astro-cid-maqyfiai>
+</span><span class="abnf-line" data-astro-cid-maqyfiai><span class="rule-name">pipe-expression</span>   = expression <span class="literal">&quot;|&quot;</span> expression
+</span><span class="abnf-line" data-astro-cid-maqyfiai>
+</span></code></pre> </div><div class="spec-doc" data-astro-cid-maqyfiai><ol>
+<li>Any <code>expression</code> can be used on the right hand side. A <code>sub-expression</code> restricts the type of <code>expression</code> that can be
+used on the right hand side.</li>
+<li>A <code>pipe-expression</code> stops projections on the left hand side for propagating to the right hand side. If the left
+<code>expression</code> creates a projection, it does not apply to the right hand side.</li>
+</ol>
+<p>In pseudocode:</p>
+</div><div class="spec-code-block" data-astro-cid-maqyfiai> <div data-astro-cid-maqyfiai><pre><code class="language-code">left-evaluation = search(left-expression, original-json-document)
+result = search(right-expression, left-evaluation)</code></pre></div> </div><div class="spec-doc" data-astro-cid-maqyfiai><p>For example, given the following data:</p>
+</div><div class="spec-code-block" data-astro-cid-maqyfiai> <div data-astro-cid-maqyfiai><pre><code class="language-json">
+<span style="color: #6c7086;">{</span><span style="color: #89b4fa;">&quot;foo&quot;</span><span style="color: #6c7086;">:</span> <span style="color: #6c7086;">[</span><span style="color: #6c7086;">{</span><span style="color: #89b4fa;">&quot;bar&quot;</span><span style="color: #6c7086;">:</span> <span style="color: #6c7086;">[</span><span style="color: #a6e3a1;">&quot;first1&quot;</span><span style="color: #6c7086;">,</span> <span style="color: #a6e3a1;">&quot;second1&quot;</span><span style="color: #6c7086;">]</span><span style="color: #6c7086;">}</span><span style="color: #6c7086;">,</span> <span style="color: #6c7086;">{</span><span style="color: #89b4fa;">&quot;bar&quot;</span><span style="color: #6c7086;">:</span> <span style="color: #6c7086;">[</span><span style="color: #a6e3a1;">&quot;first2&quot;</span><span style="color: #6c7086;">,</span> <span style="color: #a6e3a1;">&quot;second2&quot;</span><span style="color: #6c7086;">]</span><span style="color: #6c7086;">}</span><span style="color: #6c7086;">]</span><span style="color: #6c7086;">}</span>
+</code></pre></div> </div><div class="spec-doc" data-astro-cid-maqyfiai><p>The <code>expression</code> <code>foo[*].bar</code> gives the result of:</p>
+</div><div class="spec-code-block" data-astro-cid-maqyfiai> <div data-astro-cid-maqyfiai><pre><code class="language-json">
+<span style="color: #6c7086;">[</span>
+    <span style="color: #6c7086;">[</span>
+        <span style="color: #a6e3a1;">&quot;first1&quot;</span><span style="color: #6c7086;">,</span>
+        <span style="color: #a6e3a1;">&quot;second1&quot;</span>
+    <span style="color: #6c7086;">]</span><span style="color: #6c7086;">,</span>
+    <span style="color: #6c7086;">[</span>
+        <span style="color: #a6e3a1;">&quot;first2&quot;</span><span style="color: #6c7086;">,</span>
+        <span style="color: #a6e3a1;">&quot;second2&quot;</span>
+    <span style="color: #6c7086;">]</span>
+<span style="color: #6c7086;">]</span>
+</code></pre></div> </div><div class="spec-doc" data-astro-cid-maqyfiai><p>The first part of the <code>expression</code>, <code>foo[*]</code>, creates a projection. At this point, the remaining <code>expression</code>, bar is
+projected onto each element of the list created from <code>foo[*]</code>. If you project the <code>[0]</code> <code>expression</code>, you will get the
+first element from each sub list. The <code>expression</code> <code>foo[*].bar[0]</code> will return:</p>
+</div><div class="spec-code-block" data-astro-cid-maqyfiai> <div data-astro-cid-maqyfiai><pre><code class="language-json">
+<span style="color: #6c7086;">[</span><span style="color: #a6e3a1;">&quot;first1&quot;</span><span style="color: #6c7086;">,</span> <span style="color: #a6e3a1;">&quot;first2&quot;</span><span style="color: #6c7086;">]</span>
+</code></pre></div> </div><div class="spec-doc" data-astro-cid-maqyfiai><p>If you instead wanted only the first sub list, <code>[&quot;first1&quot;, &quot;second1&quot;]</code>, you can use a <code>pipe-expression</code>:</p>
+</div><div class="spec-code-block" data-astro-cid-maqyfiai> <div data-astro-cid-maqyfiai><pre><code class="language-code"><span style="color: #00d4ff;">foo[*].bar[0]</span> → <span style="color: #6c7086;">[</span><span style="color: #a6e3a1;">&quot;first1&quot;</span><span style="color: #6c7086;">,</span> <span style="color: #a6e3a1;">&quot;first2&quot;</span><span style="color: #6c7086;">]</span>
+<span style="color: #00d4ff;">foo[*].bar | [0]</span> → <span style="color: #6c7086;">[</span><span style="color: #a6e3a1;">&quot;first1&quot;</span><span style="color: #6c7086;">,</span> <span style="color: #a6e3a1;">&quot;second1&quot;</span><span style="color: #6c7086;">]</span></code></pre></div> </div><div class="spec-doc" data-astro-cid-maqyfiai><h2 id="spec-examples">Examples</h2>
+</div><div class="spec-code-block" data-astro-cid-maqyfiai> <div data-astro-cid-maqyfiai><pre><code class="language-code">search(<span style="color: #00d4ff;">foo | bar</span>, <span style="color: #6c7086;">{</span><span style="color: #89b4fa;">&quot;foo&quot;</span><span style="color: #6c7086;">:</span> <span style="color: #6c7086;">{</span><span style="color: #89b4fa;">&quot;bar&quot;</span><span style="color: #6c7086;">:</span> <span style="color: #a6e3a1;">&quot;baz&quot;</span><span style="color: #6c7086;">}</span><span style="color: #6c7086;">}</span>) → <span style="color: #a6e3a1;">&quot;baz&quot;</span>
+search(<span style="color: #00d4ff;">foo[*].bar | [0]</span>,
+<span style="color: #6c7086;">{</span>
+    <span style="color: #89b4fa;">&quot;foo&quot;</span><span style="color: #6c7086;">:</span> <span style="color: #6c7086;">[</span><span style="color: #6c7086;">{</span><span style="color: #89b4fa;">&quot;bar&quot;</span><span style="color: #6c7086;">:</span> <span style="color: #6c7086;">[</span><span style="color: #a6e3a1;">&quot;first1&quot;</span><span style="color: #6c7086;">,</span> <span style="color: #a6e3a1;">&quot;second1&quot;</span><span style="color: #6c7086;">]</span><span style="color: #6c7086;">}</span><span style="color: #6c7086;">,</span>
+            <span style="color: #6c7086;">{</span><span style="color: #89b4fa;">&quot;bar&quot;</span><span style="color: #6c7086;">:</span> <span style="color: #6c7086;">[</span><span style="color: #a6e3a1;">&quot;first2&quot;</span><span style="color: #6c7086;">,</span> <span style="color: #a6e3a1;">&quot;second2&quot;</span><span style="color: #6c7086;">]</span><span style="color: #6c7086;">}</span><span style="color: #6c7086;">]</span><span style="color: #6c7086;">}</span>) → <span style="color: #6c7086;">[</span><span style="color: #a6e3a1;">&quot;first1&quot;</span><span style="color: #6c7086;">,</span> <span style="color: #a6e3a1;">&quot;second1&quot;</span><span style="color: #6c7086;">]</span>
+search(<span style="color: #00d4ff;">foo | [0]</span>, <span style="color: #6c7086;">{</span><span style="color: #89b4fa;">&quot;foo&quot;</span><span style="color: #6c7086;">:</span> <span style="color: #6c7086;">[</span><span style="color: #f5c2de;">0</span><span style="color: #6c7086;">,</span> <span style="color: #f5c2de;">1</span><span style="color: #6c7086;">,</span> <span style="color: #f5c2de;">2</span><span style="color: #6c7086;">]</span><span style="color: #6c7086;">}</span>) → <span style="color: #6c7086;">[</span><span style="color: #f5c2de;">0</span><span style="color: #6c7086;">]</span></code></pre></div> </div><div class="spec-doc" data-astro-cid-maqyfiai><h1 id="spec-or-expressions">Or Expressions</h1>
+</div><div class="spec-rule-block" data-astro-cid-maqyfiai>  <pre data-astro-cid-maqyfiai><code class="language-abnf" data-astro-cid-maqyfiai><span class="abnf-line" data-astro-cid-maqyfiai>
+</span><span class="abnf-line" data-astro-cid-maqyfiai><span class="rule-name">or-expression</span>     = expression <span class="literal">&quot;||&quot;</span> expression
+</span><span class="abnf-line" data-astro-cid-maqyfiai>
+</span></code></pre> </div><div class="spec-doc" data-astro-cid-maqyfiai><p>An <code>or-expression</code> will evaluate to either the left <code>expression</code> or the right <code>expression</code>. If the evaluation of the left
+<code>expression</code> is not <code>false</code> it is used as the return value. If the evaluation of the right <code>expression</code> is not <code>false</code> it is
+used as the return value. If neither the left or right <code>expression</code> are non-null, then a value of <code>null</code> is returned. A
+<code>false</code> value corresponds to any of the following conditions:</p>
+<ul>
+<li>Empty list: <code>[]</code></li>
+<li>Empty object: <code>{}</code></li>
+<li>Empty string: <code>&quot;&quot;</code></li>
+<li>False boolean: <code>false</code></li>
+<li>Null value: <code>null</code></li>
+</ul>
+<p>A <code>true</code> value corresponds to any value that is not <code>false</code>.</p>
+<h2 id="spec-examples">Examples</h2>
+</div><div class="spec-code-block" data-astro-cid-maqyfiai> <div data-astro-cid-maqyfiai><pre><code class="language-code">search(<span style="color: #00d4ff;">foo || bar</span>, <span style="color: #6c7086;">{</span><span style="color: #89b4fa;">&quot;foo&quot;</span><span style="color: #6c7086;">:</span> <span style="color: #a6e3a1;">&quot;foo-value&quot;</span><span style="color: #6c7086;">}</span>) → <span style="color: #a6e3a1;">&quot;foo-value&quot;</span>
+search(<span style="color: #00d4ff;">foo || bar</span>, <span style="color: #6c7086;">{</span><span style="color: #89b4fa;">&quot;bar&quot;</span><span style="color: #6c7086;">:</span> <span style="color: #a6e3a1;">&quot;bar-value&quot;</span><span style="color: #6c7086;">}</span>) → <span style="color: #a6e3a1;">&quot;bar-value&quot;</span>
+search(<span style="color: #00d4ff;">foo || bar</span>, <span style="color: #6c7086;">{</span><span style="color: #89b4fa;">&quot;foo&quot;</span><span style="color: #6c7086;">:</span> <span style="color: #a6e3a1;">&quot;foo-value&quot;</span><span style="color: #6c7086;">,</span> <span style="color: #89b4fa;">&quot;bar&quot;</span><span style="color: #6c7086;">:</span> <span style="color: #a6e3a1;">&quot;bar-value&quot;</span><span style="color: #6c7086;">}</span>) → <span style="color: #a6e3a1;">&quot;foo-value&quot;</span>
+search(<span style="color: #00d4ff;">foo || bar</span>, <span style="color: #6c7086;">{</span><span style="color: #89b4fa;">&quot;baz&quot;</span><span style="color: #6c7086;">:</span> <span style="color: #a6e3a1;">&quot;baz-value&quot;</span><span style="color: #6c7086;">}</span>) → <span style="color: #f5c2de;">null</span>
+search(<span style="color: #00d4ff;">foo || bar || baz</span>, <span style="color: #6c7086;">{</span><span style="color: #89b4fa;">&quot;baz&quot;</span><span style="color: #6c7086;">:</span> <span style="color: #a6e3a1;">&quot;baz-value&quot;</span><span style="color: #6c7086;">}</span>) → <span style="color: #a6e3a1;">&quot;baz-value&quot;</span>
+search(<span style="color: #00d4ff;">override || mylist[-1]</span>, <span style="color: #6c7086;">{</span><span style="color: #89b4fa;">&quot;mylist&quot;</span><span style="color: #6c7086;">:</span> <span style="color: #6c7086;">[</span><span style="color: #a6e3a1;">&quot;one&quot;</span><span style="color: #6c7086;">,</span> <span style="color: #a6e3a1;">&quot;two&quot;</span><span style="color: #6c7086;">]</span><span style="color: #6c7086;">}</span>) → <span style="color: #a6e3a1;">&quot;two&quot;</span>
+search(<span style="color: #00d4ff;">override || mylist[-1]</span>, <span style="color: #6c7086;">{</span><span style="color: #89b4fa;">&quot;mylist&quot;</span><span style="color: #6c7086;">:</span> <span style="color: #6c7086;">[</span><span style="color: #a6e3a1;">&quot;one&quot;</span><span style="color: #6c7086;">,</span> <span style="color: #a6e3a1;">&quot;two&quot;</span><span style="color: #6c7086;">]</span><span style="color: #6c7086;">,</span> <span style="color: #89b4fa;">&quot;override&quot;</span><span style="color: #6c7086;">:</span> <span style="color: #a6e3a1;">&quot;yes&quot;</span><span style="color: #6c7086;">}</span>) → <span style="color: #a6e3a1;">&quot;yes&quot;</span></code></pre></div> </div><div class="spec-doc" data-astro-cid-maqyfiai><h1 id="spec-and-expressions">And Expressions</h1>
+</div><div class="spec-rule-block" data-astro-cid-maqyfiai>  <pre data-astro-cid-maqyfiai><code class="language-abnf" data-astro-cid-maqyfiai><span class="abnf-line" data-astro-cid-maqyfiai>
+</span><span class="abnf-line" data-astro-cid-maqyfiai><span class="rule-name">and-expression</span>    = expression &quot;&amp;&amp;&quot; expression
+</span><span class="abnf-line" data-astro-cid-maqyfiai>
+</span></code></pre> </div><div class="spec-doc" data-astro-cid-maqyfiai><p>An <code>and-expression</code> will evaluate to either the left <code>expression</code> or the right <code>expression</code>. If the <code>expression</code> on the left
+hand side is a truth-like value, then the value on the right hand side is returned. Otherwise the result of the
+<code>expression</code> on the left hand side is returned. This also reduces to the expected truth table:</p>
+<p>Truth table for and expressions</p>
+<table>
+<thead>
+<tr>
+<th>LHS</th>
+<th>RHS</th>
+<th>Result</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>True</td>
+<td>True</td>
+<td>True</td>
+</tr>
+<tr>
+<td>True</td>
+<td>False</td>
+<td>False</td>
+</tr>
+<tr>
+<td>False</td>
+<td>True</td>
+<td>False</td>
+</tr>
+<tr>
+<td>False</td>
+<td>False</td>
+<td>False</td>
+</tr>
+</tbody></table>
+<p>This is the standard truth table for a logical conjunction (AND).</p>
+<h2 id="spec-examples">Examples</h2>
+</div><div class="spec-code-block" data-astro-cid-maqyfiai> <div data-astro-cid-maqyfiai><pre><code class="language-code">search(<span style="color: #00d4ff;">True &amp;&amp; False</span>, <span style="color: #6c7086;">{</span><span style="color: #89b4fa;">&quot;True&quot;</span><span style="color: #6c7086;">:</span> <span style="color: #f5c2de;">true</span><span style="color: #6c7086;">,</span> <span style="color: #89b4fa;">&quot;False&quot;</span><span style="color: #6c7086;">:</span> <span style="color: #f5c2de;">false</span><span style="color: #6c7086;">}</span>) → <span style="color: #f5c2de;">false</span>
+search(<span style="color: #00d4ff;">Number &amp;&amp; EmptyList</span>, {&quot;Number&quot;: 5, EmptyList: []}) → <span style="color: #6c7086;">[</span><span style="color: #6c7086;">]</span>
+search(<span style="color: #00d4ff;">foo[?a == `1` &amp;&amp; b == `2`]</span>, <span style="color: #6c7086;">{</span><span style="color: #89b4fa;">&quot;foo&quot;</span><span style="color: #6c7086;">:</span> <span style="color: #6c7086;">[</span><span style="color: #6c7086;">{</span><span style="color: #89b4fa;">&quot;a&quot;</span><span style="color: #6c7086;">:</span> <span style="color: #f5c2de;">1</span><span style="color: #6c7086;">,</span> <span style="color: #89b4fa;">&quot;b&quot;</span><span style="color: #6c7086;">:</span> <span style="color: #f5c2de;">2</span><span style="color: #6c7086;">}</span><span style="color: #6c7086;">,</span> <span style="color: #6c7086;">{</span><span style="color: #89b4fa;">&quot;a&quot;</span><span style="color: #6c7086;">:</span> <span style="color: #f5c2de;">1</span><span style="color: #6c7086;">,</span> <span style="color: #89b4fa;">&quot;b&quot;</span><span style="color: #6c7086;">:</span> <span style="color: #f5c2de;">3</span><span style="color: #6c7086;">}</span><span style="color: #6c7086;">]</span><span style="color: #6c7086;">}</span>) → <span style="color: #6c7086;">[</span><span style="color: #6c7086;">{</span><span style="color: #89b4fa;">&quot;a&quot;</span><span style="color: #6c7086;">:</span> <span style="color: #f5c2de;">1</span><span style="color: #6c7086;">,</span> <span style="color: #89b4fa;">&quot;b&quot;</span><span style="color: #6c7086;">:</span> <span style="color: #f5c2de;">2</span><span style="color: #6c7086;">}</span><span style="color: #6c7086;">]</span></code></pre></div> </div><div class="spec-doc" data-astro-cid-maqyfiai><h1 id="spec-not-expressions">Not Expressions</h1>
+</div><div class="spec-rule-block" data-astro-cid-maqyfiai>  <pre data-astro-cid-maqyfiai><code class="language-abnf" data-astro-cid-maqyfiai><span class="abnf-line" data-astro-cid-maqyfiai>
+</span><span class="abnf-line" data-astro-cid-maqyfiai><span class="rule-name">not-expression</span>    = <span class="literal">&quot;!&quot;</span> expression
+</span><span class="abnf-line" data-astro-cid-maqyfiai>
+</span></code></pre> </div><div class="spec-doc" data-astro-cid-maqyfiai><p>A <code>not-expression</code> negates the result of an <code>expression</code>. If the <code>expression</code> results in a truth-like value, a <code>not-expression</code>
+will change this value to <code>false</code>. If the <code>expression</code> results in a false-like value, a <code>not-expression</code> will change this value
+to <code>true</code>.</p>
+<h2 id="spec-examples">Examples</h2>
+</div><div class="spec-code-block" data-astro-cid-maqyfiai> <div data-astro-cid-maqyfiai><pre><code class="language-code">search(<span style="color: #00d4ff;">!True</span>, <span style="color: #6c7086;">{</span><span style="color: #89b4fa;">&quot;True&quot;</span><span style="color: #6c7086;">:</span> <span style="color: #f5c2de;">true</span><span style="color: #6c7086;">}</span>) → <span style="color: #f5c2de;">false</span>
+search(<span style="color: #00d4ff;">!False</span>, <span style="color: #6c7086;">{</span><span style="color: #89b4fa;">&quot;False&quot;</span><span style="color: #6c7086;">:</span> <span style="color: #f5c2de;">false</span><span style="color: #6c7086;">}</span>) → <span style="color: #f5c2de;">true</span>
+search(<span style="color: #00d4ff;">!Number</span>, <span style="color: #6c7086;">{</span><span style="color: #89b4fa;">&quot;Number&quot;</span><span style="color: #6c7086;">:</span> <span style="color: #f5c2de;">5</span><span style="color: #6c7086;">}</span>) → <span style="color: #f5c2de;">false</span>
+search(<span style="color: #00d4ff;">!EmptyList</span>, <span style="color: #6c7086;">{</span><span style="color: #89b4fa;">&quot;EmptyList&quot;</span><span style="color: #6c7086;">:</span> <span style="color: #6c7086;">[</span><span style="color: #6c7086;">]</span><span style="color: #6c7086;">}</span>) → <span style="color: #f5c2de;">true</span></code></pre></div> </div><div class="spec-doc" data-astro-cid-maqyfiai><h1 id="spec-parenthetical-expressions">Parenthetical Expressions</h1>
+<p>A <code>paren-expression</code> allows a user to override the precedence order of an <code>expression</code>, <code>e</code>.g. (a || b) &amp;&amp; c.</p>
+</div><div class="spec-rule-block" data-astro-cid-maqyfiai>  <pre data-astro-cid-maqyfiai><code class="language-abnf" data-astro-cid-maqyfiai><span class="abnf-line" data-astro-cid-maqyfiai>
+</span><span class="abnf-line" data-astro-cid-maqyfiai><span class="rule-name">paren-expression</span>  = <span class="literal">&quot;(&quot;</span> expression <span class="literal">&quot;)&quot;</span>
+</span><span class="abnf-line" data-astro-cid-maqyfiai>
+</span></code></pre> </div><div class="spec-doc" data-astro-cid-maqyfiai><h2 id="spec-examples">Examples</h2>
+</div><div class="spec-code-block" data-astro-cid-maqyfiai> <div data-astro-cid-maqyfiai><pre><code class="language-code">search(<span style="color: #00d4ff;">foo[?(a == `1` || b ==`2`) &amp;&amp; c == `5`]</span>, <span style="color: #6c7086;">{</span><span style="color: #89b4fa;">&quot;foo&quot;</span><span style="color: #6c7086;">:</span> <span style="color: #6c7086;">[</span><span style="color: #6c7086;">{</span><span style="color: #89b4fa;">&quot;a&quot;</span><span style="color: #6c7086;">:</span> <span style="color: #f5c2de;">1</span><span style="color: #6c7086;">,</span> <span style="color: #89b4fa;">&quot;b&quot;</span><span style="color: #6c7086;">:</span> <span style="color: #f5c2de;">2</span><span style="color: #6c7086;">,</span> <span style="color: #89b4fa;">&quot;c&quot;</span><span style="color: #6c7086;">:</span> <span style="color: #f5c2de;">3</span><span style="color: #6c7086;">}</span><span style="color: #6c7086;">,</span> <span style="color: #6c7086;">{</span><span style="color: #89b4fa;">&quot;a&quot;</span><span style="color: #6c7086;">:</span> <span style="color: #f5c2de;">3</span><span style="color: #6c7086;">,</span> <span style="color: #89b4fa;">&quot;b&quot;</span><span style="color: #6c7086;">:</span> <span style="color: #f5c2de;">4</span><span style="color: #6c7086;">}</span><span style="color: #6c7086;">]</span><span style="color: #6c7086;">}</span>) → <span style="color: #6c7086;">[</span><span style="color: #6c7086;">]</span></code></pre></div> </div><div class="spec-doc" data-astro-cid-maqyfiai><h1 id="spec-index-expressions">Index Expressions</h1>
+</div><div class="spec-rule-block" data-astro-cid-maqyfiai>  <pre data-astro-cid-maqyfiai><code class="language-abnf" data-astro-cid-maqyfiai><span class="abnf-line" data-astro-cid-maqyfiai>
+</span><span class="abnf-line" data-astro-cid-maqyfiai><span class="rule-name">index-expression</span>  = expression bracket-specifier / bracket-specifier
+</span><span class="abnf-line" data-astro-cid-maqyfiai><span class="rule-name">bracket-specifier</span> = <span class="literal">&quot;[&quot;</span> (number / slice-expression) <span class="literal">&quot;]&quot;</span>
+</span><span class="abnf-line" data-astro-cid-maqyfiai>
+</span></code></pre> </div><div class="spec-doc" data-astro-cid-maqyfiai><p>An <code>index-expression</code> is used to access elements in a list. Indexing is 0 based, the index of 0 refers to the first
+element of the list. A negative <code>number</code> is a valid index. A negative <code>number</code> indicates that indexing is relative to the
+end of the list, specifically:</p>
+</div><div class="spec-doc" data-astro-cid-maqyfiai><pre><code class="language-spec">
+negative-index == (length of array) + negative-index
+</code></pre>
+<p>Given an array of length N, an index of -1 would be equal to a positive index of N - 1, which is the last element of
+the list. If an index <code>expression</code> refers to an index that is greater than the length of the array, a value of <code>null</code> is returned.</p>
+<p>For the grammar rule <code>expression</code> <code>bracket-specifier</code> the <code>expression</code> is first evaluated, and then return value from the
+<code>expression</code> is given as input to the <code>bracket-specifier</code>.</p>
+<p>Using a &quot;*&quot; character within a <code>bracket-specifier</code> is discussed below in the wildcard expressions section.</p>
+<h2 id="spec-flatten-operator">Flatten Operator</h2>
+</div><div class="spec-rule-block" data-astro-cid-maqyfiai>  <pre data-astro-cid-maqyfiai><code class="language-abnf" data-astro-cid-maqyfiai><span class="abnf-line" data-astro-cid-maqyfiai>
+</span><span class="abnf-line" data-astro-cid-maqyfiai><span class="rule-name">bracket-specifier</span> =/ <span class="literal">&quot;[]&quot;</span>
+</span><span class="abnf-line" data-astro-cid-maqyfiai>
+</span></code></pre> </div><div class="spec-doc" data-astro-cid-maqyfiai><p>When the character sequence [] is provided as a bracket specifier, then a flattening operation occurs on the current
+result. The flattening operator will merge sublists in the current result into a single list. The flattening operator
+has the following semantics:</p>
+<ul>
+<li>Create an empty result list.</li>
+<li>Iterate over the elements of the current result.</li>
+<li>If the current element is not a list, add to the end of the result list.</li>
+<li>If the current element is a list, add each element of the current element to the end of the result list.</li>
+<li>The result list is now the new current result.</li>
+</ul>
+<p>Once the flattening operation has been performed, subsequent operations are projected onto the flattened list with the
+same semantics as a wildcard <code>expression</code>. Thus the difference between [*] and [] is that [] will first flatten sublists
+in the current result.</p>
+<h3 id="spec-examples">Examples</h3>
+</div><div class="spec-code-block" data-astro-cid-maqyfiai> <div data-astro-cid-maqyfiai><pre><code class="language-code">search(<span style="color: #00d4ff;">[0]</span>, <span style="color: #6c7086;">[</span><span style="color: #a6e3a1;">&quot;first&quot;</span><span style="color: #6c7086;">,</span> <span style="color: #a6e3a1;">&quot;second&quot;</span><span style="color: #6c7086;">,</span> <span style="color: #a6e3a1;">&quot;third&quot;</span><span style="color: #6c7086;">]</span>) → <span style="color: #a6e3a1;">&quot;first&quot;</span>
+search(<span style="color: #00d4ff;">[-1]</span>, <span style="color: #6c7086;">[</span><span style="color: #a6e3a1;">&quot;first&quot;</span><span style="color: #6c7086;">,</span> <span style="color: #a6e3a1;">&quot;second&quot;</span><span style="color: #6c7086;">,</span> <span style="color: #a6e3a1;">&quot;third&quot;</span><span style="color: #6c7086;">]</span>) → <span style="color: #a6e3a1;">&quot;third&quot;</span>
+search(<span style="color: #00d4ff;">[100]</span>, <span style="color: #6c7086;">[</span><span style="color: #a6e3a1;">&quot;first&quot;</span><span style="color: #6c7086;">,</span> <span style="color: #a6e3a1;">&quot;second&quot;</span><span style="color: #6c7086;">,</span> <span style="color: #a6e3a1;">&quot;third&quot;</span><span style="color: #6c7086;">]</span>) → <span style="color: #f5c2de;">null</span>
+search(<span style="color: #00d4ff;">foo[0]</span>, <span style="color: #6c7086;">{</span><span style="color: #89b4fa;">&quot;foo&quot;</span><span style="color: #6c7086;">:</span> <span style="color: #6c7086;">[</span><span style="color: #a6e3a1;">&quot;first&quot;</span><span style="color: #6c7086;">,</span> <span style="color: #a6e3a1;">&quot;second&quot;</span><span style="color: #6c7086;">,</span> <span style="color: #a6e3a1;">&quot;third&quot;</span><span style="color: #6c7086;">]</span><span style="color: #6c7086;">}</span>) → <span style="color: #a6e3a1;">&quot;first&quot;</span>
+search(<span style="color: #00d4ff;">foo[100]</span>, <span style="color: #6c7086;">{</span><span style="color: #89b4fa;">&quot;foo&quot;</span><span style="color: #6c7086;">:</span> <span style="color: #6c7086;">[</span><span style="color: #a6e3a1;">&quot;first&quot;</span><span style="color: #6c7086;">,</span> <span style="color: #a6e3a1;">&quot;second&quot;</span><span style="color: #6c7086;">,</span> <span style="color: #a6e3a1;">&quot;third&quot;</span><span style="color: #6c7086;">]</span><span style="color: #6c7086;">}</span>) → <span style="color: #f5c2de;">null</span>
+search(<span style="color: #00d4ff;">foo[0][0]</span>, <span style="color: #6c7086;">{</span><span style="color: #89b4fa;">&quot;foo&quot;</span><span style="color: #6c7086;">:</span> <span style="color: #6c7086;">[</span><span style="color: #6c7086;">[</span><span style="color: #f5c2de;">0</span><span style="color: #6c7086;">,</span> <span style="color: #f5c2de;">1</span><span style="color: #6c7086;">]</span><span style="color: #6c7086;">,</span> <span style="color: #6c7086;">[</span><span style="color: #f5c2de;">1</span><span style="color: #6c7086;">,</span> <span style="color: #f5c2de;">2</span><span style="color: #6c7086;">]</span><span style="color: #6c7086;">]</span><span style="color: #6c7086;">}</span>) → <span style="color: #f5c2de;">0</span></code></pre></div> </div><div class="spec-doc" data-astro-cid-maqyfiai><h2 id="spec-slices">Slices</h2>
+<p>A <code>slice-expression</code> allows you to select a subset of an array. A slice has a <code>start</code>, <code>stop</code>, and <code>step</code> value. The
+general form of a slice is <code>[start:stop:step]</code>, but each component is optional and can be omitted.</p>
+</div><div class="spec-rule-block" data-astro-cid-maqyfiai>  <pre data-astro-cid-maqyfiai><code class="language-abnf" data-astro-cid-maqyfiai><span class="abnf-line" data-astro-cid-maqyfiai>
+</span><span class="abnf-line" data-astro-cid-maqyfiai><span class="rule-name">slice-expression</span>  = [number] <span class="literal">&quot;:&quot;</span> [number] [ <span class="literal">&quot;:&quot;</span> [number] ]
+</span><span class="abnf-line" data-astro-cid-maqyfiai>
+</span></code></pre> </div><div class="spec-doc" data-astro-cid-maqyfiai></div><div class="spec-doc" data-astro-cid-maqyfiai><pre><code class="language-note">
+Slices in JMESPath have the same semantics as python slices. If you&#39;re familiar with python slices, you&#39;re familiar with JMESPath slices.
+</code></pre>
+<p>Given a <code>start</code>, <code>stop</code>, and <code>step</code> value, the sub elements in an array are extracted as follows:</p>
+<ul>
+<li>The first element in the extracted array is the index denoted by <code>start</code>.</li>
+<li>The last element in the extracted array is the index denoted by <code>end - 1</code>.</li>
+<li>The <code>step</code> value determines how many indices to skip after each element is selected from the array.
+The default <code>step</code> value of <code>1</code> will not skip any indices and will return a contiguous subset of the original array.
+A <code>step</code> value greater than <code>1</code> will skip indices while extracting elements from an array. For instance, a <code>step</code> value of <code>2</code> will
+skip every other element.
+Negative <code>step</code> values start from the end of the array and extract elements in reverse order.</li>
+</ul>
+<p>Slice expressions adhere to the following rules:</p>
+<ul>
+<li>If a negative <code>start</code> position is given, it is calculated as the total length of the array <code>plus</code> the given <code>start</code> position.</li>
+<li>If no <code>start</code> position is given, it is assumed to be <code>0</code> if the given <code>step</code> is greater than 0 or the end of the array if
+the given <code>step</code> is less than <code>0</code>.</li>
+<li>If a negative <code>stop</code> position is given, it is calculated as the total length of the array <code>plus</code> the given <code>stop</code> position.</li>
+<li>If no <code>stop</code> position is given, it is assumed to be the length of the array if the given <code>step</code> is greater than <code>0</code> or <code>0</code> if
+the given <code>step</code> is less than <code>0</code>.</li>
+<li>If the given <code>step</code> is omitted, it it assumed to be <code>1</code>.</li>
+<li>If the given <code>step</code> is <code>0</code>, an <code>invalid-value</code> error MUST be raised.</li>
+<li>If the element being sliced is not an array, the result is <code>null</code>.</li>
+<li>If the element being sliced is an array and yields no results, the result MUST be an empty array.</li>
+</ul>
+<h3 id="spec-examples">Examples</h3>
+</div><div class="spec-code-block" data-astro-cid-maqyfiai> <div data-astro-cid-maqyfiai><pre><code class="language-code">search(<span style="color: #00d4ff;">[0:4:1]</span>, <span style="color: #6c7086;">[</span><span style="color: #f5c2de;">0</span><span style="color: #6c7086;">,</span> <span style="color: #f5c2de;">1</span><span style="color: #6c7086;">,</span> <span style="color: #f5c2de;">2</span><span style="color: #6c7086;">,</span> <span style="color: #f5c2de;">3</span><span style="color: #6c7086;">]</span>) → <span style="color: #6c7086;">[</span><span style="color: #f5c2de;">0</span><span style="color: #6c7086;">,</span> <span style="color: #f5c2de;">1</span><span style="color: #6c7086;">,</span> <span style="color: #f5c2de;">2</span><span style="color: #6c7086;">,</span> <span style="color: #f5c2de;">3</span><span style="color: #6c7086;">]</span>
+search(<span style="color: #00d4ff;">[0:4]</span>, <span style="color: #6c7086;">[</span><span style="color: #f5c2de;">0</span><span style="color: #6c7086;">,</span> <span style="color: #f5c2de;">1</span><span style="color: #6c7086;">,</span> <span style="color: #f5c2de;">2</span><span style="color: #6c7086;">,</span> <span style="color: #f5c2de;">3</span><span style="color: #6c7086;">]</span>) → <span style="color: #6c7086;">[</span><span style="color: #f5c2de;">0</span><span style="color: #6c7086;">,</span> <span style="color: #f5c2de;">1</span><span style="color: #6c7086;">,</span> <span style="color: #f5c2de;">2</span><span style="color: #6c7086;">,</span> <span style="color: #f5c2de;">3</span><span style="color: #6c7086;">]</span>
+search(<span style="color: #00d4ff;">[0:3]</span>, <span style="color: #6c7086;">[</span><span style="color: #f5c2de;">0</span><span style="color: #6c7086;">,</span> <span style="color: #f5c2de;">1</span><span style="color: #6c7086;">,</span> <span style="color: #f5c2de;">2</span><span style="color: #6c7086;">,</span> <span style="color: #f5c2de;">3</span><span style="color: #6c7086;">]</span>) → <span style="color: #6c7086;">[</span><span style="color: #f5c2de;">0</span><span style="color: #6c7086;">,</span> <span style="color: #f5c2de;">1</span><span style="color: #6c7086;">,</span> <span style="color: #f5c2de;">2</span><span style="color: #6c7086;">]</span>
+search(<span style="color: #00d4ff;">[:2]</span>, <span style="color: #6c7086;">[</span><span style="color: #f5c2de;">0</span><span style="color: #6c7086;">,</span> <span style="color: #f5c2de;">1</span><span style="color: #6c7086;">,</span> <span style="color: #f5c2de;">2</span><span style="color: #6c7086;">,</span> <span style="color: #f5c2de;">3</span><span style="color: #6c7086;">]</span>) → <span style="color: #6c7086;">[</span><span style="color: #f5c2de;">0</span><span style="color: #6c7086;">,</span> <span style="color: #f5c2de;">1</span><span style="color: #6c7086;">]</span>
+search(<span style="color: #00d4ff;">[::2]</span>, <span style="color: #6c7086;">[</span><span style="color: #f5c2de;">0</span><span style="color: #6c7086;">,</span> <span style="color: #f5c2de;">1</span><span style="color: #6c7086;">,</span> <span style="color: #f5c2de;">2</span><span style="color: #6c7086;">,</span> <span style="color: #f5c2de;">3</span><span style="color: #6c7086;">]</span>) → <span style="color: #6c7086;">[</span><span style="color: #f5c2de;">0</span><span style="color: #6c7086;">,</span> <span style="color: #f5c2de;">2</span><span style="color: #6c7086;">]</span>
+search(<span style="color: #00d4ff;">[::-1]</span>, <span style="color: #6c7086;">[</span><span style="color: #f5c2de;">0</span><span style="color: #6c7086;">,</span> <span style="color: #f5c2de;">1</span><span style="color: #6c7086;">,</span> <span style="color: #f5c2de;">2</span><span style="color: #6c7086;">,</span> <span style="color: #f5c2de;">3</span><span style="color: #6c7086;">]</span>) → <span style="color: #6c7086;">[</span><span style="color: #f5c2de;">3</span><span style="color: #6c7086;">,</span> <span style="color: #f5c2de;">2</span><span style="color: #6c7086;">,</span> <span style="color: #f5c2de;">1</span><span style="color: #6c7086;">,</span> <span style="color: #f5c2de;">0</span><span style="color: #6c7086;">]</span>
+search(<span style="color: #00d4ff;">[-2:]</span>, <span style="color: #6c7086;">[</span><span style="color: #f5c2de;">0</span><span style="color: #6c7086;">,</span> <span style="color: #f5c2de;">1</span><span style="color: #6c7086;">,</span> <span style="color: #f5c2de;">2</span><span style="color: #6c7086;">,</span> <span style="color: #f5c2de;">3</span><span style="color: #6c7086;">]</span>) → <span style="color: #6c7086;">[</span><span style="color: #f5c2de;">2</span><span style="color: #6c7086;">,</span> <span style="color: #f5c2de;">3</span><span style="color: #6c7086;">]</span></code></pre></div> </div><div class="spec-doc" data-astro-cid-maqyfiai><h1 id="spec-multiselect-list">MultiSelect List</h1>
+<p>A <code>multi-select-list</code> <code>expression</code> is used to extract a subset of elements from a JSON hash. There are two version of multiselect,
+one in which the multiselect <code>expression</code> is enclosed in <code>{...}</code> and one which is enclosed in <code>[...]</code>. This section describes the <code>[...]</code> version.</p>
+</div><div class="spec-rule-block" data-astro-cid-maqyfiai>  <pre data-astro-cid-maqyfiai><code class="language-abnf" data-astro-cid-maqyfiai><span class="abnf-line" data-astro-cid-maqyfiai>
+</span><span class="abnf-line" data-astro-cid-maqyfiai><span class="rule-name">multi-select-list</span> = <span class="literal">&quot;[&quot;</span> ( expression *( <span class="literal">&quot;,&quot;</span> expression ) ) <span class="literal">&quot;]&quot;</span>
+</span><span class="abnf-line" data-astro-cid-maqyfiai>
+</span></code></pre> </div><div class="spec-doc" data-astro-cid-maqyfiai><p>Within the start and closing characters is one or more non expressions separated by a comma. Each
+<code>expression</code> will be evaluated against the JSON document. Each returned element will be the result of evaluating the
+<code>expression</code>. A <code>multi-select-list</code> with N expressions will result in a list of length N. Given a multiselect <code>expression</code>
+<code>[expr-1,expr-2,...,expr-n]</code>, the evaluated <code>expression</code> will return <code>[evaluate(expr-1), evaluate(expr-2), ..., evaluate(expr-n)]</code>.</p>
+<h2 id="spec-examples">Examples</h2>
+</div><div class="spec-code-block" data-astro-cid-maqyfiai> <div data-astro-cid-maqyfiai><pre><code class="language-code">search(<span style="color: #00d4ff;">[foo,bar]</span>, <span style="color: #6c7086;">{</span><span style="color: #89b4fa;">&quot;foo&quot;</span><span style="color: #6c7086;">:</span> <span style="color: #a6e3a1;">&quot;a&quot;</span><span style="color: #6c7086;">,</span> <span style="color: #89b4fa;">&quot;bar&quot;</span><span style="color: #6c7086;">:</span> <span style="color: #a6e3a1;">&quot;b&quot;</span><span style="color: #6c7086;">,</span> <span style="color: #89b4fa;">&quot;baz&quot;</span><span style="color: #6c7086;">:</span> <span style="color: #a6e3a1;">&quot;c&quot;</span><span style="color: #6c7086;">}</span>) → <span style="color: #6c7086;">[</span><span style="color: #a6e3a1;">&quot;a&quot;</span><span style="color: #6c7086;">,</span> <span style="color: #a6e3a1;">&quot;b&quot;</span><span style="color: #6c7086;">]</span>
+search(<span style="color: #00d4ff;">[foo,bar[0]]</span>, <span style="color: #6c7086;">{</span><span style="color: #89b4fa;">&quot;foo&quot;</span><span style="color: #6c7086;">:</span> <span style="color: #a6e3a1;">&quot;a&quot;</span><span style="color: #6c7086;">,</span> <span style="color: #89b4fa;">&quot;bar&quot;</span><span style="color: #6c7086;">:</span> <span style="color: #6c7086;">[</span><span style="color: #a6e3a1;">&quot;b&quot;</span><span style="color: #6c7086;">]</span><span style="color: #6c7086;">,</span> <span style="color: #89b4fa;">&quot;baz&quot;</span><span style="color: #6c7086;">:</span> <span style="color: #a6e3a1;">&quot;c&quot;</span><span style="color: #6c7086;">}</span>) → <span style="color: #6c7086;">[</span><span style="color: #a6e3a1;">&quot;a&quot;</span><span style="color: #6c7086;">,</span> <span style="color: #a6e3a1;">&quot;b&quot;</span><span style="color: #6c7086;">]</span>
+search(<span style="color: #00d4ff;">[foo,bar.baz]</span>, <span style="color: #6c7086;">{</span><span style="color: #89b4fa;">&quot;foo&quot;</span><span style="color: #6c7086;">:</span> <span style="color: #a6e3a1;">&quot;a&quot;</span><span style="color: #6c7086;">,</span> <span style="color: #89b4fa;">&quot;bar&quot;</span><span style="color: #6c7086;">:</span> <span style="color: #6c7086;">{</span><span style="color: #89b4fa;">&quot;baz&quot;</span><span style="color: #6c7086;">:</span> <span style="color: #a6e3a1;">&quot;b&quot;</span><span style="color: #6c7086;">}</span><span style="color: #6c7086;">}</span>) → <span style="color: #6c7086;">[</span><span style="color: #a6e3a1;">&quot;a&quot;</span><span style="color: #6c7086;">,</span> <span style="color: #a6e3a1;">&quot;b&quot;</span><span style="color: #6c7086;">]</span>
+search(<span style="color: #00d4ff;">[foo,baz]</span>, <span style="color: #6c7086;">{</span><span style="color: #89b4fa;">&quot;foo&quot;</span><span style="color: #6c7086;">:</span> <span style="color: #a6e3a1;">&quot;a&quot;</span><span style="color: #6c7086;">,</span> <span style="color: #89b4fa;">&quot;bar&quot;</span><span style="color: #6c7086;">:</span> <span style="color: #a6e3a1;">&quot;b&quot;</span><span style="color: #6c7086;">}</span>) → <span style="color: #6c7086;">[</span><span style="color: #a6e3a1;">&quot;a&quot;</span><span style="color: #6c7086;">,</span> <span style="color: #f5c2de;">null</span><span style="color: #6c7086;">]</span></code></pre></div> </div><div class="spec-doc" data-astro-cid-maqyfiai><h1 id="spec-multiselect-hash">MultiSelect Hash</h1>
+</div><div class="spec-rule-block" data-astro-cid-maqyfiai>  <pre data-astro-cid-maqyfiai><code class="language-abnf" data-astro-cid-maqyfiai><span class="abnf-line" data-astro-cid-maqyfiai>
+</span><span class="abnf-line" data-astro-cid-maqyfiai><span class="rule-name">multi-select-hash</span> = <span class="literal">&quot;{&quot;</span> ( keyval-expr *( <span class="literal">&quot;,&quot;</span> keyval-expr ) ) <span class="literal">&quot;}&quot;</span>
+</span><span class="abnf-line" data-astro-cid-maqyfiai><span class="rule-name">keyval-expr</span>       = identifier <span class="literal">&quot;:&quot;</span> expression
+</span><span class="abnf-line" data-astro-cid-maqyfiai>
+</span></code></pre> </div><div class="spec-doc" data-astro-cid-maqyfiai><p>A <code>multi-select-hash</code> <code>expression</code> is similar to a <code>multi-select-list</code> <code>expression</code>, except that a hash is created instead of a
+list. A <code>multi-select-hash</code> <code>expression</code> also requires key names to be provided, as specified in the <code>keyval-expr</code> rule.
+Given the following rule:</p>
+</div><div class="spec-rule-block" data-astro-cid-maqyfiai>  <pre data-astro-cid-maqyfiai><code class="language-abnf" data-astro-cid-maqyfiai><span class="abnf-line" data-astro-cid-maqyfiai>
+</span><span class="abnf-line" data-astro-cid-maqyfiai><span class="rule-name">keyval-expr</span>       = identifier <span class="literal">&quot;:&quot;</span> expression
+</span><span class="abnf-line" data-astro-cid-maqyfiai>
+</span></code></pre> </div><div class="spec-doc" data-astro-cid-maqyfiai><p>The <code>identifier</code> is used as the key name and the result of evaluating the <code>expression</code> is the value associated with the <code>identifier</code> key.</p>
+<p>Each <code>keyval-expr</code> within the <code>multi-select-hash</code> will correspond to a single key value pair in the created hash.</p>
+<h2 id="spec-examples">Examples</h2>
+<p>Given a <code>multi-select-hash</code> <code>expression</code> <code>{foo: one.two, bar: bar}</code> and the data <code>{&quot;bar&quot;: &quot;bar&quot;, {&quot;one&quot;: {&quot;two&quot;: &quot;one-two&quot;}}}</code>,
+the <code>expression</code> is evaluated as follows:</p>
+<ul>
+<li>A hash is created: {}</li>
+<li>A key foo is created whose value is the result of evaluating one.two against the provided JSON document: <code>{&quot;foo&quot;: evaluate(one.two, &lt;data&gt;)}</code></li>
+<li>A key bar is created whose value is the result of evaluting the <code>expression</code> bar against the provided JSON document.</li>
+</ul>
+<p>The final result will be: <code>{&quot;foo&quot;: &quot;one-two&quot;, &quot;bar&quot;: &quot;bar&quot;}</code>.</p>
+<p>Additional examples:</p>
+</div><div class="spec-code-block" data-astro-cid-maqyfiai> <div data-astro-cid-maqyfiai><pre><code class="language-code">search(<span style="color: #00d4ff;">{foo: foo, bar: bar}</span>, <span style="color: #6c7086;">{</span><span style="color: #89b4fa;">&quot;foo&quot;</span><span style="color: #6c7086;">:</span> <span style="color: #a6e3a1;">&quot;a&quot;</span><span style="color: #6c7086;">,</span> <span style="color: #89b4fa;">&quot;bar&quot;</span><span style="color: #6c7086;">:</span> <span style="color: #a6e3a1;">&quot;b&quot;</span><span style="color: #6c7086;">,</span> <span style="color: #89b4fa;">&quot;baz&quot;</span><span style="color: #6c7086;">:</span> <span style="color: #a6e3a1;">&quot;c&quot;</span><span style="color: #6c7086;">}</span>) → <span style="color: #6c7086;">{</span><span style="color: #89b4fa;">&quot;foo&quot;</span><span style="color: #6c7086;">:</span> <span style="color: #a6e3a1;">&quot;a&quot;</span><span style="color: #6c7086;">,</span> <span style="color: #89b4fa;">&quot;bar&quot;</span><span style="color: #6c7086;">:</span> <span style="color: #a6e3a1;">&quot;b&quot;</span><span style="color: #6c7086;">}</span>
+search(<span style="color: #00d4ff;">{foo: foo, firstbar: bar[0]}</span>, <span style="color: #6c7086;">{</span><span style="color: #89b4fa;">&quot;foo&quot;</span><span style="color: #6c7086;">:</span> <span style="color: #a6e3a1;">&quot;a&quot;</span><span style="color: #6c7086;">,</span> <span style="color: #89b4fa;">&quot;bar&quot;</span><span style="color: #6c7086;">:</span> <span style="color: #6c7086;">[</span><span style="color: #a6e3a1;">&quot;b&quot;</span><span style="color: #6c7086;">]</span><span style="color: #6c7086;">}</span>) → <span style="color: #6c7086;">{</span><span style="color: #89b4fa;">&quot;foo&quot;</span><span style="color: #6c7086;">:</span> <span style="color: #a6e3a1;">&quot;a&quot;</span><span style="color: #6c7086;">,</span> <span style="color: #89b4fa;">&quot;firstbar&quot;</span><span style="color: #6c7086;">:</span> <span style="color: #a6e3a1;">&quot;b&quot;</span><span style="color: #6c7086;">}</span>
+search(<span style="color: #00d4ff;">{foo: foo, &quot;bar.baz&quot;: bar.baz}</span>, <span style="color: #6c7086;">{</span><span style="color: #89b4fa;">&quot;foo&quot;</span><span style="color: #6c7086;">:</span> <span style="color: #a6e3a1;">&quot;a&quot;</span><span style="color: #6c7086;">,</span> <span style="color: #89b4fa;">&quot;bar&quot;</span><span style="color: #6c7086;">:</span> <span style="color: #6c7086;">{</span><span style="color: #89b4fa;">&quot;baz&quot;</span><span style="color: #6c7086;">:</span> <span style="color: #a6e3a1;">&quot;b&quot;</span><span style="color: #6c7086;">}</span><span style="color: #6c7086;">}</span>) → <span style="color: #6c7086;">{</span><span style="color: #89b4fa;">&quot;foo&quot;</span><span style="color: #6c7086;">:</span> <span style="color: #a6e3a1;">&quot;a&quot;</span><span style="color: #6c7086;">,</span> <span style="color: #89b4fa;">&quot;bar.baz&quot;</span><span style="color: #6c7086;">:</span> <span style="color: #a6e3a1;">&quot;b&quot;</span><span style="color: #6c7086;">}</span>
+search(<span style="color: #00d4ff;">{foo: foo, baz: baz}</span>, <span style="color: #6c7086;">{</span><span style="color: #89b4fa;">&quot;foo&quot;</span><span style="color: #6c7086;">:</span> <span style="color: #a6e3a1;">&quot;a&quot;</span><span style="color: #6c7086;">,</span> <span style="color: #89b4fa;">&quot;bar&quot;</span><span style="color: #6c7086;">:</span> <span style="color: #a6e3a1;">&quot;b&quot;</span><span style="color: #6c7086;">}</span>) → <span style="color: #6c7086;">{</span><span style="color: #89b4fa;">&quot;foo&quot;</span><span style="color: #6c7086;">:</span> <span style="color: #a6e3a1;">&quot;a&quot;</span><span style="color: #6c7086;">,</span> <span style="color: #89b4fa;">&quot;baz&quot;</span><span style="color: #6c7086;">:</span> <span style="color: #f5c2de;">null</span><span style="color: #6c7086;">}</span></code></pre></div> </div><div class="spec-doc" data-astro-cid-maqyfiai><h1 id="spec-wildcard-expressions">Wildcard Expressions</h1>
+</div><div class="spec-rule-block" data-astro-cid-maqyfiai>  <pre data-astro-cid-maqyfiai><code class="language-abnf" data-astro-cid-maqyfiai><span class="abnf-line" data-astro-cid-maqyfiai>
+</span><span class="abnf-line" data-astro-cid-maqyfiai><span class="rule-name">expression</span>        =/ <span class="literal">&quot;*&quot;</span>
+</span><span class="abnf-line" data-astro-cid-maqyfiai><span class="rule-name">bracket-specifier</span> =/ <span class="literal">&quot;[&quot;</span> <span class="literal">&quot;*&quot;</span> <span class="literal">&quot;]&quot;</span>
+</span><span class="abnf-line" data-astro-cid-maqyfiai>
+</span></code></pre> </div><div class="spec-doc" data-astro-cid-maqyfiai><p>A wildcard <code>expression</code> is a <code>expression</code> of either <code>*</code> or <code>[*]</code>. A wildcard <code>expression</code> can return multiple elements, and the
+remaining expressions are evaluated against each returned element from a wildcard <code>expression</code>. The <code>[*]</code> syntax applies to
+a list type and the <code>*</code>syntax applies to a hash type.</p>
+<p>The <code>[*]</code> syntax (referred to as a list wildcard <code>expression</code>) will return all the elements in a list. Any subsequent
+expressions will be evaluated against each individual element. Given an <code>expression</code> <code>[*].child-expr</code>, and a list of N
+elements, the evaluation of this <code>expression</code> would be <code>[child-expr(el-0), child-expr(el-2), ..., child-expr(el-N)]</code>.
+This is referred to as a projection, and the child-expr <code>expression</code> is projected onto the elements of the resulting list.</p>
+<p>Once a projection has been created, all subsequent expressions are projected onto the resulting list.</p>
+<p>The <code>*</code> syntax (referred to as a hash wildcard <code>expression</code>) will return a list of the hash element&#39;s values. Any subsequent
+<code>expression</code> will be evaluated against each individual element in the list (this is also referred to as a projection).</p>
+<p>Note that if any subsequent <code>expression</code> after a wildcard <code>expression</code> returns a <code>null</code> value, it is omitted from the final
+result list.</p>
+<p>A list wildcard <code>expression</code> is only valid for the JSON array type. If a list wildcard <code>expression</code> is applied to any other
+JSON type, a value of <code>null</code> is returned.</p>
+<p>Similarly, a hash wildcard <code>expression</code> is only valid for the JSON object type. If a hash wildcard <code>expression</code> is applied
+to any other JSON type, a value of <code>null</code> is returned. Note that JSON hashes are explicitly defined as unordered.
+Therefore a hash wildcard <code>expression</code> can return the values associated with the hash in any order. Implementations
+are not required to return the hash values in any specific order.</p>
+<h2 id="spec-examples">Examples</h2>
+</div><div class="spec-code-block" data-astro-cid-maqyfiai> <div data-astro-cid-maqyfiai><pre><code class="language-code">search(<span style="color: #00d4ff;">[*].foo</span>, <span style="color: #6c7086;">[</span><span style="color: #6c7086;">{</span><span style="color: #89b4fa;">&quot;foo&quot;</span><span style="color: #6c7086;">:</span> <span style="color: #f5c2de;">1</span><span style="color: #6c7086;">}</span><span style="color: #6c7086;">,</span> <span style="color: #6c7086;">{</span><span style="color: #89b4fa;">&quot;foo&quot;</span><span style="color: #6c7086;">:</span> <span style="color: #f5c2de;">2</span><span style="color: #6c7086;">}</span><span style="color: #6c7086;">,</span> <span style="color: #6c7086;">{</span><span style="color: #89b4fa;">&quot;foo&quot;</span><span style="color: #6c7086;">:</span> <span style="color: #f5c2de;">3</span><span style="color: #6c7086;">}</span><span style="color: #6c7086;">]</span>) → <span style="color: #6c7086;">[</span><span style="color: #f5c2de;">1</span><span style="color: #6c7086;">,</span> <span style="color: #f5c2de;">2</span><span style="color: #6c7086;">,</span> <span style="color: #f5c2de;">3</span><span style="color: #6c7086;">]</span>
+search(<span style="color: #00d4ff;">[*].foo</span>, <span style="color: #6c7086;">[</span><span style="color: #6c7086;">{</span><span style="color: #89b4fa;">&quot;foo&quot;</span><span style="color: #6c7086;">:</span> <span style="color: #f5c2de;">1</span><span style="color: #6c7086;">}</span><span style="color: #6c7086;">,</span> <span style="color: #6c7086;">{</span><span style="color: #89b4fa;">&quot;foo&quot;</span><span style="color: #6c7086;">:</span> <span style="color: #f5c2de;">2</span><span style="color: #6c7086;">}</span><span style="color: #6c7086;">,</span> <span style="color: #6c7086;">{</span><span style="color: #89b4fa;">&quot;bar&quot;</span><span style="color: #6c7086;">:</span> <span style="color: #f5c2de;">3</span><span style="color: #6c7086;">}</span><span style="color: #6c7086;">]</span>) → <span style="color: #6c7086;">[</span><span style="color: #f5c2de;">1</span><span style="color: #6c7086;">,</span> <span style="color: #f5c2de;">2</span><span style="color: #6c7086;">]</span>
+search(<span style="color: #00d4ff;">&#39;*.foo&#39;</span>, <span style="color: #6c7086;">{</span><span style="color: #89b4fa;">&quot;a&quot;</span><span style="color: #6c7086;">:</span> <span style="color: #6c7086;">{</span><span style="color: #89b4fa;">&quot;foo&quot;</span><span style="color: #6c7086;">:</span> <span style="color: #f5c2de;">1</span><span style="color: #6c7086;">}</span><span style="color: #6c7086;">,</span> <span style="color: #89b4fa;">&quot;b&quot;</span><span style="color: #6c7086;">:</span> <span style="color: #6c7086;">{</span><span style="color: #89b4fa;">&quot;foo&quot;</span><span style="color: #6c7086;">:</span> <span style="color: #f5c2de;">2</span><span style="color: #6c7086;">}</span><span style="color: #6c7086;">,</span> <span style="color: #89b4fa;">&quot;c&quot;</span><span style="color: #6c7086;">:</span> <span style="color: #6c7086;">{</span><span style="color: #89b4fa;">&quot;bar&quot;</span><span style="color: #6c7086;">:</span> <span style="color: #f5c2de;">1</span><span style="color: #6c7086;">}</span><span style="color: #6c7086;">}</span>) → <span style="color: #6c7086;">[</span><span style="color: #f5c2de;">1</span><span style="color: #6c7086;">,</span> <span style="color: #f5c2de;">2</span><span style="color: #6c7086;">]</span></code></pre></div> </div><div class="spec-doc" data-astro-cid-maqyfiai><h1 id="spec-filter-expressions">Filter Expressions</h1>
+</div><div class="spec-rule-block" data-astro-cid-maqyfiai>  <pre data-astro-cid-maqyfiai><code class="language-abnf" data-astro-cid-maqyfiai><span class="abnf-line" data-astro-cid-maqyfiai>
+</span><span class="abnf-line" data-astro-cid-maqyfiai><span class="rule-name">filter-expression</span> = <span class="literal">&quot;[?&quot;</span> expression <span class="literal">&quot;]&quot;</span>
+</span><span class="abnf-line" data-astro-cid-maqyfiai><span class="rule-name">bracket-specifier</span> =/ filter-expression
+</span><span class="abnf-line" data-astro-cid-maqyfiai>
+</span></code></pre> </div><div class="spec-doc" data-astro-cid-maqyfiai><p>A <code>filter-expression</code> provides a way to select JSON elements based on a comparison to another <code>expression</code>. A filter
+<code>expression</code> is evaluated as follows: for each element in an array evaluate the <code>expression</code> against the element. If the
+<code>expression</code> evaluates to a truth-like value, the item (in its entirety) is added to the result list. Otherwise it is
+excluded from the result list. A filter <code>expression</code> is only defined for a JSON array. Attempting to evaluate a filter
+<code>expression</code> against any other type will return <code>null</code>.</p>
+<h2 id="spec-comparison-operators">Comparison Operators</h2>
+</div><div class="spec-rule-block" data-astro-cid-maqyfiai>  <pre data-astro-cid-maqyfiai><code class="language-abnf" data-astro-cid-maqyfiai><span class="abnf-line" data-astro-cid-maqyfiai>
+</span><span class="abnf-line" data-astro-cid-maqyfiai><span class="rule-name">comparator-expression</span> = expression comparator expression
+</span><span class="abnf-line" data-astro-cid-maqyfiai><span class="rule-name">comparator</span>        = &quot;&lt;<span class="literal">&quot; / &quot;</span>&lt;=<span class="literal">&quot; / &quot;</span>==<span class="literal">&quot; / &quot;</span>&gt;=<span class="literal">&quot; / &quot;</span>&gt;<span class="literal">&quot; / &quot;</span>!=&quot;
+</span><span class="abnf-line" data-astro-cid-maqyfiai>
+</span></code></pre> </div><div class="spec-doc" data-astro-cid-maqyfiai><p>The following operations are supported:</p>
+<ul>
+<li><code>==</code>, tests for equality.</li>
+<li><code>!=</code>, tests for inequality.</li>
+<li><code>&lt;,</code> less than.</li>
+<li><code>&lt;=</code>, less than or equal to.</li>
+<li><code>&gt;,</code> greater than.</li>
+<li><code>&gt;=</code>, greater than or equal to.</li>
+</ul>
+<p>The behavior of each operation is dependent on the type of each evaluated <code>expression</code>.</p>
+<p>The comparison semantics for each operator are defined below based on the corresponding JSON type:</p>
+<h2 id="spec-equality-operators">Equality Operators</h2>
+<p>For <code>string</code>/<code>number</code>/<code>true</code>/<code>false</code>/<code>null</code> types, equality is an exact match. A string is equal to another string if
+they they have the exact sequence of code points. The <code>literal</code> values <code>true</code>/<code>false</code>/<code>null</code> are only equal to their own <code>literal</code>
+values. Two JSON objects are equal if they have the same set of keys and values (given two JSON objects x and y, for each
+key value pair (i, j) in x, there exists an equivalent pair (i, j) in y). Two JSON arrays are equal if they have equal
+elements in the same order (given two arrays x and y, for each i from 0 until length(x), x[i] == y[i]).</p>
+<h2 id="spec-ordering-operators">Ordering Operators</h2>
+<p>Ordering operators <code>&gt;</code>, <code>&gt;=</code>, <code>&lt;</code>, <code>&lt;=</code> are only valid for numbers. Evaluating any other type with a comparison operator
+will yield a <code>null</code> value, which will result in the element being excluded from the result list. For example, given:</p>
+</div><div class="spec-code-block" data-astro-cid-maqyfiai> <div data-astro-cid-maqyfiai><pre><code class="language-code">search(<span style="color: #00d4ff;">&#39;foo[?a&lt;b]&#39;</span>,
+<span style="color: #6c7086;">{</span><span style="color: #89b4fa;">&quot;foo&quot;</span><span style="color: #6c7086;">:</span> <span style="color: #6c7086;">[</span><span style="color: #6c7086;">{</span><span style="color: #89b4fa;">&quot;a&quot;</span><span style="color: #6c7086;">:</span> <span style="color: #a6e3a1;">&quot;char&quot;</span><span style="color: #6c7086;">,</span> <span style="color: #89b4fa;">&quot;b&quot;</span><span style="color: #6c7086;">:</span> <span style="color: #a6e3a1;">&quot;char&quot;</span><span style="color: #6c7086;">}</span><span style="color: #6c7086;">,</span>
+                             <span style="color: #6c7086;">{</span><span style="color: #89b4fa;">&quot;a&quot;</span><span style="color: #6c7086;">:</span> <span style="color: #f5c2de;">2</span><span style="color: #6c7086;">,</span> <span style="color: #89b4fa;">&quot;b&quot;</span><span style="color: #6c7086;">:</span> <span style="color: #f5c2de;">1</span><span style="color: #6c7086;">}</span><span style="color: #6c7086;">,</span>
+                             <span style="color: #6c7086;">{</span><span style="color: #89b4fa;">&quot;a&quot;</span><span style="color: #6c7086;">:</span> <span style="color: #f5c2de;">1</span><span style="color: #6c7086;">,</span> <span style="color: #89b4fa;">&quot;b&quot;</span><span style="color: #6c7086;">:</span> <span style="color: #f5c2de;">2</span><span style="color: #6c7086;">}</span><span style="color: #6c7086;">]</span><span style="color: #6c7086;">}</span>) → <span style="color: #6c7086;">[</span><span style="color: #6c7086;">{</span><span style="color: #89b4fa;">&quot;a&quot;</span><span style="color: #6c7086;">:</span> <span style="color: #f5c2de;">1</span><span style="color: #6c7086;">,</span> <span style="color: #89b4fa;">&quot;b&quot;</span><span style="color: #6c7086;">:</span> <span style="color: #f5c2de;">2</span><span style="color: #6c7086;">}</span><span style="color: #6c7086;">]</span></code></pre></div> </div><div class="spec-doc" data-astro-cid-maqyfiai><p>The three elements in the foo list are evaluated against a &lt; b. The first element resolves to the comparison &quot;char&quot; &lt;
+&quot;bar&quot;, and because these types are string, the <code>expression</code> results in <code>null</code>, so the first element is not included in the
+result list. The second element resolves to 2 &lt; 1, which is <code>false</code>, so the second element is excluded from the result
+list. The third <code>expression</code> resolves to 1 &lt; 2 which evaluates to <code>true</code>, so the third element is included in the list.
+The final result of that <code>expression</code> is <code>[{&quot;a&quot;: 1, &quot;b&quot;: 2}]</code>.</p>
+<h2 id="spec-examples">Examples</h2>
+</div><div class="spec-code-block" data-astro-cid-maqyfiai> <div data-astro-cid-maqyfiai><pre><code class="language-code">search(<span style="color: #00d4ff;">foo[?bar==`10`]</span>, <span style="color: #6c7086;">{</span><span style="color: #89b4fa;">&quot;foo&quot;</span><span style="color: #6c7086;">:</span> <span style="color: #6c7086;">[</span><span style="color: #6c7086;">{</span><span style="color: #89b4fa;">&quot;bar&quot;</span><span style="color: #6c7086;">:</span> <span style="color: #f5c2de;">1</span><span style="color: #6c7086;">}</span><span style="color: #6c7086;">,</span> <span style="color: #6c7086;">{</span><span style="color: #89b4fa;">&quot;bar&quot;</span><span style="color: #6c7086;">:</span> <span style="color: #f5c2de;">10</span><span style="color: #6c7086;">}</span><span style="color: #6c7086;">]</span><span style="color: #6c7086;">}</span>) → <span style="color: #6c7086;">[</span><span style="color: #6c7086;">{</span><span style="color: #89b4fa;">&quot;bar&quot;</span><span style="color: #6c7086;">:</span> <span style="color: #f5c2de;">10</span><span style="color: #6c7086;">}</span><span style="color: #6c7086;">]</span>
+search([?bar==`10`], [{&quot;bar&quot;: 1}, {&quot;bar&quot;: 10}]}) -&gt; [{&quot;bar&quot;: 10}]
+search(<span style="color: #00d4ff;">foo[?a==b]</span>, <span style="color: #6c7086;">{</span><span style="color: #89b4fa;">&quot;foo&quot;</span><span style="color: #6c7086;">:</span> <span style="color: #6c7086;">[</span><span style="color: #6c7086;">{</span><span style="color: #89b4fa;">&quot;a&quot;</span><span style="color: #6c7086;">:</span> <span style="color: #f5c2de;">1</span><span style="color: #6c7086;">,</span> <span style="color: #89b4fa;">&quot;b&quot;</span><span style="color: #6c7086;">:</span> <span style="color: #f5c2de;">2</span><span style="color: #6c7086;">}</span><span style="color: #6c7086;">,</span> <span style="color: #6c7086;">{</span><span style="color: #89b4fa;">&quot;a&quot;</span><span style="color: #6c7086;">:</span> <span style="color: #f5c2de;">2</span><span style="color: #6c7086;">,</span> <span style="color: #89b4fa;">&quot;b&quot;</span><span style="color: #6c7086;">:</span> <span style="color: #f5c2de;">2</span><span style="color: #6c7086;">}</span><span style="color: #6c7086;">]</span><span style="color: #6c7086;">}</span>) → <span style="color: #6c7086;">[</span><span style="color: #6c7086;">{</span><span style="color: #89b4fa;">&quot;a&quot;</span><span style="color: #6c7086;">:</span> <span style="color: #f5c2de;">2</span><span style="color: #6c7086;">,</span> <span style="color: #89b4fa;">&quot;b&quot;</span><span style="color: #6c7086;">:</span> <span style="color: #f5c2de;">2</span><span style="color: #6c7086;">}</span><span style="color: #6c7086;">]</span></code></pre></div> </div><div class="spec-doc" data-astro-cid-maqyfiai><h1 id="spec-function-expressions">Function Expressions</h1>
+</div><div class="spec-rule-block" data-astro-cid-maqyfiai>  <pre data-astro-cid-maqyfiai><code class="language-abnf" data-astro-cid-maqyfiai><span class="abnf-line" data-astro-cid-maqyfiai>
+</span><span class="abnf-line" data-astro-cid-maqyfiai><span class="rule-name">function-expression</span> = unquoted-string  ( no-args  / one-or-more-args )
+</span><span class="abnf-line" data-astro-cid-maqyfiai>
+</span><span class="abnf-line" data-astro-cid-maqyfiai><span class="rule-name">no-args</span>             = <span class="literal">&quot;(&quot;</span> <span class="literal">&quot;)&quot;</span>
+</span><span class="abnf-line" data-astro-cid-maqyfiai><span class="rule-name">one-or-more-args</span>    = <span class="literal">&quot;(&quot;</span> ( function-arg *( <span class="literal">&quot;,&quot;</span> function-arg ) ) <span class="literal">&quot;)&quot;</span>
+</span><span class="abnf-line" data-astro-cid-maqyfiai>
+</span><span class="abnf-line" data-astro-cid-maqyfiai><span class="rule-name">function-arg</span>        = expression / expression-type
+</span><span class="abnf-line" data-astro-cid-maqyfiai>
+</span></code></pre> </div><div class="spec-doc" data-astro-cid-maqyfiai><p>Functions allow users to easily transform and filter data in JMESPath expressions.</p>
+<h2 id="spec-data-types">Data Types</h2>
+<p>In order to support functions, a type system is needed. The JSON types are used:</p>
+<ul>
+<li><code>number</code> (integers and double-precision floating-point format in JSON)</li>
+<li>string (a sequence of Unicode <a href="https://unicode.org/glossary/#code_point">code points</a>. Note that a code point is distinct to a <a href="https://unicode.org/glossary/#code_unit">code unit</a>)</li>
+<li>boolean (<code>true</code> or <code>false</code>)</li>
+<li>array (an ordered, sequence of values)</li>
+<li>object (an unordered collection of key value pairs)</li>
+<li><code>null</code></li>
+</ul>
+<p>There is also an additional type that is not a JSON type that&#39;s used in JMESPath functions:</p>
+<ul>
+<li><code>expression</code> (denoted by <code>&amp;expression</code>)</li>
+</ul>
+</div><div class="spec-rule-block" data-astro-cid-maqyfiai>  <pre data-astro-cid-maqyfiai><code class="language-abnf" data-astro-cid-maqyfiai><span class="abnf-line" data-astro-cid-maqyfiai>
+</span><span class="abnf-line" data-astro-cid-maqyfiai><span class="rule-name">expression-type</span>     = &quot;&amp;&quot; expression
+</span><span class="abnf-line" data-astro-cid-maqyfiai>
+</span></code></pre> </div><div class="spec-doc" data-astro-cid-maqyfiai><h2 id="spec-current-node">Current Node</h2>
+<p>The <code>current-node</code> token can be used to represent the current node being evaluated. The <code>current-node</code> token is useful
+for functions that require the current node being evaluated as an argument.</p>
+</div><div class="spec-rule-block" data-astro-cid-maqyfiai>  <pre data-astro-cid-maqyfiai><code class="language-abnf" data-astro-cid-maqyfiai><span class="abnf-line" data-astro-cid-maqyfiai>
+</span><span class="abnf-line" data-astro-cid-maqyfiai><span class="rule-name">current-node</span>        = <span class="literal">&quot;@&quot;</span>
+</span><span class="abnf-line" data-astro-cid-maqyfiai>
+</span></code></pre> </div><div class="spec-doc" data-astro-cid-maqyfiai><p>For example, the following <code>expression</code>
+creates an array containing the total <code>number</code> of elements in the foo object followed by the value of <code>foo[&quot;bar&quot;]</code>.</p>
+</div><div class="spec-code-block" data-astro-cid-maqyfiai> <div data-astro-cid-maqyfiai><pre><code class="language-jmespath"><span style="color: #00d4ff;">foo[].[count(@), bar]</span></code></pre></div> </div><div class="spec-doc" data-astro-cid-maqyfiai><p>JMESPath assumes that all function arguments operate on the current node unless the argument is a <code>literal</code> or <code>number</code>
+token. Because of this, an <code>expression</code> such as @.bar would be equivalent to just bar, so the current node is only
+allowed as a bare <code>expression</code>.</p>
+<h3 id="spec-current-node-state">Current node state</h3>
+<p>At the start of an <code>expression</code>, the value of the current node is the data being evaluated by the JMESPath <code>expression</code>.
+As an <code>expression</code> is evaluated, the value the the current node represents MUST change to reflect the node currently
+being evaluated. When in a projection, the current node value must be changed to the node currently being evaluated
+by the projection.</p>
+<h1 id="spec-function-evaluation">Function Evaluation</h1>
+<p>Functions are evaluated in applicative order. Each argument must be an <code>expression</code>, each argument <code>expression</code> must be
+evaluated before evaluating the function. The function is then called with the evaluated function arguments. The result
+of the <code>function-expression</code> is the result returned by the function call. If a <code>function-expression</code> is evaluated for a
+function that does not exist, the JMESPath implementation must indicate to the caller that an <code>unknown-function</code> error
+occurred. How and when this error is raised is implementation specific, but implementations should indicate to the caller
+that this specific error occurred.</p>
+<p>Functions can either have a specific arity or be variadic with a minimum <code>number</code> of arguments. If a <code>function-expression</code> is encountered where the arity does not match or the minimum <code>number</code>
+of arguments for a variadic function is not provided, then implementations must indicate to the caller that an <code>invalid-arity</code>
+error occurred. How and when this error is raised is implementation specific.</p>
+<p>Each function signature declares the types of its input parameters. If any type constraints are not met, implementations
+must indicate that an <code>invalid-type</code> error occurred.</p>
+<p>In order to accommodate type constraints, functions are provided to convert types to other types (to_string, to_number)
+which are defined below. No explicit type conversion happens unless a user specifically uses one of these type conversion
+functions.</p>
+<p>Function expressions are also allowed as the child element of a sub <code>expression</code>. This allows functions to be used with
+projections, which can enable functions to be applied to every element in a projection. For example, given the input
+data of <code>[&quot;1&quot;, &quot;2&quot;, &quot;3&quot;, &quot;notanumber&quot;, true]</code>, the following <code>expression</code> can be used to convert (and filter) all elements
+to numbers:</p>
+</div><div class="spec-code-block" data-astro-cid-maqyfiai> <div data-astro-cid-maqyfiai><pre><code class="language-code">search(<span style="color: #00d4ff;">[].to_number(@)</span>, <span style="color: #6c7086;">[</span><span style="color: #a6e3a1;">&quot;1&quot;</span><span style="color: #6c7086;">,</span> <span style="color: #a6e3a1;">&quot;2&quot;</span><span style="color: #6c7086;">,</span> <span style="color: #a6e3a1;">&quot;3&quot;</span><span style="color: #6c7086;">,</span> <span style="color: #a6e3a1;">&quot;notanumber&quot;</span><span style="color: #6c7086;">,</span> <span style="color: #f5c2de;">true</span><span style="color: #6c7086;">]</span>) → <span style="color: #6c7086;">[</span><span style="color: #f5c2de;">1</span><span style="color: #6c7086;">,</span> <span style="color: #f5c2de;">2</span><span style="color: #6c7086;">,</span> <span style="color: #f5c2de;">3</span><span style="color: #6c7086;">]</span></code></pre></div> </div><div class="spec-doc" data-astro-cid-maqyfiai><p>This provides a simple mechanism to explicitly convert types when needed.</p>
+<h1 id="spec-raw-string-literals">Raw String Literals</h1>
+</div><div class="spec-rule-block" data-astro-cid-maqyfiai>  <pre data-astro-cid-maqyfiai><code class="language-abnf" data-astro-cid-maqyfiai><span class="abnf-line" data-astro-cid-maqyfiai>
+</span><span class="abnf-line" data-astro-cid-maqyfiai><span class="rule-name">raw-string</span>        = &quot;&#39;<span class="literal">&quot; *raw-string-char &quot;</span>&#39;&quot;
+</span><span class="abnf-line" data-astro-cid-maqyfiai>
+</span><span class="abnf-line" data-astro-cid-maqyfiai><span class="rule-name">raw-string-char</span>   = (%x20-26 / %x28-5B / %x5D-10FFFF) / preserved-escape / raw-string-escape
+</span><span class="abnf-line" data-astro-cid-maqyfiai><span class="rule-name">preserved-escape</span>  = escape (%x20-26 / %x28-5B / %x5D-10FFFF)
+</span><span class="abnf-line" data-astro-cid-maqyfiai><span class="rule-name">raw-string-escape</span> = escape (&quot;&#39;&quot; / escape)
+</span><span class="abnf-line" data-astro-cid-maqyfiai>
+</span></code></pre> </div><div class="spec-doc" data-astro-cid-maqyfiai><p>A <code>raw string</code> is an <code>expression</code> that allows for a <code>literal</code> string value to be specified. The result of evaluating the raw
+string <code>literal</code> <code>expression</code> is the <code>literal</code> string value. It is a simpler form of a <code>literal</code> <code>expression</code> that is special
+cased for strings. For example, the following expressions both evaluate to the same value: &quot;foo&quot;:</p>
+</div><div class="spec-code-block" data-astro-cid-maqyfiai> <div data-astro-cid-maqyfiai><pre><code class="language-code">search(<span style="color: #00d4ff;">`&quot;foo&quot;`</span>, <span style="color: #a6e3a1;">&quot;&quot;</span>) → <span style="color: #a6e3a1;">&quot;foo&quot;</span>
+search(<span style="color: #00d4ff;">&#39;foo&#39;</span>, <span style="color: #a6e3a1;">&quot;&quot;</span>) → <span style="color: #a6e3a1;">&quot;foo&quot;</span></code></pre></div> </div><div class="spec-doc" data-astro-cid-maqyfiai><p>As you can see in the examples above, it is meant as a more succinct form of the common scenario of specifying a <code>literal</code>
+string value.</p>
+<p>In addition, it does not perform any of the additional processing that JSON strings supports including:</p>
+<ul>
+<li>Not expanding unicode escape sequences</li>
+<li>Not expanding newline characters</li>
+<li>Not expanding tab characters or any other escape sequences documented in RFC 4627 section 2.5.</li>
+</ul>
+<h2 id="spec-examples">Examples</h2>
+</div><div class="spec-code-block" data-astro-cid-maqyfiai> <div data-astro-cid-maqyfiai><pre><code class="language-code">search(<span style="color: #00d4ff;">&#39;foo&#39;</span>, <span style="color: #a6e3a1;">&quot;&quot;</span>) → <span style="color: #a6e3a1;">&quot;foo&quot;</span>
+search(<span style="color: #00d4ff;">&#39; bar &#39;</span>, <span style="color: #a6e3a1;">&quot;&quot;</span>) → <span style="color: #a6e3a1;">&quot; bar &quot;</span>
+search(<span style="color: #00d4ff;">&#39;[baz]&#39;</span>, <span style="color: #a6e3a1;">&quot;&quot;</span>) → <span style="color: #a6e3a1;">&quot;[baz]&quot;</span>
+search(<span style="color: #00d4ff;">&#39;[baz]&#39;</span>, <span style="color: #a6e3a1;">&quot;&quot;</span>) → <span style="color: #a6e3a1;">&quot;[baz]&quot;</span>
+search(<span style="color: #00d4ff;">&#39;\u03a6&#39;</span>, <span style="color: #a6e3a1;">&quot;&quot;</span>) → <span style="color: #a6e3a1;">&quot;\u03a6&quot;</span>
+search(<span style="color: #00d4ff;">&#39;\\&#39;</span>, <span style="color: #a6e3a1;">&quot;&quot;</span>) → <span style="color: #a6e3a1;">&quot;\\&quot;</span></code></pre></div> </div><div class="spec-doc" data-astro-cid-maqyfiai><h1 id="spec-literal-expressions">Literal Expressions</h1>
+</div><div class="spec-rule-block" data-astro-cid-maqyfiai>  <pre data-astro-cid-maqyfiai><code class="language-abnf" data-astro-cid-maqyfiai><span class="abnf-line" data-astro-cid-maqyfiai>
+</span><span class="abnf-line" data-astro-cid-maqyfiai><span class="rule-name">literal</span>           = <span class="literal">&quot;`&quot;</span> json-text <span class="literal">&quot;`&quot;</span>
+</span><span class="abnf-line" data-astro-cid-maqyfiai>
+</span></code></pre> </div><div class="spec-doc" data-astro-cid-maqyfiai><p>A <code>literal</code> <code>expression</code> is an <code>expression</code> that allows arbitrary JSON objects to be specified. This is useful in filter
+expressions as well as multi select hashes (to create arbitrary key value pairs), but is allowed anywhere an <code>expression</code>
+is allowed. The specification includes the ABNF for JSON, implementations should use an existing JSON parser to parse
+<code>literal</code> values. Note that the ` character must now be escaped in a json-value which means implementations need to
+handle this case before passing the resulting string to a JSON parser.</p>
+<p>For completeness, here is the grammar specification for JSON text:</p>
+</div><div class="spec-rule-block" data-astro-cid-maqyfiai>  <pre data-astro-cid-maqyfiai><code class="language-abnf" data-astro-cid-maqyfiai><span class="abnf-line" data-astro-cid-maqyfiai>
+</span><span class="abnf-line" data-astro-cid-maqyfiai><span class="rule-name">unquoted-string</span>   = (%x41-5A / %x61-7A / %x5F) *(  <span class="comment">; A-Za-z_</span>
+</span><span class="abnf-line" data-astro-cid-maqyfiai>                        %x30-39  /  <span class="comment">; 0-9</span>
+</span><span class="abnf-line" data-astro-cid-maqyfiai>                        %x41-5A /  <span class="comment">; A-Z</span>
+</span><span class="abnf-line" data-astro-cid-maqyfiai>                        %x5F    /  <span class="comment">; _</span>
+</span><span class="abnf-line" data-astro-cid-maqyfiai>                        %x61-7A)   <span class="comment">; a-z</span>
+</span><span class="abnf-line" data-astro-cid-maqyfiai><span class="rule-name">quoted-string</span>     = quotation-mark 1*(unescaped-char / escaped-char) quotation-mark
+</span><span class="abnf-line" data-astro-cid-maqyfiai><span class="rule-name">unescaped-char</span>    = %x20-21 / %x23-5B / %x5D-10FFFF
+</span><span class="abnf-line" data-astro-cid-maqyfiai><span class="rule-name">escape</span>            = %x5C   <span class="comment">;</span>
+</span><span class="abnf-line" data-astro-cid-maqyfiai><span class="rule-name">quotation-mark</span>    = %x22   <span class="comment">; &quot;</span>
+</span><span class="abnf-line" data-astro-cid-maqyfiai><span class="rule-name">escaped-char</span>      = escape (
+</span><span class="abnf-line" data-astro-cid-maqyfiai>                        %x22 /          <span class="comment">; &quot;    quotation mark  U+0022</span>
+</span><span class="abnf-line" data-astro-cid-maqyfiai>                        %x5C /          <span class="comment">; \    reverse solidus U+005C</span>
+</span><span class="abnf-line" data-astro-cid-maqyfiai>                        %x2F /          <span class="comment">; /    solidus         U+002F</span>
+</span><span class="abnf-line" data-astro-cid-maqyfiai>                        %x62 /          <span class="comment">; b    backspace       U+0008</span>
+</span><span class="abnf-line" data-astro-cid-maqyfiai>                        %x66 /          <span class="comment">; f    form feed       U+000C</span>
+</span><span class="abnf-line" data-astro-cid-maqyfiai>                        %x6E /          <span class="comment">; n    line feed       U+000A</span>
+</span><span class="abnf-line" data-astro-cid-maqyfiai>                        %x72 /          <span class="comment">; r    carriage return U+000D</span>
+</span><span class="abnf-line" data-astro-cid-maqyfiai>                        %x74 /          <span class="comment">; t    tab             U+0009</span>
+</span><span class="abnf-line" data-astro-cid-maqyfiai>                        %x75 4HEXDIG )  <span class="comment">; uXXXX                U+XXXX</span>
+</span><span class="abnf-line" data-astro-cid-maqyfiai>
+</span><span class="abnf-line" data-astro-cid-maqyfiai><span class="rule-name">json-text</span>  = ws json-value ws
+</span><span class="abnf-line" data-astro-cid-maqyfiai><span class="rule-name">ws</span>         = *(
+</span><span class="abnf-line" data-astro-cid-maqyfiai>                %x20 /              <span class="comment">; Space</span>
+</span><span class="abnf-line" data-astro-cid-maqyfiai>                %x09 /              <span class="comment">; Horizontal tab</span>
+</span><span class="abnf-line" data-astro-cid-maqyfiai>                %x0A /              <span class="comment">; Line feed or New line</span>
+</span><span class="abnf-line" data-astro-cid-maqyfiai>                %x0D )              <span class="comment">; Carriage return</span>
+</span><span class="abnf-line" data-astro-cid-maqyfiai><span class="comment">; `json-value` is any valid JSON value with the one exception that each</span>
+</span><span class="abnf-line" data-astro-cid-maqyfiai><span class="comment">; U+0060 GRAVE ACCENT &#39;`&#39; must be escaped with a preceding backslash.</span>
+</span><span class="abnf-line" data-astro-cid-maqyfiai><span class="comment">; While implementations are encouraged to use any existing JSON parser for this</span>
+</span><span class="abnf-line" data-astro-cid-maqyfiai><span class="comment">; section of the grammar (after handling the escaped characters), a complete</span>
+</span><span class="abnf-line" data-astro-cid-maqyfiai><span class="comment">; set of rules derived from RFC 8259 is included below:</span>
+</span><span class="abnf-line" data-astro-cid-maqyfiai><span class="rule-name">json-value</span> = false / null / true / json-object / json-array /
+</span><span class="abnf-line" data-astro-cid-maqyfiai>             json-number / json-string
+</span><span class="abnf-line" data-astro-cid-maqyfiai><span class="comment">; JSON literals</span>
+</span><span class="abnf-line" data-astro-cid-maqyfiai><span class="rule-name">false</span> = %x66.61.6c.73.65   <span class="comment">; false</span>
+</span><span class="abnf-line" data-astro-cid-maqyfiai><span class="rule-name">null</span>  = %x6e.75.6c.6c      <span class="comment">; null</span>
+</span><span class="abnf-line" data-astro-cid-maqyfiai><span class="rule-name">true</span>  = %x74.72.75.65      <span class="comment">; true</span>
+</span><span class="abnf-line" data-astro-cid-maqyfiai><span class="comment">; JSON strings</span>
+</span><span class="abnf-line" data-astro-cid-maqyfiai><span class="rule-name">json-string</span>    = quotation-mark *( json-unescaped / json-escaped ) quotation-mark
+</span><span class="abnf-line" data-astro-cid-maqyfiai><span class="rule-name">json-unescaped</span> = %x20-21     / <span class="comment">; space or &#39;!&#39; (precedes U+0022 &#39;&quot;&#39;)</span>
+</span><span class="abnf-line" data-astro-cid-maqyfiai>                 %x23-5B     / <span class="comment">; &#39;#&#39; through &#39;[&#39; (precedes U+005C &#39;\&#39;)</span>
+</span><span class="abnf-line" data-astro-cid-maqyfiai>                 %x5D-5F     / <span class="comment">; &#39;]&#39; through &#39;_&#39; (precedes U+0060 &#39;`&#39;)</span>
+</span><span class="abnf-line" data-astro-cid-maqyfiai>                 %x61-10FFFF   <span class="comment">; &#39;a&#39; and all following code points</span>
+</span><span class="abnf-line" data-astro-cid-maqyfiai><span class="rule-name">json-escaped</span>   = escaped-char / (escape <span class="literal">&quot;`&quot;</span>)
+</span><span class="abnf-line" data-astro-cid-maqyfiai><span class="comment">; JSON arrays</span>
+</span><span class="abnf-line" data-astro-cid-maqyfiai><span class="rule-name">json-array</span>      = begin-array [ json-value *( value-separator json-value ) ] end-array
+</span><span class="abnf-line" data-astro-cid-maqyfiai><span class="rule-name">begin-array</span>     = ws %x5B ws  <span class="comment">; [ left square bracket</span>
+</span><span class="abnf-line" data-astro-cid-maqyfiai><span class="rule-name">end-array</span>       = ws %x5D ws  <span class="comment">; ] right square bracket</span>
+</span><span class="abnf-line" data-astro-cid-maqyfiai><span class="rule-name">value-separator</span> = ws %x2C ws  <span class="comment">; , comma</span>
+</span><span class="abnf-line" data-astro-cid-maqyfiai><span class="comment">; JSON objects</span>
+</span><span class="abnf-line" data-astro-cid-maqyfiai><span class="rule-name">json-object</span>    = begin-object [ member *( value-separator member ) ] end-object
+</span><span class="abnf-line" data-astro-cid-maqyfiai><span class="rule-name">begin-object</span>   = ws %x7B ws  <span class="comment">; { left curly bracket</span>
+</span><span class="abnf-line" data-astro-cid-maqyfiai><span class="rule-name">end-object</span>     = ws %x7D ws  <span class="comment">; } right curly bracket</span>
+</span><span class="abnf-line" data-astro-cid-maqyfiai><span class="rule-name">member</span>         = json-string name-separator json-value
+</span><span class="abnf-line" data-astro-cid-maqyfiai><span class="rule-name">name-separator</span> = ws %x3A ws  <span class="comment">; : colon</span>
+</span><span class="abnf-line" data-astro-cid-maqyfiai><span class="comment">; JSON numbers</span>
+</span><span class="abnf-line" data-astro-cid-maqyfiai><span class="rule-name">json-number</span>   = [ minus ] int [ frac ] [ exp ]
+</span><span class="abnf-line" data-astro-cid-maqyfiai><span class="rule-name">decimal-point</span> = %x2E                 <span class="comment">; .</span>
+</span><span class="abnf-line" data-astro-cid-maqyfiai><span class="rule-name">digit1-9</span>      = %x31-39              <span class="comment">; 1-9</span>
+</span><span class="abnf-line" data-astro-cid-maqyfiai><span class="rule-name">e</span>             = %x65 / %x45          <span class="comment">; e E</span>
+</span><span class="abnf-line" data-astro-cid-maqyfiai><span class="rule-name">exp</span>           = e [ minus / plus ] 1*digit
+</span><span class="abnf-line" data-astro-cid-maqyfiai><span class="rule-name">frac</span>          = decimal-point 1*digit
+</span><span class="abnf-line" data-astro-cid-maqyfiai><span class="rule-name">int</span>           = zero / ( digit1-9 *digit )
+</span><span class="abnf-line" data-astro-cid-maqyfiai><span class="rule-name">minus</span>         = %x2D                 <span class="comment">; -</span>
+</span><span class="abnf-line" data-astro-cid-maqyfiai><span class="rule-name">plus</span>          = %x2B                 <span class="comment">; +</span>
+</span><span class="abnf-line" data-astro-cid-maqyfiai><span class="rule-name">zero</span>          = %x30                 <span class="comment">; 0</span>
+</span><span class="abnf-line" data-astro-cid-maqyfiai>
+</span><span class="abnf-line" data-astro-cid-maqyfiai>
+</span></code></pre> </div><div class="spec-doc" data-astro-cid-maqyfiai><h2 id="spec-examples">Examples</h2>
+</div><div class="spec-code-block" data-astro-cid-maqyfiai> <div data-astro-cid-maqyfiai><pre><code class="language-code">search(<span style="color: #00d4ff;">`&quot;foo&quot;`</span>, <span style="color: #a6e3a1;">&quot;anything&quot;</span>) → <span style="color: #a6e3a1;">&quot;foo&quot;</span>
+search(<span style="color: #00d4ff;">`&quot;foo\`bar&quot;`</span>, <span style="color: #a6e3a1;">&quot;anything&quot;</span>) → <span style="color: #a6e3a1;">&quot;foo`bar&quot;</span>
+search(<span style="color: #00d4ff;">`[1, 2]`</span>, <span style="color: #a6e3a1;">&quot;anything&quot;</span>) → <span style="color: #6c7086;">[</span><span style="color: #f5c2de;">1</span><span style="color: #6c7086;">,</span> <span style="color: #f5c2de;">2</span><span style="color: #6c7086;">]</span>
+search(<span style="color: #00d4ff;">`true`</span>, <span style="color: #a6e3a1;">&quot;anything&quot;</span>) → <span style="color: #f5c2de;">true</span>
+search(<span style="color: #00d4ff;">`{&quot;a&quot;: &quot;b&quot;}`.a</span>, <span style="color: #a6e3a1;">&quot;anything&quot;</span>) → <span style="color: #a6e3a1;">&quot;b&quot;</span>
+search(<span style="color: #00d4ff;">{first: a, type: `&quot;mytype&quot;`}</span>, <span style="color: #6c7086;">{</span><span style="color: #89b4fa;">&quot;a&quot;</span><span style="color: #6c7086;">:</span> <span style="color: #a6e3a1;">&quot;b&quot;</span><span style="color: #6c7086;">,</span> <span style="color: #89b4fa;">&quot;c&quot;</span><span style="color: #6c7086;">:</span> <span style="color: #a6e3a1;">&quot;d&quot;</span><span style="color: #6c7086;">}</span>) → <span style="color: #6c7086;">{</span><span style="color: #89b4fa;">&quot;first&quot;</span><span style="color: #6c7086;">:</span> <span style="color: #a6e3a1;">&quot;b&quot;</span><span style="color: #6c7086;">,</span> <span style="color: #89b4fa;">&quot;type&quot;</span><span style="color: #6c7086;">:</span> <span style="color: #a6e3a1;">&quot;mytype&quot;</span><span style="color: #6c7086;">}</span></code></pre></div> </div><div class="spec-doc" data-astro-cid-maqyfiai><h1 id="spec-identifiers">Identifiers</h1>
+<p>An <code>identifier</code> is the most basic <code>expression</code> and can be used to extract a single element from a JSON document.</p>
+</div><div class="spec-rule-block" data-astro-cid-maqyfiai>  <pre data-astro-cid-maqyfiai><code class="language-abnf" data-astro-cid-maqyfiai><span class="abnf-line" data-astro-cid-maqyfiai>
+</span><span class="abnf-line" data-astro-cid-maqyfiai><span class="rule-name">number</span>            = [<span class="literal">&quot;-&quot;</span>] 1*digit
+</span><span class="abnf-line" data-astro-cid-maqyfiai><span class="rule-name">digit</span>             = %x30-39 <span class="comment">; 0-9</span>
+</span><span class="abnf-line" data-astro-cid-maqyfiai><span class="rule-name">identifier</span>        = unquoted-string / quoted-string
+</span><span class="abnf-line" data-astro-cid-maqyfiai>
+</span></code></pre> </div><div class="spec-doc" data-astro-cid-maqyfiai><p>The return value for an <code>identifier</code> is the value associated with the <code>identifier</code>. If the <code>identifier</code> does not exist in the
+JSON document, than a <code>null</code> value is returned.
+From the grammar rule listed above identifiers can be one or more characters, and must start with A-Za-z_.
+An <code>identifier</code> can also be quoted. This is necessary when an <code>identifier</code> has characters not specified in the
+<code>unquoted-string</code> grammar rule. In this situation, an <code>identifier</code> is specified with a double quote, followed by any <code>number</code>
+of <code>unescaped-char</code> or <code>escaped-char</code> characters, followed by a double quote. The <code>quoted-string</code> rule is the same grammar
+rule as a JSON string, so any valid string can be used between double quoted, include JSON supported escape sequences,
+and six character unicode escape sequences.
+Note that any <code>identifier</code> that does not start with A-Za-z_ must be quoted.</p>
+<h2 id="spec-examples">Examples</h2>
+</div><div class="spec-code-block" data-astro-cid-maqyfiai> <div data-astro-cid-maqyfiai><pre><code class="language-code">search(<span style="color: #00d4ff;">foo</span>, <span style="color: #6c7086;">{</span><span style="color: #89b4fa;">&quot;foo&quot;</span><span style="color: #6c7086;">:</span> <span style="color: #a6e3a1;">&quot;value&quot;</span><span style="color: #6c7086;">}</span>) → <span style="color: #a6e3a1;">&quot;value&quot;</span>
+search(<span style="color: #00d4ff;">bar</span>, <span style="color: #6c7086;">{</span><span style="color: #89b4fa;">&quot;foo&quot;</span><span style="color: #6c7086;">:</span> <span style="color: #a6e3a1;">&quot;value&quot;</span><span style="color: #6c7086;">}</span>) → <span style="color: #f5c2de;">null</span>
+search(<span style="color: #00d4ff;">foo</span>, <span style="color: #6c7086;">{</span><span style="color: #89b4fa;">&quot;foo&quot;</span><span style="color: #6c7086;">:</span> <span style="color: #6c7086;">[</span><span style="color: #f5c2de;">0</span><span style="color: #6c7086;">,</span> <span style="color: #f5c2de;">1</span><span style="color: #6c7086;">,</span> <span style="color: #f5c2de;">2</span><span style="color: #6c7086;">]</span><span style="color: #6c7086;">}</span>) → <span style="color: #6c7086;">[</span><span style="color: #f5c2de;">0</span><span style="color: #6c7086;">,</span> <span style="color: #f5c2de;">1</span><span style="color: #6c7086;">,</span> <span style="color: #f5c2de;">2</span><span style="color: #6c7086;">]</span>
+search(<span style="color: #00d4ff;">&quot;with space&quot;</span>, <span style="color: #6c7086;">{</span><span style="color: #89b4fa;">&quot;with space&quot;</span><span style="color: #6c7086;">:</span> <span style="color: #a6e3a1;">&quot;value&quot;</span><span style="color: #6c7086;">}</span>) → <span style="color: #a6e3a1;">&quot;value&quot;</span>
+search(<span style="color: #00d4ff;">&quot;special chars: !@#&quot;</span>, <span style="color: #6c7086;">{</span><span style="color: #89b4fa;">&quot;special chars: !@#&quot;</span><span style="color: #6c7086;">:</span> <span style="color: #a6e3a1;">&quot;value&quot;</span><span style="color: #6c7086;">}</span>) → <span style="color: #a6e3a1;">&quot;value&quot;</span>
+search(<span style="color: #00d4ff;">&quot;quote\&quot;char&quot;</span>, <span style="color: #6c7086;">{</span><span style="color: #89b4fa;">&quot;quote\&quot;char&quot;</span><span style="color: #6c7086;">:</span> <span style="color: #a6e3a1;">&quot;value&quot;</span><span style="color: #6c7086;">}</span>) → <span style="color: #a6e3a1;">&quot;value&quot;</span>
+search(<span style="color: #00d4ff;">&quot;\u2713&quot;</span>, <span style="color: #6c7086;">{</span><span style="color: #89b4fa;">&quot;\u2713&quot;</span><span style="color: #6c7086;">:</span> <span style="color: #a6e3a1;">&quot;value&quot;</span><span style="color: #6c7086;">}</span>) → <span style="color: #a6e3a1;">&quot;value&quot;</span></code></pre></div> </div><div class="spec-doc" data-astro-cid-maqyfiai></div> </article>  </div>  </main> <footer data-astro-cid-37fxchfa> <div class="footer-container" data-astro-cid-37fxchfa> <p data-astro-cid-37fxchfa>&copy; 2026 JMESPath Contributors</p> <a href="https://github.com/jmespath/jmespath.site" target="_blank" rel="noopener noreferrer" data-astro-cid-37fxchfa>GitHub</a> </div> </footer> <script type="module">const s="jmespath-version",a="latest",m="jmespath-cdn-script",p="jmespath-loaded";function u(){const e=document.getElementById("jmespath-versions-config");if(!e)return{};try{return JSON.parse(e.textContent??"{}")}catch{return{}}}function f(e){const t=e.match(/^\/(specification|functions)\/([^/]+)\//);return t?t[2]:null}function h(){document.getElementById(m)?.remove();const e=window;e.jmespath=void 0}function d(e){h();const t=document.createElement("script");t.id=m,t.src=e.url,t.integrity=e.integrity,t.crossOrigin="anonymous",t.addEventListener("load",()=>{window.dispatchEvent(new CustomEvent(p))}),t.addEventListener("error",()=>{g(e.url)}),document.head.appendChild(t)}function g(e){if(document.getElementById("jmespath-cdn-error"))return;const o=document.createElement("div");o.id="jmespath-cdn-error",o.setAttribute("role","alert"),o.style.cssText="position:fixed;bottom:1rem;right:1rem;padding:0.75rem 1rem;background:#fff5f5;border:1px solid #e53e3e;border-radius:6px;color:#c53030;font-size:0.875rem;z-index:9999;max-width:320px;box-shadow:0 2px 8px rgba(0,0,0,0.15);",o.textContent=`Failed to load JMESPath library from CDN. Demos may not work. (${e})`;const n=document.createElement("button");n.textContent="×",n.setAttribute("aria-label","Dismiss"),n.style.cssText="margin-left:0.75rem;background:none;border:none;cursor:pointer;font-size:1rem;color:inherit;",n.addEventListener("click",()=>o.remove()),o.appendChild(n),document.body.appendChild(o)}function E(){window.dispatchEvent(new CustomEvent(p))}function l(){const e=document.getElementById("version-select");if(!e)return;const t=e.dataset.pageType,o=u();let n;t==="versioned"?(n=f(window.location.pathname)??a,localStorage.setItem(s,n)):n=localStorage.getItem(s)??a;for(const r of Array.from(e.options))r.selected=r.value===n;if(t==="shared"){const r=o[n];r&&d(r)}e.addEventListener("change",()=>{const r=e.value;if(localStorage.setItem(s,r),t==="versioned"){const i=window.location.pathname,c=i.replace(/\/(specification|functions)\/[^/]+\//,`/$1/${r}/`);c!==i&&(window.location.href=c)}else{const i=o[r];i?d(i):E()}})}document.readyState==="loading"?document.addEventListener("DOMContentLoaded",l):l();</script> <script type="module">const e=document.querySelector(".hamburger"),t=document.getElementById("nav-links");e&&t&&e.addEventListener("click",()=>{const n=e.getAttribute("aria-expanded")==="true";e.setAttribute("aria-expanded",String(!n)),t.classList.toggle("open")});</script> </body> </html>

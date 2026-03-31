@@ -1,0 +1,121 @@
+<!DOCTYPE html><html lang="en" data-astro-cid-37fxchfa> <head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>to_number — Functions — JMESPath</title><link rel="icon" href="/favicon.svg" type="image/svg+xml"><!-- Versions CDN config for client-side version-switcher --><script type="application/json" id="jmespath-versions-config">{"latest":{"url":"https://jmespath.blob.core.windows.net/lib/v1.1.4/jmespath.umd.min.js","integrity":"sha384-j6O40Ai4K7WYsLIPv7PVGVN4i8M+DP244ldsCxzfKQAUOuVR+S5ZR3mZr0z6OOGt"},"2015-09-05-9e8d0e3":{"url":"https://jmespath.blob.core.windows.net/lib/v2015-09-05-9e8d0e3/jmespath.min.js","integrity":"sha384-Pb3pjju9BY7ahpWm+ev8GsRTP9tRwDSgIQwJoRhYjr9TY6aB+E7irR6Mc/ma6LcL"}}</script><link rel="stylesheet" href="/_astro/BaseLayout.Pi98jGX4.css">
+<link rel="stylesheet" href="/_astro/_func_@_@astro.MAkfp5xq.css"></head> <body data-astro-cid-37fxchfa> <header data-astro-cid-37fxchfa> <div class="site-banner" role="banner" aria-label="JMESPath Community banner" data-astro-cid-kggsjsm4> <img src="/static/logo.svg" alt="JMESPath Community logo" data-astro-cid-kggsjsm4> </div> <nav aria-label="Main navigation" data-astro-cid-37fxchfa> <div class="nav-container" data-astro-cid-37fxchfa> <div class="nav-logo" data-astro-cid-37fxchfa> <a href="/" aria-label="JMESPath home" data-astro-cid-37fxchfa> <span class="logo-text" data-astro-cid-37fxchfa>JMESPath</span> </a> </div> <div class="nav-links" id="nav-links" role="menubar" data-astro-cid-37fxchfa> <a href="/tutorial/" role="menuitem" data-astro-cid-37fxchfa>Tutorial</a> <a href="/examples/" role="menuitem" data-astro-cid-37fxchfa>Examples</a> <a href="/libraries/" role="menuitem" data-astro-cid-37fxchfa>Libraries</a> <a href="/specification/latest/" role="menuitem" data-astro-cid-37fxchfa>Specification</a> <a href="/functions/latest/" role="menuitem" aria-current="page" class="active" data-astro-cid-37fxchfa>Functions</a> </div> <div class="nav-version" data-astro-cid-37fxchfa> <label for="version-select" class="sr-only" data-astro-cid-37fxchfa>Version</label> <select id="version-select" name="version" data-page-type="versioned" data-current-version="latest" data-astro-cid-37fxchfa> <option value="latest" selected data-astro-cid-37fxchfa> Latest (v1.1.4) </option><option value="2015-09-05-9e8d0e3" data-astro-cid-37fxchfa> Legacy (2015-09-05) </option> </select> </div> <button class="hamburger" aria-label="Toggle navigation menu" aria-expanded="false" aria-controls="nav-links" type="button" data-astro-cid-37fxchfa> <span data-astro-cid-37fxchfa></span> <span data-astro-cid-37fxchfa></span> <span data-astro-cid-37fxchfa></span> </button> </div> </nav> </header> <main data-astro-cid-37fxchfa>  <nav class="breadcrumb" aria-label="Breadcrumb" data-astro-cid-vzbrc7s6> <ol data-astro-cid-vzbrc7s6> <li data-astro-cid-vzbrc7s6><a href="/functions/latest/" data-astro-cid-vzbrc7s6>Functions</a></li> <li aria-hidden="true" data-astro-cid-vzbrc7s6>›</li> <li data-astro-cid-vzbrc7s6><a href="/functions/latest/" data-astro-cid-vzbrc7s6>Latest (v1.1.4)</a></li> <li aria-hidden="true" data-astro-cid-vzbrc7s6>›</li> <li aria-current="page" data-astro-cid-vzbrc7s6>to_number</li> </ol> </nav> <div class="func-page" data-astro-cid-vzbrc7s6> <aside class="func-toc" aria-label="Function list" data-astro-cid-xpk6m4ku> <h2 data-astro-cid-xpk6m4ku>Functions</h2> <nav data-astro-cid-xpk6m4ku> <ul data-astro-cid-xpk6m4ku> <li data-astro-cid-xpk6m4ku> <a href="/functions/latest/abs/" data-astro-cid-xpk6m4ku> Abs </a> </li><li data-astro-cid-xpk6m4ku> <a href="/functions/latest/avg/" data-astro-cid-xpk6m4ku> Avg </a> </li><li data-astro-cid-xpk6m4ku> <a href="/functions/latest/ceil/" data-astro-cid-xpk6m4ku> Ceil </a> </li><li data-astro-cid-xpk6m4ku> <a href="/functions/latest/contains/" data-astro-cid-xpk6m4ku> Contains </a> </li><li data-astro-cid-xpk6m4ku> <a href="/functions/latest/ends_with/" data-astro-cid-xpk6m4ku> Ends With </a> </li><li data-astro-cid-xpk6m4ku> <a href="/functions/latest/find_first/" data-astro-cid-xpk6m4ku> Find First </a> </li><li data-astro-cid-xpk6m4ku> <a href="/functions/latest/find_last/" data-astro-cid-xpk6m4ku> Find Last </a> </li><li data-astro-cid-xpk6m4ku> <a href="/functions/latest/floor/" data-astro-cid-xpk6m4ku> Floor </a> </li><li data-astro-cid-xpk6m4ku> <a href="/functions/latest/from_items/" data-astro-cid-xpk6m4ku> From Items </a> </li><li data-astro-cid-xpk6m4ku> <a href="/functions/latest/group_by/" data-astro-cid-xpk6m4ku> Group By </a> </li><li data-astro-cid-xpk6m4ku> <a href="/functions/latest/items/" data-astro-cid-xpk6m4ku> Items </a> </li><li data-astro-cid-xpk6m4ku> <a href="/functions/latest/join/" data-astro-cid-xpk6m4ku> Join </a> </li><li data-astro-cid-xpk6m4ku> <a href="/functions/latest/keys/" data-astro-cid-xpk6m4ku> Keys </a> </li><li data-astro-cid-xpk6m4ku> <a href="/functions/latest/length/" data-astro-cid-xpk6m4ku> Length </a> </li><li data-astro-cid-xpk6m4ku> <a href="/functions/latest/lower/" data-astro-cid-xpk6m4ku> Lower </a> </li><li data-astro-cid-xpk6m4ku> <a href="/functions/latest/map/" data-astro-cid-xpk6m4ku> Map </a> </li><li data-astro-cid-xpk6m4ku> <a href="/functions/latest/max/" data-astro-cid-xpk6m4ku> Max </a> </li><li data-astro-cid-xpk6m4ku> <a href="/functions/latest/max_by/" data-astro-cid-xpk6m4ku> Max By </a> </li><li data-astro-cid-xpk6m4ku> <a href="/functions/latest/merge/" data-astro-cid-xpk6m4ku> Merge </a> </li><li data-astro-cid-xpk6m4ku> <a href="/functions/latest/min/" data-astro-cid-xpk6m4ku> Min </a> </li><li data-astro-cid-xpk6m4ku> <a href="/functions/latest/min_by/" data-astro-cid-xpk6m4ku> Min By </a> </li><li data-astro-cid-xpk6m4ku> <a href="/functions/latest/not_null/" data-astro-cid-xpk6m4ku> Not Null </a> </li><li data-astro-cid-xpk6m4ku> <a href="/functions/latest/pad_left/" data-astro-cid-xpk6m4ku> Pad Left </a> </li><li data-astro-cid-xpk6m4ku> <a href="/functions/latest/pad_right/" data-astro-cid-xpk6m4ku> Pad Right </a> </li><li data-astro-cid-xpk6m4ku> <a href="/functions/latest/replace/" data-astro-cid-xpk6m4ku> Replace </a> </li><li data-astro-cid-xpk6m4ku> <a href="/functions/latest/reverse/" data-astro-cid-xpk6m4ku> Reverse </a> </li><li data-astro-cid-xpk6m4ku> <a href="/functions/latest/sort/" data-astro-cid-xpk6m4ku> Sort </a> </li><li data-astro-cid-xpk6m4ku> <a href="/functions/latest/sort_by/" data-astro-cid-xpk6m4ku> Sort By </a> </li><li data-astro-cid-xpk6m4ku> <a href="/functions/latest/split/" data-astro-cid-xpk6m4ku> Split </a> </li><li data-astro-cid-xpk6m4ku> <a href="/functions/latest/starts_with/" data-astro-cid-xpk6m4ku> Starts With </a> </li><li data-astro-cid-xpk6m4ku> <a href="/functions/latest/sum/" data-astro-cid-xpk6m4ku> Sum </a> </li><li data-astro-cid-xpk6m4ku> <a href="/functions/latest/to_array/" data-astro-cid-xpk6m4ku> To Array </a> </li><li data-astro-cid-xpk6m4ku> <a href="/functions/latest/to_number/" aria-current="page" class="active" data-astro-cid-xpk6m4ku> To Number </a> </li><li data-astro-cid-xpk6m4ku> <a href="/functions/latest/to_string/" data-astro-cid-xpk6m4ku> To String </a> </li><li data-astro-cid-xpk6m4ku> <a href="/functions/latest/trim/" data-astro-cid-xpk6m4ku> Trim </a> </li><li data-astro-cid-xpk6m4ku> <a href="/functions/latest/trim_left/" data-astro-cid-xpk6m4ku> Trim Left </a> </li><li data-astro-cid-xpk6m4ku> <a href="/functions/latest/trim_right/" data-astro-cid-xpk6m4ku> Trim Right </a> </li><li data-astro-cid-xpk6m4ku> <a href="/functions/latest/type/" data-astro-cid-xpk6m4ku> Type </a> </li><li data-astro-cid-xpk6m4ku> <a href="/functions/latest/upper/" data-astro-cid-xpk6m4ku> Upper </a> </li><li data-astro-cid-xpk6m4ku> <a href="/functions/latest/values/" data-astro-cid-xpk6m4ku> Values </a> </li><li data-astro-cid-xpk6m4ku> <a href="/functions/latest/zip/" data-astro-cid-xpk6m4ku> Zip </a> </li> </ul> </nav> </aside> <article class="func-content" data-astro-cid-vzbrc7s6> <div class="func-meta" data-astro-cid-vzbrc7s6> <span class="func-topic" data-astro-cid-vzbrc7s6>conversion</span> <span class="func-version" data-astro-cid-vzbrc7s6>Latest (v1.1.4)</span> </div> <h1 data-astro-cid-vzbrc7s6>to_number</h1> <p class="func-description" data-astro-cid-vzbrc7s6>* string - Returns the parsed number.</p> <pre class="func-signature" data-astro-cid-vzbrc7s6><code data-astro-cid-vzbrc7s6>to_number(arg: any) -&gt; number</code></pre> <div class="func-body" data-astro-cid-vzbrc7s6>  <div><h2>Description</h2>
+<ul>
+<li><p>string - Returns the parsed number.  Any string that conforms to the
+<code>json-number</code> production is supported.  Note that the floating number
+support will be implementation specific, but implementations should support
+at least IEEE 754-2008 binary64 (double precision) numbers, as this is
+generally available and widely used.</p>
+</li>
+<li><p>number - Returns the passed in value.</p>
+</li>
+<li><p>array - null</p>
+</li>
+<li><p>object - null</p>
+</li>
+<li><p>boolean - null</p>
+</li>
+<li><p>null - null</p>
+</li>
+</ul>
+<h2>Arguments</h2>
+<h3>Required</h3>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>arg</code></td>
+<td><code>any</code></td>
+<td></td>
+</tr>
+</tbody></table>
+<h2>Returns</h2>
+<p><strong>Type:</strong> <code>number</code></p>
+<h2>Examples</h2>
+<p>Given the following JSON input:</p>
+
+<pre><code class="language-json">
+<span style="color: #6c7086;">{</span>
+  <span style="color: #89b4fa;">&quot;foo&quot;</span><span style="color: #6c7086;">:</span> <span style="color: #f5c2de;">-1</span><span style="color: #6c7086;">,</span>
+  <span style="color: #89b4fa;">&quot;zero&quot;</span><span style="color: #6c7086;">:</span> <span style="color: #f5c2de;">0</span><span style="color: #6c7086;">,</span>
+  <span style="color: #89b4fa;">&quot;numbers&quot;</span><span style="color: #6c7086;">:</span> <span style="color: #6c7086;">[</span>
+    <span style="color: #f5c2de;">-1</span><span style="color: #6c7086;">,</span>
+    <span style="color: #f5c2de;">3</span><span style="color: #6c7086;">,</span>
+    <span style="color: #f5c2de;">4</span><span style="color: #6c7086;">,</span>
+    <span style="color: #f5c2de;">5</span>
+  <span style="color: #6c7086;">]</span><span style="color: #6c7086;">,</span>
+  <span style="color: #89b4fa;">&quot;array&quot;</span><span style="color: #6c7086;">:</span> <span style="color: #6c7086;">[</span>
+    <span style="color: #f5c2de;">-1</span><span style="color: #6c7086;">,</span>
+    <span style="color: #f5c2de;">3</span><span style="color: #6c7086;">,</span>
+    <span style="color: #f5c2de;">4</span><span style="color: #6c7086;">,</span>
+    <span style="color: #f5c2de;">5</span><span style="color: #6c7086;">,</span>
+    <span style="color: #a6e3a1;">&quot;a&quot;</span><span style="color: #6c7086;">,</span>
+    <span style="color: #a6e3a1;">&quot;100&quot;</span>
+  <span style="color: #6c7086;">]</span><span style="color: #6c7086;">,</span>
+  <span style="color: #89b4fa;">&quot;strings&quot;</span><span style="color: #6c7086;">:</span> <span style="color: #6c7086;">[</span>
+    <span style="color: #a6e3a1;">&quot;a&quot;</span><span style="color: #6c7086;">,</span>
+    <span style="color: #a6e3a1;">&quot;b&quot;</span><span style="color: #6c7086;">,</span>
+    <span style="color: #a6e3a1;">&quot;c&quot;</span>
+  <span style="color: #6c7086;">]</span><span style="color: #6c7086;">,</span>
+  <span style="color: #89b4fa;">&quot;decimals&quot;</span><span style="color: #6c7086;">:</span> <span style="color: #6c7086;">[</span>
+    <span style="color: #f5c2de;">1.01</span><span style="color: #6c7086;">,</span>
+    <span style="color: #f5c2de;">1.2</span><span style="color: #6c7086;">,</span>
+    <span style="color: #f5c2de;">-1.5</span>
+  <span style="color: #6c7086;">]</span><span style="color: #6c7086;">,</span>
+  <span style="color: #89b4fa;">&quot;str&quot;</span><span style="color: #6c7086;">:</span> <span style="color: #a6e3a1;">&quot;Str&quot;</span><span style="color: #6c7086;">,</span>
+  <span style="color: #89b4fa;">&quot;false&quot;</span><span style="color: #6c7086;">:</span> <span style="color: #f5c2de;">false</span><span style="color: #6c7086;">,</span>
+  <span style="color: #89b4fa;">&quot;empty_list&quot;</span><span style="color: #6c7086;">:</span> <span style="color: #6c7086;">[</span><span style="color: #6c7086;">]</span><span style="color: #6c7086;">,</span>
+  <span style="color: #89b4fa;">&quot;empty_hash&quot;</span><span style="color: #6c7086;">:</span> <span style="color: #6c7086;">{</span><span style="color: #6c7086;">}</span><span style="color: #6c7086;">,</span>
+  <span style="color: #89b4fa;">&quot;objects&quot;</span><span style="color: #6c7086;">:</span> <span style="color: #6c7086;">{</span>
+    <span style="color: #89b4fa;">&quot;foo&quot;</span><span style="color: #6c7086;">:</span> <span style="color: #a6e3a1;">&quot;bar&quot;</span><span style="color: #6c7086;">,</span>
+    <span style="color: #89b4fa;">&quot;bar&quot;</span><span style="color: #6c7086;">:</span> <span style="color: #a6e3a1;">&quot;baz&quot;</span>
+  <span style="color: #6c7086;">}</span><span style="color: #6c7086;">,</span>
+  <span style="color: #89b4fa;">&quot;null_key&quot;</span><span style="color: #6c7086;">:</span> <span style="color: #f5c2de;">null</span>
+<span style="color: #6c7086;">}</span>
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Expression</th>
+<th>Result</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>to_number(&#39;1.0&#39;)</code></td>
+<td><code>1</code></td>
+</tr>
+<tr>
+<td><code>to_number(&#39;1.1&#39;)</code></td>
+<td><code>1.1</code></td>
+</tr>
+<tr>
+<td><code>to_number(&#39;4&#39;)</code></td>
+<td><code>4</code></td>
+</tr>
+<tr>
+<td><code>to_number(notanumber)</code></td>
+<td><code>null</code></td>
+</tr>
+<tr>
+<td><code>to_number(false)</code></td>
+<td><code>null</code></td>
+</tr>
+<tr>
+<td><code>to_number(null)</code></td>
+<td><code>null</code></td>
+</tr>
+<tr>
+<td><code>to_number([0])</code></td>
+<td><code>null</code></td>
+</tr>
+<tr>
+<td><code>to_number([object Object])</code></td>
+<td><code>null</code></td>
+</tr>
+</tbody></table>
+</div>  </div> </article> </div>  </main> <footer data-astro-cid-37fxchfa> <div class="footer-container" data-astro-cid-37fxchfa> <p data-astro-cid-37fxchfa>&copy; 2026 JMESPath Contributors</p> <a href="https://github.com/jmespath/jmespath.site" target="_blank" rel="noopener noreferrer" data-astro-cid-37fxchfa>GitHub</a> </div> </footer> <script type="module">const s="jmespath-version",a="latest",m="jmespath-cdn-script",p="jmespath-loaded";function u(){const e=document.getElementById("jmespath-versions-config");if(!e)return{};try{return JSON.parse(e.textContent??"{}")}catch{return{}}}function f(e){const t=e.match(/^\/(specification|functions)\/([^/]+)\//);return t?t[2]:null}function h(){document.getElementById(m)?.remove();const e=window;e.jmespath=void 0}function d(e){h();const t=document.createElement("script");t.id=m,t.src=e.url,t.integrity=e.integrity,t.crossOrigin="anonymous",t.addEventListener("load",()=>{window.dispatchEvent(new CustomEvent(p))}),t.addEventListener("error",()=>{g(e.url)}),document.head.appendChild(t)}function g(e){if(document.getElementById("jmespath-cdn-error"))return;const o=document.createElement("div");o.id="jmespath-cdn-error",o.setAttribute("role","alert"),o.style.cssText="position:fixed;bottom:1rem;right:1rem;padding:0.75rem 1rem;background:#fff5f5;border:1px solid #e53e3e;border-radius:6px;color:#c53030;font-size:0.875rem;z-index:9999;max-width:320px;box-shadow:0 2px 8px rgba(0,0,0,0.15);",o.textContent=`Failed to load JMESPath library from CDN. Demos may not work. (${e})`;const n=document.createElement("button");n.textContent="×",n.setAttribute("aria-label","Dismiss"),n.style.cssText="margin-left:0.75rem;background:none;border:none;cursor:pointer;font-size:1rem;color:inherit;",n.addEventListener("click",()=>o.remove()),o.appendChild(n),document.body.appendChild(o)}function E(){window.dispatchEvent(new CustomEvent(p))}function l(){const e=document.getElementById("version-select");if(!e)return;const t=e.dataset.pageType,o=u();let n;t==="versioned"?(n=f(window.location.pathname)??a,localStorage.setItem(s,n)):n=localStorage.getItem(s)??a;for(const r of Array.from(e.options))r.selected=r.value===n;if(t==="shared"){const r=o[n];r&&d(r)}e.addEventListener("change",()=>{const r=e.value;if(localStorage.setItem(s,r),t==="versioned"){const i=window.location.pathname,c=i.replace(/\/(specification|functions)\/[^/]+\//,`/$1/${r}/`);c!==i&&(window.location.href=c)}else{const i=o[r];i?d(i):E()}})}document.readyState==="loading"?document.addEventListener("DOMContentLoaded",l):l();</script> <script type="module">const e=document.querySelector(".hamburger"),t=document.getElementById("nav-links");e&&t&&e.addEventListener("click",()=>{const n=e.getAttribute("aria-expanded")==="true";e.setAttribute("aria-expanded",String(!n)),t.classList.toggle("open")});</script> </body> </html>

@@ -1,0 +1,651 @@
+<!DOCTYPE html><html lang="en" data-astro-cid-37fxchfa> <head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Tutorial — JMESPath</title><link rel="icon" href="/favicon.svg" type="image/svg+xml"><!-- Versions CDN config for client-side version-switcher --><script type="application/json" id="jmespath-versions-config">{"latest":{"url":"https://jmespath.blob.core.windows.net/lib/v1.1.4/jmespath.umd.min.js","integrity":"sha384-j6O40Ai4K7WYsLIPv7PVGVN4i8M+DP244ldsCxzfKQAUOuVR+S5ZR3mZr0z6OOGt"},"2015-09-05-9e8d0e3":{"url":"https://jmespath.blob.core.windows.net/lib/v2015-09-05-9e8d0e3/jmespath.min.js","integrity":"sha384-Pb3pjju9BY7ahpWm+ev8GsRTP9tRwDSgIQwJoRhYjr9TY6aB+E7irR6Mc/ma6LcL"}}</script><link rel="stylesheet" href="/_astro/BaseLayout.Pi98jGX4.css">
+<style>.jmespath-demo[data-astro-cid-q63za7yy]{border:1px solid var(--demo-border, #d0d0d8);border-radius:8px;overflow:hidden;background:var(--demo-bg, #fafafa);margin:1.5rem 0;font-family:var(--font-mono, "Fira Code", "Cascadia Code", monospace);font-size:.875rem}.demo-header[data-astro-cid-q63za7yy]{display:flex;align-items:center;gap:.75rem;width:100%;padding:.65rem 1rem;background:var(--demo-header-bg, #ececf4);border:none;cursor:pointer;text-align:left;font-family:inherit;font-size:.875rem;color:var(--demo-header-fg, #333);transition:background .15s}.demo-header[data-astro-cid-q63za7yy]:hover,.demo-header[data-astro-cid-q63za7yy]:focus-visible{background:var(--demo-header-hover, #ddddef);outline:2px solid var(--accent, #3b82f6);outline-offset:-2px}.demo-label[data-astro-cid-q63za7yy]{font-weight:600;flex-shrink:0}.demo-query-preview[data-astro-cid-q63za7yy]{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;opacity:.7}.demo-toggle-icon[data-astro-cid-q63za7yy]{flex-shrink:0;transition:transform .2s;font-size:.65em}.jmespath-demo[data-astro-cid-q63za7yy].expanded .demo-toggle-icon[data-astro-cid-q63za7yy]{transform:rotate(90deg)}.demo-body[data-astro-cid-q63za7yy]{display:none;padding:1rem}.jmespath-demo[data-astro-cid-q63za7yy].always-expanded .demo-body[data-astro-cid-q63za7yy],.jmespath-demo[data-astro-cid-q63za7yy].expanded .demo-body[data-astro-cid-q63za7yy]{display:block}@media(scripting:none){.demo-body[data-astro-cid-q63za7yy]{display:block}}.demo-fields[data-astro-cid-q63za7yy]{display:flex;flex-direction:column;gap:.75rem}.demo-field-label[data-astro-cid-q63za7yy]{display:flex;flex-direction:column;gap:.3rem;font-family:var(--font-sans, system-ui, sans-serif);font-size:.78rem;font-weight:600;text-transform:uppercase;letter-spacing:.05em;color:var(--demo-label-fg, #555)}.demo-query[data-astro-cid-q63za7yy],.demo-data[data-astro-cid-q63za7yy],.demo-result[data-astro-cid-q63za7yy]{width:100%;box-sizing:border-box;padding:.5rem .75rem;border:1px solid var(--demo-input-border, #c8c8d4);border-radius:4px;background:var(--demo-input-bg, #fff);color:var(--demo-input-fg, #1a1a2e);font-family:inherit;font-size:inherit;resize:vertical;transition:border-color .15s}.demo-query[data-astro-cid-q63za7yy]:focus,.demo-data[data-astro-cid-q63za7yy]:focus{outline:none;border-color:var(--accent, #3b82f6)}.demo-result[data-astro-cid-q63za7yy]{resize:none;background:var(--demo-result-bg, #f0f0f8);color:var(--demo-result-fg, #1a1a2e)}.demo-result[data-astro-cid-q63za7yy].demo-error{border-color:var(--error, #e53e3e);background:var(--demo-error-bg, #fff5f5);color:var(--error, #e53e3e)}.jmespath-demo[data-astro-cid-q63za7yy].always-expanded{border-radius:12px;font-size:1rem}.jmespath-demo[data-astro-cid-q63za7yy].always-expanded .demo-body[data-astro-cid-q63za7yy]{padding:1.25rem}.jmespath-demo[data-astro-cid-q63za7yy].always-expanded .demo-query[data-astro-cid-q63za7yy]{font-size:1rem}
+.tutorial-page[data-astro-cid-efjq5ct2]{max-width:860px;margin:0 auto;padding:2rem 1rem}.tutorial-page[data-astro-cid-efjq5ct2] h1[data-astro-cid-efjq5ct2]{font-size:1.75rem;font-weight:700;margin-top:2.5rem;margin-bottom:1rem;border-bottom:1px solid #e5e7eb;padding-bottom:.5rem}.tutorial-page[data-astro-cid-efjq5ct2] h2[data-astro-cid-efjq5ct2]{font-size:1.375rem;font-weight:600;margin-top:2rem;margin-bottom:.75rem}.tutorial-page[data-astro-cid-efjq5ct2] h3[data-astro-cid-efjq5ct2]{font-size:1.125rem;font-weight:600;margin-top:1.5rem;margin-bottom:.5rem}.tutorial-page[data-astro-cid-efjq5ct2] p[data-astro-cid-efjq5ct2]{margin-bottom:1rem;line-height:1.7}.tutorial-page[data-astro-cid-efjq5ct2] ul[data-astro-cid-efjq5ct2]{margin-bottom:1rem;padding-left:1.5rem;list-style-type:disc}.tutorial-page[data-astro-cid-efjq5ct2] li[data-astro-cid-efjq5ct2]{margin-bottom:.5rem;line-height:1.7}.tutorial-page[data-astro-cid-efjq5ct2] code[data-astro-cid-efjq5ct2]{background-color:#f3f4f6;border-radius:.25rem;padding:.125rem .25rem;font-family:monospace;font-size:.875em}.tutorial-page[data-astro-cid-efjq5ct2] pre[data-astro-cid-efjq5ct2]{background-color:#f3f4f6;border-radius:.375rem;padding:1rem;overflow-x:auto;margin-bottom:1rem}.tutorial-page[data-astro-cid-efjq5ct2] pre[data-astro-cid-efjq5ct2] code[data-astro-cid-efjq5ct2]{background-color:transparent;padding:0;font-size:.875rem}.tutorial-page[data-astro-cid-efjq5ct2] a[data-astro-cid-efjq5ct2]{color:#2563eb;text-decoration:underline}.tutorial-page[data-astro-cid-efjq5ct2] a[data-astro-cid-efjq5ct2]:hover{color:#1d4ed8}
+</style></head> <body data-astro-cid-37fxchfa> <header data-astro-cid-37fxchfa> <div class="site-banner" role="banner" aria-label="JMESPath Community banner" data-astro-cid-kggsjsm4> <img src="/static/logo.svg" alt="JMESPath Community logo" data-astro-cid-kggsjsm4> </div> <nav aria-label="Main navigation" data-astro-cid-37fxchfa> <div class="nav-container" data-astro-cid-37fxchfa> <div class="nav-logo" data-astro-cid-37fxchfa> <a href="/" aria-label="JMESPath home" data-astro-cid-37fxchfa> <span class="logo-text" data-astro-cid-37fxchfa>JMESPath</span> </a> </div> <div class="nav-links" id="nav-links" role="menubar" data-astro-cid-37fxchfa> <a href="/tutorial/" role="menuitem" aria-current="page" class="active" data-astro-cid-37fxchfa>Tutorial</a> <a href="/examples/" role="menuitem" data-astro-cid-37fxchfa>Examples</a> <a href="/libraries/" role="menuitem" data-astro-cid-37fxchfa>Libraries</a> <a href="/specification/latest/" role="menuitem" data-astro-cid-37fxchfa>Specification</a> <a href="/functions/latest/" role="menuitem" data-astro-cid-37fxchfa>Functions</a> </div> <div class="nav-version" data-astro-cid-37fxchfa> <label for="version-select" class="sr-only" data-astro-cid-37fxchfa>Version</label> <select id="version-select" name="version" data-page-type="shared" data-current-version="latest" data-astro-cid-37fxchfa> <option value="latest" selected data-astro-cid-37fxchfa> Latest (v1.1.4) </option><option value="2015-09-05-9e8d0e3" data-astro-cid-37fxchfa> Legacy (2015-09-05) </option> </select> </div> <button class="hamburger" aria-label="Toggle navigation menu" aria-expanded="false" aria-controls="nav-links" type="button" data-astro-cid-37fxchfa> <span data-astro-cid-37fxchfa></span> <span data-astro-cid-37fxchfa></span> <span data-astro-cid-37fxchfa></span> </button> </div> </nav> </header> <main data-astro-cid-37fxchfa>  <div class="tutorial-page" data-astro-cid-efjq5ct2> <p data-astro-cid-efjq5ct2>
+JMESPath is a query language for JSON. You can extract and transform
+      elements from a JSON document. The examples below are interactive. You can
+      change the JMESPath expressions and see the results update automatically.
+</p> <p data-astro-cid-efjq5ct2>
+For each of these examples, the JMESPath expression is applied to the
+      input JSON on the left, and the result of evaluating the JMESPath
+      expression is shown in the JSON document on the right-hand side.
+</p> <h1 data-astro-cid-efjq5ct2>Basic Expressions</h1> <p data-astro-cid-efjq5ct2>
+The simplest JMESPath expression is an <code data-astro-cid-efjq5ct2>identifier</code>, which
+      selects a key in an JSON object:
+</p> <div class="jmespath-demo always-expanded" data-interactive data-always-expanded="true" data-astro-cid-q63za7yy> <!-- Collapsed header — click to expand/collapse -->  <div class="demo-body" data-astro-cid-q63za7yy> <div class="demo-fields" data-astro-cid-q63za7yy> <label class="demo-field-label" for="" data-astro-cid-q63za7yy>
+Expression
+<input class="demo-query" type="text" value="a" spellcheck="false" autocomplete="off" data-astro-cid-q63za7yy> </label> <label class="demo-field-label demo-field-data" data-astro-cid-q63za7yy>
+Input data (JSON)
+<textarea class="demo-data" spellcheck="false" rows="8" data-astro-cid-q63za7yy>{&quot;a&quot;: &quot;foo&quot;, &quot;b&quot;: &quot;bar&quot;, &quot;c&quot;: &quot;baz&quot;}</textarea> </label> <label class="demo-field-label" data-astro-cid-q63za7yy>
+Result
+<textarea class="demo-result" readonly rows="4" data-astro-cid-q63za7yy></textarea> </label> </div> </div> </div> <script type="module">function d(){return window.jmespath??null}function y(e){if(e===null)return"null";if(typeof e=="string")return JSON.stringify(e);const n=JSON.stringify(e);return n.length<100?n:JSON.stringify(e,null,2)}function i(e){e.style.height="auto",e.style.height=`${e.scrollHeight+2}px`}function l(e){const n=d(),s=e.querySelector(".demo-query"),a=e.querySelector(".demo-data"),t=e.querySelector(".demo-result");if(!(!s||!a||!t)){if(t.classList.remove("demo-error"),!n){t.value="(JMESPath library not loaded yet)",i(t);return}try{const r=JSON.parse(a.value),o=n.search(r,s.value);t.value=y(o)}catch(r){t.value=r instanceof Error?r.message:String(r),t.classList.add("demo-error")}i(t)}}function p(e){const n=e.dataset.alwaysExpanded==="true",s=e.querySelector(".demo-header"),a=e.querySelector(".demo-body");s&&a?s.addEventListener("click",()=>{const u=s.getAttribute("aria-expanded")==="true";s.setAttribute("aria-expanded",String(!u)),e.classList.toggle("expanded",!u)}):n&&a&&e.classList.add("expanded");const t=e.querySelector(".demo-query"),r=e.querySelector(".demo-data"),o=e.querySelector(".demo-result");if(!t||!r||!o)return;i(r),i(o);const c=()=>{l(e)};t.addEventListener("input",c),r.addEventListener("input",()=>{i(r),l(e)}),window.addEventListener("jmespath-loaded",()=>{l(e)}),l(e)}document.querySelectorAll(".jmespath-demo[data-interactive]").forEach(p);</script> <p data-astro-cid-efjq5ct2>
+Try changing the expression above to <code data-astro-cid-efjq5ct2>b</code>, and <code data-astro-cid-efjq5ct2>c</code>
+and note the updated result. Also note that if you refer to a key that
+      does not exist, a value of <code data-astro-cid-efjq5ct2>null</code> (or the language equivalent
+      of <code data-astro-cid-efjq5ct2>null</code>) is returned.
+</p> <p data-astro-cid-efjq5ct2>
+You can use a <code data-astro-cid-efjq5ct2>subexpression</code> to return to nested values in a
+      JSON object:
+</p> <div class="jmespath-demo always-expanded" data-interactive data-always-expanded="true" data-astro-cid-q63za7yy> <!-- Collapsed header — click to expand/collapse -->  <div class="demo-body" data-astro-cid-q63za7yy> <div class="demo-fields" data-astro-cid-q63za7yy> <label class="demo-field-label" for="" data-astro-cid-q63za7yy>
+Expression
+<input class="demo-query" type="text" value="a.b.c.d" spellcheck="false" autocomplete="off" data-astro-cid-q63za7yy> </label> <label class="demo-field-label demo-field-data" data-astro-cid-q63za7yy>
+Input data (JSON)
+<textarea class="demo-data" spellcheck="false" rows="8" data-astro-cid-q63za7yy>{&quot;a&quot;: {&quot;b&quot;: {&quot;c&quot;: {&quot;d&quot;: &quot;value&quot;}}}}</textarea> </label> <label class="demo-field-label" data-astro-cid-q63za7yy>
+Result
+<textarea class="demo-result" readonly rows="4" data-astro-cid-q63za7yy></textarea> </label> </div> </div> </div>  <p data-astro-cid-efjq5ct2>
+If you refer to a key that does not exist, a value of <code data-astro-cid-efjq5ct2>null</code> is
+      returned. Attempting to subsequently access identifiers will continue to
+      return a value of <code data-astro-cid-efjq5ct2>null</code>. Try changing the expression to
+<code data-astro-cid-efjq5ct2>b.c.d.e</code> above.
+</p> <p data-astro-cid-efjq5ct2> <code data-astro-cid-efjq5ct2>Index Expressions</code> allow you to select a specific element in a
+      list. It should look similar to array access in common programming
+      languages. Indexing is 0 based.
+</p> <div class="jmespath-demo always-expanded" data-interactive data-always-expanded="true" data-astro-cid-q63za7yy> <!-- Collapsed header — click to expand/collapse -->  <div class="demo-body" data-astro-cid-q63za7yy> <div class="demo-fields" data-astro-cid-q63za7yy> <label class="demo-field-label" for="" data-astro-cid-q63za7yy>
+Expression
+<input class="demo-query" type="text" value="[1]" spellcheck="false" autocomplete="off" data-astro-cid-q63za7yy> </label> <label class="demo-field-label demo-field-data" data-astro-cid-q63za7yy>
+Input data (JSON)
+<textarea class="demo-data" spellcheck="false" rows="8" data-astro-cid-q63za7yy>[&quot;a&quot;, &quot;b&quot;, &quot;c&quot;, &quot;d&quot;, &quot;e&quot;, &quot;f&quot;]</textarea> </label> <label class="demo-field-label" data-astro-cid-q63za7yy>
+Result
+<textarea class="demo-result" readonly rows="4" data-astro-cid-q63za7yy></textarea> </label> </div> </div> </div>  <p data-astro-cid-efjq5ct2>
+If you specify an index that is larger than the list, a value of
+<code data-astro-cid-efjq5ct2>null</code> is returned. You can also use negative indexing to index
+      from the end of the list. <code data-astro-cid-efjq5ct2>[-1]</code> refers to the last element in
+      the list, <code data-astro-cid-efjq5ct2>[-2]</code> refers to the penultimate element. Try it out
+      in the example above.
+</p> <p data-astro-cid-efjq5ct2>
+You can combine identifiers, sub expressions, and index expressions to
+      access JSON elements.
+</p> <div class="jmespath-demo always-expanded" data-interactive data-always-expanded="true" data-astro-cid-q63za7yy> <!-- Collapsed header — click to expand/collapse -->  <div class="demo-body" data-astro-cid-q63za7yy> <div class="demo-fields" data-astro-cid-q63za7yy> <label class="demo-field-label" for="" data-astro-cid-q63za7yy>
+Expression
+<input class="demo-query" type="text" value="a.b.c[0].d[1][0]" spellcheck="false" autocomplete="off" data-astro-cid-q63za7yy> </label> <label class="demo-field-label demo-field-data" data-astro-cid-q63za7yy>
+Input data (JSON)
+<textarea class="demo-data" spellcheck="false" rows="8" data-astro-cid-q63za7yy>{
+  &quot;a&quot;: {
+    &quot;b&quot;: {
+      &quot;c&quot;: [
+        {
+          &quot;d&quot;: [ 0, [ 1, 2 ] ]
+        },
+        {
+          &quot;d&quot;: [ 3, 4 ]
+        }
+      ]
+    }
+  }
+}</textarea> </label> <label class="demo-field-label" data-astro-cid-q63za7yy>
+Result
+<textarea class="demo-result" readonly rows="4" data-astro-cid-q63za7yy></textarea> </label> </div> </div> </div>  <h1 data-astro-cid-efjq5ct2>Slicing</h1> <p data-astro-cid-efjq5ct2>
+Slices allow you to select a contiguous subset of an array. If you have
+      ever used slicing in python, then you already know how to use JMESPath
+      slices. In its simplest form, you can specify the starting index and the
+      ending index. The ending index is the first index which you do <em data-astro-cid-efjq5ct2>not</em> want included in the slice. Let us take a look at some examples. First,
+      given an array of integers from 0 to 9, let us select the first half of
+      the array:
+</p> <div class="jmespath-demo always-expanded" data-interactive data-always-expanded="true" data-astro-cid-q63za7yy> <!-- Collapsed header — click to expand/collapse -->  <div class="demo-body" data-astro-cid-q63za7yy> <div class="demo-fields" data-astro-cid-q63za7yy> <label class="demo-field-label" for="" data-astro-cid-q63za7yy>
+Expression
+<input class="demo-query" type="text" value="[0:5]" spellcheck="false" autocomplete="off" data-astro-cid-q63za7yy> </label> <label class="demo-field-label demo-field-data" data-astro-cid-q63za7yy>
+Input data (JSON)
+<textarea class="demo-data" spellcheck="false" rows="8" data-astro-cid-q63za7yy>[0, 1, 2, 3, 4, 5, 6, 7, 8, 9]</textarea> </label> <label class="demo-field-label" data-astro-cid-q63za7yy>
+Result
+<textarea class="demo-result" readonly rows="4" data-astro-cid-q63za7yy></textarea> </label> </div> </div> </div>  <p data-astro-cid-efjq5ct2>
+This slice result contains the elements 0, 1, 2, 3, and 4. The element at
+      index 5 is not included. If we want to select the second half of the
+      array, we can use this expression:
+</p> <div class="jmespath-demo always-expanded" data-interactive data-always-expanded="true" data-astro-cid-q63za7yy> <!-- Collapsed header — click to expand/collapse -->  <div class="demo-body" data-astro-cid-q63za7yy> <div class="demo-fields" data-astro-cid-q63za7yy> <label class="demo-field-label" for="" data-astro-cid-q63za7yy>
+Expression
+<input class="demo-query" type="text" value="[5:10]" spellcheck="false" autocomplete="off" data-astro-cid-q63za7yy> </label> <label class="demo-field-label demo-field-data" data-astro-cid-q63za7yy>
+Input data (JSON)
+<textarea class="demo-data" spellcheck="false" rows="8" data-astro-cid-q63za7yy>[0, 1, 2, 3, 4, 5, 6, 7, 8, 9]</textarea> </label> <label class="demo-field-label" data-astro-cid-q63za7yy>
+Result
+<textarea class="demo-result" readonly rows="4" data-astro-cid-q63za7yy></textarea> </label> </div> </div> </div>  <p data-astro-cid-efjq5ct2>
+The two example above can be shortened. If the <code data-astro-cid-efjq5ct2>start</code> or
+<code data-astro-cid-efjq5ct2>stop</code> value is omitted it is assumed to be the start or the
+      end of the array. For example:
+</p> <div class="jmespath-demo always-expanded" data-interactive data-always-expanded="true" data-astro-cid-q63za7yy> <!-- Collapsed header — click to expand/collapse -->  <div class="demo-body" data-astro-cid-q63za7yy> <div class="demo-fields" data-astro-cid-q63za7yy> <label class="demo-field-label" for="" data-astro-cid-q63za7yy>
+Expression
+<input class="demo-query" type="text" value="[:5]" spellcheck="false" autocomplete="off" data-astro-cid-q63za7yy> </label> <label class="demo-field-label demo-field-data" data-astro-cid-q63za7yy>
+Input data (JSON)
+<textarea class="demo-data" spellcheck="false" rows="8" data-astro-cid-q63za7yy>[0, 1, 2, 3, 4, 5, 6, 7, 8, 9]</textarea> </label> <label class="demo-field-label" data-astro-cid-q63za7yy>
+Result
+<textarea class="demo-result" readonly rows="4" data-astro-cid-q63za7yy></textarea> </label> </div> </div> </div>  <p data-astro-cid-efjq5ct2>
+Try modifying the example above to only include the last half of the array
+      elements without specifying the end value of <code data-astro-cid-efjq5ct2>10</code>.
+</p> <p data-astro-cid-efjq5ct2>
+The general form of a slice is <code data-astro-cid-efjq5ct2>[start:stop:step]</code>. So far we
+      have looked at the <code data-astro-cid-efjq5ct2>[start:stop]</code> form. By default, the
+<code data-astro-cid-efjq5ct2>step</code> value is <code data-astro-cid-efjq5ct2>1</code>, which means to include every
+      element in the range specified by the <code data-astro-cid-efjq5ct2>start</code> and
+<code data-astro-cid-efjq5ct2>stop</code> value. However, we can use the step value to skip over
+      elements. For example, to select only the even elements from the array.
+</p> <div class="jmespath-demo always-expanded" data-interactive data-always-expanded="true" data-astro-cid-q63za7yy> <!-- Collapsed header — click to expand/collapse -->  <div class="demo-body" data-astro-cid-q63za7yy> <div class="demo-fields" data-astro-cid-q63za7yy> <label class="demo-field-label" for="" data-astro-cid-q63za7yy>
+Expression
+<input class="demo-query" type="text" value="[::2]" spellcheck="false" autocomplete="off" data-astro-cid-q63za7yy> </label> <label class="demo-field-label demo-field-data" data-astro-cid-q63za7yy>
+Input data (JSON)
+<textarea class="demo-data" spellcheck="false" rows="8" data-astro-cid-q63za7yy>[0, 1, 2, 3, 4, 5, 6, 7, 8, 9]</textarea> </label> <label class="demo-field-label" data-astro-cid-q63za7yy>
+Result
+<textarea class="demo-result" readonly rows="4" data-astro-cid-q63za7yy></textarea> </label> </div> </div> </div>  <p data-astro-cid-efjq5ct2>
+Also note in this example we are omitting the <code data-astro-cid-efjq5ct2>start</code> as well
+      as the <code data-astro-cid-efjq5ct2>stop</code> value, which means to use <code data-astro-cid-efjq5ct2>0</code> for the
+<code data-astro-cid-efjq5ct2>start</code> value, and <code data-astro-cid-efjq5ct2>10</code> for the <code data-astro-cid-efjq5ct2>stop</code>
+value. In this example, the expression <code data-astro-cid-efjq5ct2>[::2]</code> is equivalent
+      to <code data-astro-cid-efjq5ct2>[0:10:2]</code>.
+</p> <p data-astro-cid-efjq5ct2>
+The last thing to know about slices is that just like indexing a single
+      value, all the values can be negative. If the <code data-astro-cid-efjq5ct2>step</code> value is
+      negative, then the slice is created in reverse order. For example:
+</p> <div class="jmespath-demo always-expanded" data-interactive data-always-expanded="true" data-astro-cid-q63za7yy> <!-- Collapsed header — click to expand/collapse -->  <div class="demo-body" data-astro-cid-q63za7yy> <div class="demo-fields" data-astro-cid-q63za7yy> <label class="demo-field-label" for="" data-astro-cid-q63za7yy>
+Expression
+<input class="demo-query" type="text" value="[::-1]" spellcheck="false" autocomplete="off" data-astro-cid-q63za7yy> </label> <label class="demo-field-label demo-field-data" data-astro-cid-q63za7yy>
+Input data (JSON)
+<textarea class="demo-data" spellcheck="false" rows="8" data-astro-cid-q63za7yy>[0, 1, 2, 3, 4, 5, 6, 7, 8, 9]</textarea> </label> <label class="demo-field-label" data-astro-cid-q63za7yy>
+Result
+<textarea class="demo-result" readonly rows="4" data-astro-cid-q63za7yy></textarea> </label> </div> </div> </div>  <p data-astro-cid-efjq5ct2>The above expression creates a slice but in reverse order.</p> <p data-astro-cid-efjq5ct2>
+If you want all the details about how slices work, check out the <a href="https://jmespath.site/#spec-slices" data-astro-cid-efjq5ct2><code data-astro-cid-efjq5ct2>slices</code></a> in the specification.
+</p> <h1 data-astro-cid-efjq5ct2>Projections</h1> <p data-astro-cid-efjq5ct2>
+Projections are one of the key features of JMESPath. It allows you to
+      apply an expression to a collection of elements. There are five kinds of
+      projections:
+</p> <ul data-astro-cid-efjq5ct2> <li data-astro-cid-efjq5ct2>List Projections</li> <li data-astro-cid-efjq5ct2>Slice Projections</li> <li data-astro-cid-efjq5ct2>Object Projections</li> <li data-astro-cid-efjq5ct2>Flatten Projections</li> <li data-astro-cid-efjq5ct2>Filter Projections</li> </ul> <h2 data-astro-cid-efjq5ct2>List and Slice Projections</h2> <p data-astro-cid-efjq5ct2>
+A <code data-astro-cid-efjq5ct2>wildcard expression</code> creates a list projection, which is a
+      projection over a JSON array. This is best illustrated with an example.
+      Let us say we have a JSON document describing a people, and each array
+      element is a JSON object that has a <code data-astro-cid-efjq5ct2>first</code>, <code data-astro-cid-efjq5ct2>last</code>,
+       and <code data-astro-cid-efjq5ct2>age</code> key. Suppose we wanted a list of all the first names
+      in our list.
+</p> <div class="jmespath-demo always-expanded" data-interactive data-always-expanded="true" data-astro-cid-q63za7yy> <!-- Collapsed header — click to expand/collapse -->  <div class="demo-body" data-astro-cid-q63za7yy> <div class="demo-fields" data-astro-cid-q63za7yy> <label class="demo-field-label" for="" data-astro-cid-q63za7yy>
+Expression
+<input class="demo-query" type="text" value="people[*].first" spellcheck="false" autocomplete="off" data-astro-cid-q63za7yy> </label> <label class="demo-field-label demo-field-data" data-astro-cid-q63za7yy>
+Input data (JSON)
+<textarea class="demo-data" spellcheck="false" rows="8" data-astro-cid-q63za7yy>{
+  &quot;people&quot;: [
+    {
+      &quot;first&quot;: &quot;James&quot;,
+      &quot;last&quot;: &quot;d&quot;
+    },
+    {
+      &quot;first&quot;: &quot;Jacob&quot;,
+      &quot;last&quot;: &quot;e&quot;
+    },
+    {
+      &quot;first&quot;: &quot;Jayden&quot;,
+      &quot;last&quot;: &quot;f&quot;
+    },
+    {
+      &quot;missing&quot;: &quot;different&quot;
+    }
+  ],
+  &quot;foo&quot;: {
+    &quot;bar&quot;: &quot;baz&quot;
+  }
+}</textarea> </label> <label class="demo-field-label" data-astro-cid-q63za7yy>
+Result
+<textarea class="demo-result" readonly rows="4" data-astro-cid-q63za7yy></textarea> </label> </div> </div> </div>  <p data-astro-cid-efjq5ct2>
+In the example above, the <code data-astro-cid-efjq5ct2>first</code> expression, which is just an
+      identifier, is applied to each element in the <code data-astro-cid-efjq5ct2>people</code> array.
+      The results are collected into a JSON array and returned as the result of
+      the expression. The expression can be more complex than a basic
+<code data-astro-cid-efjq5ct2>identifier</code>. For example, the expression
+<code data-astro-cid-efjq5ct2>foo[*].bar.baz[0]</code> would project the
+<code data-astro-cid-efjq5ct2>bar.baz[0]</code> expression to each element in the
+<code data-astro-cid-efjq5ct2>foo</code> array.
+</p> <p data-astro-cid-efjq5ct2>
+There are a few things to keep in mind when working with projections.
+      These are discussed in more detail in the <code data-astro-cid-efjq5ct2>wildcards</code> section
+      of the spec, but the main points are:
+</p> <ul data-astro-cid-efjq5ct2> <li data-astro-cid-efjq5ct2>
+Projections are evaluated as two steps. The left-hand side (LHS) creates
+        a JSON array of initial values. The right-hand side (RHS) of a
+        projection is the expression to project for each element in the JSON
+        array created by the left-hand side. Each projection type has slightly
+        different semantics when evaluating either the left-hand side and/or the
+        right-hand side.
+</li> <li data-astro-cid-efjq5ct2>
+If the result of the expression projected onto an individual array
+        element is <code data-astro-cid-efjq5ct2>null</code>, then that value is omitted from the
+        collected set of results.
+</li> <li data-astro-cid-efjq5ct2>You can stop a projection with a Pipe Expression (discussed later).</li> <li data-astro-cid-efjq5ct2>
+A list projection is only valid for a JSON array. If the value is not a
+        list, then the result of the expression is <code data-astro-cid-efjq5ct2>null</code>.
+</li> </ul> <p data-astro-cid-efjq5ct2>
+You can try this out in the demo above. Notice how
+<code data-astro-cid-efjq5ct2>people[*].first</code> only included three elements, even though the
+      people array has four elements. This is because the last element,
+<code data-astro-cid-efjq5ct2>&#123;"missing": "different"&#125;</code> evaluates to
+<code data-astro-cid-efjq5ct2>null</code> when the expression <code data-astro-cid-efjq5ct2>first</code> is applied, and
+<code data-astro-cid-efjq5ct2>null</code> values are not added to the collected result array. If
+      you try the expression <code data-astro-cid-efjq5ct2>foo[*].bar</code> you will see a result of
+<code data-astro-cid-efjq5ct2>null</code>, because the value associated with the
+<code data-astro-cid-efjq5ct2>foo</code> key is a JSON object, not an array, and a list projection
+      is only defined for JSON arrays.
+</p> <p data-astro-cid-efjq5ct2>
+Slice projections are almost identical to a list projection, with the
+      exception that the left-hand side is the result of evaluating the slice,
+      which may not include all the elements in the original list:
+</p> <div class="jmespath-demo always-expanded" data-interactive data-always-expanded="true" data-astro-cid-q63za7yy> <!-- Collapsed header — click to expand/collapse -->  <div class="demo-body" data-astro-cid-q63za7yy> <div class="demo-fields" data-astro-cid-q63za7yy> <label class="demo-field-label" for="" data-astro-cid-q63za7yy>
+Expression
+<input class="demo-query" type="text" value="people[:2].first" spellcheck="false" autocomplete="off" data-astro-cid-q63za7yy> </label> <label class="demo-field-label demo-field-data" data-astro-cid-q63za7yy>
+Input data (JSON)
+<textarea class="demo-data" spellcheck="false" rows="8" data-astro-cid-q63za7yy>{
+  &quot;people&quot;: [
+    {
+      &quot;first&quot;: &quot;James&quot;,
+      &quot;last&quot;: &quot;d&quot;
+    },
+    {
+      &quot;first&quot;: &quot;Jacob&quot;,
+      &quot;last&quot;: &quot;e&quot;
+    },
+    {
+      &quot;first&quot;: &quot;Jayden&quot;,
+      &quot;last&quot;: &quot;f&quot;
+    },
+    {
+      &quot;missing&quot;: &quot;different&quot;
+    }
+  ],
+  &quot;foo&quot;: {
+    &quot;bar&quot;: &quot;baz&quot;
+  }
+}</textarea> </label> <label class="demo-field-label" data-astro-cid-q63za7yy>
+Result
+<textarea class="demo-result" readonly rows="4" data-astro-cid-q63za7yy></textarea> </label> </div> </div> </div>  <h2 data-astro-cid-efjq5ct2>Object Projections</h2> <p data-astro-cid-efjq5ct2>
+Whereas a list projection is defined for a JSON array, an object
+      projection is defined for a JSON object. You can create an object
+      projection using the <code data-astro-cid-efjq5ct2>*</code> syntax. This will create a list of the
+      values of the JSON object, and project the right-hand side of the
+      projection onto the list of values.
+</p> <div class="jmespath-demo always-expanded" data-interactive data-always-expanded="true" data-astro-cid-q63za7yy> <!-- Collapsed header — click to expand/collapse -->  <div class="demo-body" data-astro-cid-q63za7yy> <div class="demo-fields" data-astro-cid-q63za7yy> <label class="demo-field-label" for="" data-astro-cid-q63za7yy>
+Expression
+<input class="demo-query" type="text" value="ops.*.numArgs" spellcheck="false" autocomplete="off" data-astro-cid-q63za7yy> </label> <label class="demo-field-label demo-field-data" data-astro-cid-q63za7yy>
+Input data (JSON)
+<textarea class="demo-data" spellcheck="false" rows="8" data-astro-cid-q63za7yy>{
+  &quot;ops&quot;: {
+    &quot;functionA&quot;: {
+      &quot;numArgs&quot;: 2
+    },
+    &quot;functionB&quot;: {
+      &quot;numArgs&quot;: 3
+    },
+    &quot;functionC&quot;: {
+      &quot;variadic&quot;: true
+    }
+  }
+}</textarea> </label> <label class="demo-field-label" data-astro-cid-q63za7yy>
+Result
+<textarea class="demo-result" readonly rows="4" data-astro-cid-q63za7yy></textarea> </label> </div> </div> </div>  <p data-astro-cid-efjq5ct2>
+In the example above the <code data-astro-cid-efjq5ct2>*</code> creates a JSON array of the values
+      associated with the <code data-astro-cid-efjq5ct2>ops</code> JSON object. The RHS of the
+      projection, <code data-astro-cid-efjq5ct2>numArgs</code>, is then applied to the JSON array,
+      resulting in the final array of <code data-astro-cid-efjq5ct2>[2, 3]</code>. Below is a sample
+      walk-through of how an implementation could <em data-astro-cid-efjq5ct2>potentially</em> implement
+      evaluating an object projection. First, the object projection can be
+      broken down into its two components, the left-hand side (LHS) and its
+      right-hand side (RHS):
+</p> <ul data-astro-cid-efjq5ct2> <li data-astro-cid-efjq5ct2><strong data-astro-cid-efjq5ct2>LHS</strong>: <code data-astro-cid-efjq5ct2>ops</code></li> <li data-astro-cid-efjq5ct2><strong data-astro-cid-efjq5ct2>RHS</strong>: <code data-astro-cid-efjq5ct2>numArgs</code></li> </ul> <p data-astro-cid-efjq5ct2>First, the LHS is evaluated to create the initial array to be projected:</p> <pre data-astro-cid-efjq5ct2><code data-astro-cid-efjq5ct2>evaluate(ops, inputData) -&gt; [&#123;"numArgs": 2&#125;, &#123;"numArgs": 3&#125;,
+                             &#123;"variadic": True&#125;]</code></pre> <p data-astro-cid-efjq5ct2>Then the RHS is applied to each element in the array:</p> <pre data-astro-cid-efjq5ct2><code data-astro-cid-efjq5ct2>evaluate(numArgs, &#123;numArgs: 2&#125;) -&gt; 2
+evaluate(numArgs, &#123;numArgs: 3&#125;) -&gt; 3
+evaluate(numArgs, &#123;variadic: true&#125;) -&gt; null</code></pre> <p data-astro-cid-efjq5ct2>
+Any <code data-astro-cid-efjq5ct2>null</code> values are not included in the final result, so the
+      result of the entire expression is therefore <code data-astro-cid-efjq5ct2>[2, 3]</code>.
+</p> <h2 data-astro-cid-efjq5ct2>Flatten Projections</h2> <p data-astro-cid-efjq5ct2>
+More than one projection can be used in a JMESPath expression. In the
+      case of a List/Object projection, the structure of the original document
+      is preserved when creating projection within a projection. For example,
+      let us take the expression
+<code data-astro-cid-efjq5ct2>reservations[*].instances[*].state</code>. This expression is saying
+      that the top level key <code data-astro-cid-efjq5ct2>reservations</code> has an array as a value.
+      For each of those array elements, project the
+<code data-astro-cid-efjq5ct2>instances[*].state</code> expression. Within each list element,
+      there is an <code data-astro-cid-efjq5ct2>instances</code> key which itself is a value, and we
+      create a sub projection for each each list element in the list. Here is an
+      example of that:
+</p> <div class="jmespath-demo always-expanded" data-interactive data-always-expanded="true" data-astro-cid-q63za7yy> <!-- Collapsed header — click to expand/collapse -->  <div class="demo-body" data-astro-cid-q63za7yy> <div class="demo-fields" data-astro-cid-q63za7yy> <label class="demo-field-label" for="" data-astro-cid-q63za7yy>
+Expression
+<input class="demo-query" type="text" value="reservations[*].instances[*].state" spellcheck="false" autocomplete="off" data-astro-cid-q63za7yy> </label> <label class="demo-field-label demo-field-data" data-astro-cid-q63za7yy>
+Input data (JSON)
+<textarea class="demo-data" spellcheck="false" rows="8" data-astro-cid-q63za7yy>{
+  &quot;reservations&quot;: [
+    {
+      &quot;instances&quot;: [
+        {
+          &quot;state&quot;: &quot;running&quot;
+        },
+        {
+          &quot;state&quot;: &quot;stopped&quot;
+        }
+      ]
+    },
+    {
+      &quot;instances&quot;: [
+        {
+          &quot;state&quot;: &quot;terminated&quot;
+        },
+        {
+          &quot;state&quot;: &quot;running&quot;
+        }
+      ]
+    }
+  ]
+}</textarea> </label> <label class="demo-field-label" data-astro-cid-q63za7yy>
+Result
+<textarea class="demo-result" readonly rows="4" data-astro-cid-q63za7yy></textarea> </label> </div> </div> </div>  <p data-astro-cid-efjq5ct2>
+The result of this expression is
+<code data-astro-cid-efjq5ct2>[["running", "stopped"], ["terminated", "running"]]</code>, which is
+      a list of lists. The outer list is from the projection of
+<code data-astro-cid-efjq5ct2>reservations[*]</code>, and the inner list is a projection of
+<code data-astro-cid-efjq5ct2>state</code> created from <code data-astro-cid-efjq5ct2>instances[*]</code>:
+</p> <pre data-astro-cid-efjq5ct2><code data-astro-cid-efjq5ct2>    1st       r0                         r1
+    2nd i0          i1             i0            i1
+    [["running", "stopped"], ["terminated", "running"]]</code></pre> <p data-astro-cid-efjq5ct2>
+What if we just want a list of all the states of our instances? We would
+      ideally like a result
+<code data-astro-cid-efjq5ct2>["running", "stopped", "terminated", "running"]</code>. In this
+      situation, we do not care which reservation the instance belonged to, we
+      just want a list of states.
+</p> <p data-astro-cid-efjq5ct2>
+This is the problem that a <code data-astro-cid-efjq5ct2>Flatten Projection</code> solves. To get
+      the desired result, you can use <code data-astro-cid-efjq5ct2>[]</code> instead of
+<code data-astro-cid-efjq5ct2>[*]</code> to flatten a list:
+<code data-astro-cid-efjq5ct2>reservations[].instances[].state</code>. Try changing
+<code data-astro-cid-efjq5ct2>[*]</code> to <code data-astro-cid-efjq5ct2>[]</code> in the expression above and see how
+      the result changes.
+</p> <p data-astro-cid-efjq5ct2>
+While the <code data-astro-cid-efjq5ct2>flatten</code> spec goes into more detail, a simple rule
+      of thumb to use for the flatten operator, <code data-astro-cid-efjq5ct2>[]</code>, is that:
+</p> <ul data-astro-cid-efjq5ct2> <li data-astro-cid-efjq5ct2>
+It flattens sublists into the parent list (not recursively, just one
+        level).
+</li> <li data-astro-cid-efjq5ct2>
+It creates a projection, so anything on the RHS of the flatten
+        projection is projected onto the newly created flattened list.
+</li> </ul> <p data-astro-cid-efjq5ct2>You can also just use <code data-astro-cid-efjq5ct2>[]</code> on its own to flatten a list:</p> <div class="jmespath-demo always-expanded" data-interactive data-always-expanded="true" data-astro-cid-q63za7yy> <!-- Collapsed header — click to expand/collapse -->  <div class="demo-body" data-astro-cid-q63za7yy> <div class="demo-fields" data-astro-cid-q63za7yy> <label class="demo-field-label" for="" data-astro-cid-q63za7yy>
+Expression
+<input class="demo-query" type="text" value="[]" spellcheck="false" autocomplete="off" data-astro-cid-q63za7yy> </label> <label class="demo-field-label demo-field-data" data-astro-cid-q63za7yy>
+Input data (JSON)
+<textarea class="demo-data" spellcheck="false" rows="8" data-astro-cid-q63za7yy>[[0, 1], 2, [3], 4, [5, [6, 7]]]</textarea> </label> <label class="demo-field-label" data-astro-cid-q63za7yy>
+Result
+<textarea class="demo-result" readonly rows="4" data-astro-cid-q63za7yy></textarea> </label> </div> </div> </div>  <p data-astro-cid-efjq5ct2>
+If you flattened the result of the expression again, <code data-astro-cid-efjq5ct2>[][]</code>,
+      you would then get a result of
+<code data-astro-cid-efjq5ct2>[0, 1, 2, 3, 4, 5, 6, 7, 8, 9]</code>. Try it out in the example
+      above.
+</p> <h2 data-astro-cid-efjq5ct2>Filter Projections</h2> <p data-astro-cid-efjq5ct2>Up to this point we have looked at:</p> <ul data-astro-cid-efjq5ct2> <li data-astro-cid-efjq5ct2>List/Slice projections</li> <li data-astro-cid-efjq5ct2>Object projections</li> <li data-astro-cid-efjq5ct2>Flatten projections</li> </ul> <p data-astro-cid-efjq5ct2>
+Evaluating the RHS of a projection is a basic type of filter. If the
+      result of the expression evaluated against an individual element results in
+<code data-astro-cid-efjq5ct2>null</code>, then the element is excluded from the final result.
+</p> <p data-astro-cid-efjq5ct2>
+A filter projection allows you to filter the LHS of the projection
+<em data-astro-cid-efjq5ct2>before</em> evaluating the RHS of a projection.
+</p> <p data-astro-cid-efjq5ct2>
+For example, let us say we have a list of machines, each has a
+<code data-astro-cid-efjq5ct2>name</code> and a <code data-astro-cid-efjq5ct2>state</code>. We would like the name of all
+      machines that are running. In pseudocode, this would be:
+</p> <pre data-astro-cid-efjq5ct2><code data-astro-cid-efjq5ct2>result = []
+foreach machine in inputData['machines']
+  if machine['state'] == 'running'
+    result.insert_at_end(machine['name'])
+return result</code></pre> <p data-astro-cid-efjq5ct2>A filter projection can be used to accomplish this:</p> <div class="jmespath-demo always-expanded" data-interactive data-always-expanded="true" data-astro-cid-q63za7yy> <!-- Collapsed header — click to expand/collapse -->  <div class="demo-body" data-astro-cid-q63za7yy> <div class="demo-fields" data-astro-cid-q63za7yy> <label class="demo-field-label" for="" data-astro-cid-q63za7yy>
+Expression
+<input class="demo-query" type="text" value="machines[?state=='running'].name" spellcheck="false" autocomplete="off" data-astro-cid-q63za7yy> </label> <label class="demo-field-label demo-field-data" data-astro-cid-q63za7yy>
+Input data (JSON)
+<textarea class="demo-data" spellcheck="false" rows="8" data-astro-cid-q63za7yy>{
+  &quot;machines&quot;: [
+    {
+      &quot;name&quot;: &quot;a&quot;,
+      &quot;state&quot;: &quot;running&quot;
+    },
+    {
+      &quot;name&quot;: &quot;b&quot;,
+      &quot;state&quot;: &quot;stopped&quot;
+    },
+    {
+      &quot;name&quot;: &quot;b&quot;,
+      &quot;state&quot;: &quot;running&quot;
+    }
+  ]
+}</textarea> </label> <label class="demo-field-label" data-astro-cid-q63za7yy>
+Result
+<textarea class="demo-result" readonly rows="4" data-astro-cid-q63za7yy></textarea> </label> </div> </div> </div>  <p data-astro-cid-efjq5ct2>
+Try changing <code data-astro-cid-efjq5ct2>running</code> to <code data-astro-cid-efjq5ct2>stopped</code> in the example
+      above. You can also remove the <code data-astro-cid-efjq5ct2>.name</code> at the end of the
+      expression if you just want the entire JSON object of each machine that
+      has the specified state.
+</p> <p data-astro-cid-efjq5ct2>
+A filter expression is defined for an array and has the general form
+<code data-astro-cid-efjq5ct2>LHS [? &lt;expression&gt; &lt;comparator&gt; &lt;expression&gt;]
+        RHS</code>. The <code data-astro-cid-efjq5ct2>filter expression</code> spec details exactly what comparators
+      are available and how they work, but the standard comparators are
+      supported, i.e <code data-astro-cid-efjq5ct2>==, !=, &lt;, &lt;=, &gt;, &gt;=</code>.
+</p> <h1 data-astro-cid-efjq5ct2>Pipe Expressions</h1> <p data-astro-cid-efjq5ct2>
+Projections are an important concept in JMESPath. However, there are times
+      when projection semantics are <em data-astro-cid-efjq5ct2>not</em> what you want. A common
+      scenario is when you want to operate of the <em data-astro-cid-efjq5ct2>result</em> of a
+      projection rather than projecting an expression onto each element in the
+      array. For example, the expression <code data-astro-cid-efjq5ct2>people[*].first</code> will give
+      you an array containing the first names of everyone in the people array.
+      What if you wanted the first element in that list? If you tried
+<code data-astro-cid-efjq5ct2>people[*].first[0]</code> that you just evaluate
+<code data-astro-cid-efjq5ct2>first[0]</code> for each element in the people array, and because
+      indexing is not defined for strings, the final result would be an empty
+      array, <code data-astro-cid-efjq5ct2>[]</code>. To accomplish the desired result, you can use a
+      pipe expression, <code data-astro-cid-efjq5ct2>&lt;expression&gt; | &lt;expression&gt;</code>, to
+      indicate that a projection must stop. This is shown in the example below:
+</p> <div class="jmespath-demo always-expanded" data-interactive data-always-expanded="true" data-astro-cid-q63za7yy> <!-- Collapsed header — click to expand/collapse -->  <div class="demo-body" data-astro-cid-q63za7yy> <div class="demo-fields" data-astro-cid-q63za7yy> <label class="demo-field-label" for="" data-astro-cid-q63za7yy>
+Expression
+<input class="demo-query" type="text" value="people[*].first | [0]" spellcheck="false" autocomplete="off" data-astro-cid-q63za7yy> </label> <label class="demo-field-label demo-field-data" data-astro-cid-q63za7yy>
+Input data (JSON)
+<textarea class="demo-data" spellcheck="false" rows="8" data-astro-cid-q63za7yy>{
+  &quot;people&quot;: [
+    {
+      &quot;first&quot;: &quot;James&quot;,
+      &quot;last&quot;: &quot;d&quot;
+    },
+    {
+      &quot;first&quot;: &quot;Jacob&quot;,
+      &quot;last&quot;: &quot;e&quot;
+    },
+    {
+      &quot;first&quot;: &quot;Jayden&quot;,
+      &quot;last&quot;: &quot;f&quot;
+    },
+    {
+      &quot;missing&quot;: &quot;different&quot;
+    }
+  ],
+  &quot;foo&quot;: {
+    &quot;bar&quot;: &quot;baz&quot;
+  }
+}</textarea> </label> <label class="demo-field-label" data-astro-cid-q63za7yy>
+Result
+<textarea class="demo-result" readonly rows="4" data-astro-cid-q63za7yy></textarea> </label> </div> </div> </div>  <p data-astro-cid-efjq5ct2>
+In the example above, the RHS of the list projection is <code data-astro-cid-efjq5ct2>first</code>. When a pipe is encountered, the result up to that point is passed to
+      the RHS of the pipe expression. The pipe expression is evaluated as:
+</p> <pre data-astro-cid-efjq5ct2><code data-astro-cid-efjq5ct2>evaluate(people[*].first, inputData) -&gt; ["James", "Jacob", "Jayden"]
+evaluate([0], ["James", "Jacob", "Jayden"]) -&gt; "James"</code></pre> <h1 data-astro-cid-efjq5ct2>MultiSelect</h1> <p data-astro-cid-efjq5ct2>
+Up to this point, we have looked at JMESPath expressions that help to
+      pare down a JSON document into just the elements you are interested in.
+      This next concept, <a href="https://jmespath.site/#spec-multiselectlist" data-astro-cid-efjq5ct2><code data-astro-cid-efjq5ct2>multiselect lists</code></a> and <a href="https://jmespath.site/#spec-multiselecthash" data-astro-cid-efjq5ct2><code data-astro-cid-efjq5ct2>multiselect hashes</code></a> allow you to create JSON elements. This allows you to create elements
+      that do not exist in a JSON document. A multiselect list creates a list
+      and a multiselect hash creates a JSON object.
+</p> <p data-astro-cid-efjq5ct2>This is an example of a multiselect list:</p> <div class="jmespath-demo always-expanded" data-interactive data-always-expanded="true" data-astro-cid-q63za7yy> <!-- Collapsed header — click to expand/collapse -->  <div class="demo-body" data-astro-cid-q63za7yy> <div class="demo-fields" data-astro-cid-q63za7yy> <label class="demo-field-label" for="" data-astro-cid-q63za7yy>
+Expression
+<input class="demo-query" type="text" value="people[].[name, state.name]" spellcheck="false" autocomplete="off" data-astro-cid-q63za7yy> </label> <label class="demo-field-label demo-field-data" data-astro-cid-q63za7yy>
+Input data (JSON)
+<textarea class="demo-data" spellcheck="false" rows="8" data-astro-cid-q63za7yy>{
+  &quot;people&quot;: [
+    {
+      &quot;name&quot;: &quot;a&quot;,
+      &quot;state&quot;: {
+        &quot;name&quot;: &quot;up&quot;
+      }
+    },
+    {
+      &quot;name&quot;: &quot;b&quot;,
+      &quot;state&quot;: {
+        &quot;name&quot;: &quot;down&quot;
+      }
+    },
+    {
+      &quot;name&quot;: &quot;c&quot;,
+      &quot;state&quot;: {
+        &quot;name&quot;: &quot;up&quot;
+      }
+    }
+  ]
+}</textarea> </label> <label class="demo-field-label" data-astro-cid-q63za7yy>
+Result
+<textarea class="demo-result" readonly rows="4" data-astro-cid-q63za7yy></textarea> </label> </div> </div> </div>  <p data-astro-cid-efjq5ct2>
+In the expression above, the <code data-astro-cid-efjq5ct2>[name, state.name]</code> portion is a
+      multiselect list. It says to create a list of two element, the first
+      element is the result of evaluating the <code data-astro-cid-efjq5ct2>name</code> expression
+      against the list element, and the second element is the result of
+      evaluating <code data-astro-cid-efjq5ct2>state.name</code>. Each list element will therefore
+      create a two element list, and the final result of the entire expression
+      is a list of two element lists.
+</p> <p data-astro-cid-efjq5ct2>
+Unlike a projection, the result of the expression in always included, even
+      if the result is a null. If you change the above expression to
+<code data-astro-cid-efjq5ct2>people[].[foo, bar]</code> each two element list will be
+<code data-astro-cid-efjq5ct2>[null, null]</code>.
+</p> <p data-astro-cid-efjq5ct2>
+A multiselect hash has the same basic idea as a multiselect list, except
+      it instead creates a hash instead of an array. Using the same example
+      above, if we instead wanted to create a two element hash that had two
+      keys, <code data-astro-cid-efjq5ct2>Name</code> and <code data-astro-cid-efjq5ct2>State</code>, we could use this:
+</p> <div class="jmespath-demo always-expanded" data-interactive data-always-expanded="true" data-astro-cid-q63za7yy> <!-- Collapsed header — click to expand/collapse -->  <div class="demo-body" data-astro-cid-q63za7yy> <div class="demo-fields" data-astro-cid-q63za7yy> <label class="demo-field-label" for="" data-astro-cid-q63za7yy>
+Expression
+<input class="demo-query" type="text" value="people[].{Name: name, State: state.name}" spellcheck="false" autocomplete="off" data-astro-cid-q63za7yy> </label> <label class="demo-field-label demo-field-data" data-astro-cid-q63za7yy>
+Input data (JSON)
+<textarea class="demo-data" spellcheck="false" rows="8" data-astro-cid-q63za7yy>{
+  &quot;people&quot;: [
+    {
+      &quot;name&quot;: &quot;a&quot;,
+      &quot;state&quot;: {
+        &quot;name&quot;: &quot;up&quot;
+      }
+    },
+    {
+      &quot;name&quot;: &quot;b&quot;,
+      &quot;state&quot;: {
+        &quot;name&quot;: &quot;down&quot;
+      }
+    },
+    {
+      &quot;name&quot;: &quot;c&quot;,
+      &quot;state&quot;: {
+        &quot;name&quot;: &quot;up&quot;
+      }
+    }
+  ]
+}</textarea> </label> <label class="demo-field-label" data-astro-cid-q63za7yy>
+Result
+<textarea class="demo-result" readonly rows="4" data-astro-cid-q63za7yy></textarea> </label> </div> </div> </div>  <h1 data-astro-cid-efjq5ct2>Functions</h1> <p data-astro-cid-efjq5ct2>JMESPath supports function expressions, for example:</p> <div class="jmespath-demo always-expanded" data-interactive data-always-expanded="true" data-astro-cid-q63za7yy> <!-- Collapsed header — click to expand/collapse -->  <div class="demo-body" data-astro-cid-q63za7yy> <div class="demo-fields" data-astro-cid-q63za7yy> <label class="demo-field-label" for="" data-astro-cid-q63za7yy>
+Expression
+<input class="demo-query" type="text" value="length(people)" spellcheck="false" autocomplete="off" data-astro-cid-q63za7yy> </label> <label class="demo-field-label demo-field-data" data-astro-cid-q63za7yy>
+Input data (JSON)
+<textarea class="demo-data" spellcheck="false" rows="8" data-astro-cid-q63za7yy>{
+  &quot;people&quot;: [
+    {
+      &quot;name&quot;: &quot;b&quot;,
+      &quot;age&quot;: 30,
+      &quot;state&quot;: {
+        &quot;name&quot;: &quot;up&quot;
+      }
+    },
+    {
+      &quot;name&quot;: &quot;a&quot;,
+      &quot;age&quot;: 50,
+      &quot;state&quot;: {
+        &quot;name&quot;: &quot;down&quot;
+      }
+    },
+    {
+      &quot;name&quot;: &quot;c&quot;,
+      &quot;age&quot;: 40,
+      &quot;state&quot;: {
+        &quot;name&quot;: &quot;up&quot;
+      }
+    }
+  ]
+}</textarea> </label> <label class="demo-field-label" data-astro-cid-q63za7yy>
+Result
+<textarea class="demo-result" readonly rows="4" data-astro-cid-q63za7yy></textarea> </label> </div> </div> </div>  <p data-astro-cid-efjq5ct2> <a href="https://jmespath.site/#functions" data-astro-cid-efjq5ct2>Functions</a> can be used to
+      transform and filter data in powerful ways.
+</p> <p data-astro-cid-efjq5ct2>Below are a few examples of functions.</p> <p data-astro-cid-efjq5ct2>
+This example prints the name of the oldest person in the
+<code data-astro-cid-efjq5ct2>people</code> array:
+</p> <div class="jmespath-demo always-expanded" data-interactive data-always-expanded="true" data-astro-cid-q63za7yy> <!-- Collapsed header — click to expand/collapse -->  <div class="demo-body" data-astro-cid-q63za7yy> <div class="demo-fields" data-astro-cid-q63za7yy> <label class="demo-field-label" for="" data-astro-cid-q63za7yy>
+Expression
+<input class="demo-query" type="text" value="max_by(people, &#38;age).name" spellcheck="false" autocomplete="off" data-astro-cid-q63za7yy> </label> <label class="demo-field-label demo-field-data" data-astro-cid-q63za7yy>
+Input data (JSON)
+<textarea class="demo-data" spellcheck="false" rows="8" data-astro-cid-q63za7yy>{
+  &quot;people&quot;: [
+    {
+      &quot;name&quot;: &quot;b&quot;,
+      &quot;age&quot;: 30
+    },
+    {
+      &quot;name&quot;: &quot;a&quot;,
+      &quot;age&quot;: 50
+    },
+    {
+      &quot;name&quot;: &quot;c&quot;,
+      &quot;age&quot;: 40
+    }
+  ]
+}</textarea> </label> <label class="demo-field-label" data-astro-cid-q63za7yy>
+Result
+<textarea class="demo-result" readonly rows="4" data-astro-cid-q63za7yy></textarea> </label> </div> </div> </div>  <p data-astro-cid-efjq5ct2>
+Functions can also be combined with filter expressions. In the example
+      below, the JMESPath expressions finds all elements in
+<code data-astro-cid-efjq5ct2>myarray</code> that contains the string <code data-astro-cid-efjq5ct2>foo</code>.
+</p> <div class="jmespath-demo always-expanded" data-interactive data-always-expanded="true" data-astro-cid-q63za7yy> <!-- Collapsed header — click to expand/collapse -->  <div class="demo-body" data-astro-cid-q63za7yy> <div class="demo-fields" data-astro-cid-q63za7yy> <label class="demo-field-label" for="" data-astro-cid-q63za7yy>
+Expression
+<input class="demo-query" type="text" value="myarray[?contains(@, 'foo') == `true`]" spellcheck="false" autocomplete="off" data-astro-cid-q63za7yy> </label> <label class="demo-field-label demo-field-data" data-astro-cid-q63za7yy>
+Input data (JSON)
+<textarea class="demo-data" spellcheck="false" rows="8" data-astro-cid-q63za7yy>{
+  &quot;myarray&quot;: [
+    &quot;foo&quot;,
+    &quot;foobar&quot;,
+    &quot;barfoo&quot;,
+    &quot;bar&quot;,
+    &quot;baz&quot;,
+    &quot;barbaz&quot;,
+    &quot;barfoobaz&quot;
+  ]
+}</textarea> </label> <label class="demo-field-label" data-astro-cid-q63za7yy>
+Result
+<textarea class="demo-result" readonly rows="4" data-astro-cid-q63za7yy></textarea> </label> </div> </div> </div>  <p data-astro-cid-efjq5ct2>
+The <code data-astro-cid-efjq5ct2>@</code> character in the example above refers to the current
+      element being evaluated in <code data-astro-cid-efjq5ct2>myarray</code>. The expression
+<code data-astro-cid-efjq5ct2>contains(@, 'foo')</code> will return <code data-astro-cid-efjq5ct2>true</code> if the
+      current element in the <code data-astro-cid-efjq5ct2>myarray</code> array contains the string
+<code data-astro-cid-efjq5ct2>foo</code>.
+</p> <p data-astro-cid-efjq5ct2>
+While the <code data-astro-cid-efjq5ct2>function expression</code> spec has all the details, there
+      are a few things to keep in mind when working with functions:
+</p> <ul data-astro-cid-efjq5ct2> <li data-astro-cid-efjq5ct2>
+Function arguments have types. If an argument for a function has the
+        wrong type, an <code data-astro-cid-efjq5ct2>invalid-type</code> error will occur. There are
+        functions that can do type conversions (<code data-astro-cid-efjq5ct2>to_string</code>,
+<code data-astro-cid-efjq5ct2>to_number</code>) to help get arguments converted to their proper
+        type.
+</li> <li data-astro-cid-efjq5ct2>
+If a function is called with the wrong number of arguments, an
+<code data-astro-cid-efjq5ct2>invalid-arity</code> will occur.
+</li> </ul> <h1 data-astro-cid-efjq5ct2>Next Steps</h1> <p data-astro-cid-efjq5ct2>
+We have now seen an overview of the JMESPath language. The next things to
+      do are:
+</p> <ul data-astro-cid-efjq5ct2> <li data-astro-cid-efjq5ct2>
+See the <a href="https://jmespath.site/#examples" data-astro-cid-efjq5ct2>examples</a>. You will
+        see common JMESPath expressions that go beyond the tutorial. You will
+        also see you how to combine multiple features together in order to best
+        leverage JMESPath expressions.
+</li> <li data-astro-cid-efjq5ct2>
+To actually start using JMESPath, pick the language of your choice, and
+        check out the <a href="https://jmespath.site/#libraries" data-astro-cid-efjq5ct2>libraries</a> page
+        for more information on using JMESPath in the language of your choice.
+</li> <li data-astro-cid-efjq5ct2>
+Read the <a href="https://jmespath.site/#specification" data-astro-cid-efjq5ct2>JMESPath Spec</a>, which has the official ABNF grammar and full details of the semantics
+        of the language.
+</li> </ul> </div>  </main> <footer data-astro-cid-37fxchfa> <div class="footer-container" data-astro-cid-37fxchfa> <p data-astro-cid-37fxchfa>&copy; 2026 JMESPath Contributors</p> <a href="https://github.com/jmespath/jmespath.site" target="_blank" rel="noopener noreferrer" data-astro-cid-37fxchfa>GitHub</a> </div> </footer> <script type="module">const s="jmespath-version",a="latest",m="jmespath-cdn-script",p="jmespath-loaded";function u(){const e=document.getElementById("jmespath-versions-config");if(!e)return{};try{return JSON.parse(e.textContent??"{}")}catch{return{}}}function f(e){const t=e.match(/^\/(specification|functions)\/([^/]+)\//);return t?t[2]:null}function h(){document.getElementById(m)?.remove();const e=window;e.jmespath=void 0}function d(e){h();const t=document.createElement("script");t.id=m,t.src=e.url,t.integrity=e.integrity,t.crossOrigin="anonymous",t.addEventListener("load",()=>{window.dispatchEvent(new CustomEvent(p))}),t.addEventListener("error",()=>{g(e.url)}),document.head.appendChild(t)}function g(e){if(document.getElementById("jmespath-cdn-error"))return;const o=document.createElement("div");o.id="jmespath-cdn-error",o.setAttribute("role","alert"),o.style.cssText="position:fixed;bottom:1rem;right:1rem;padding:0.75rem 1rem;background:#fff5f5;border:1px solid #e53e3e;border-radius:6px;color:#c53030;font-size:0.875rem;z-index:9999;max-width:320px;box-shadow:0 2px 8px rgba(0,0,0,0.15);",o.textContent=`Failed to load JMESPath library from CDN. Demos may not work. (${e})`;const n=document.createElement("button");n.textContent="×",n.setAttribute("aria-label","Dismiss"),n.style.cssText="margin-left:0.75rem;background:none;border:none;cursor:pointer;font-size:1rem;color:inherit;",n.addEventListener("click",()=>o.remove()),o.appendChild(n),document.body.appendChild(o)}function E(){window.dispatchEvent(new CustomEvent(p))}function l(){const e=document.getElementById("version-select");if(!e)return;const t=e.dataset.pageType,o=u();let n;t==="versioned"?(n=f(window.location.pathname)??a,localStorage.setItem(s,n)):n=localStorage.getItem(s)??a;for(const r of Array.from(e.options))r.selected=r.value===n;if(t==="shared"){const r=o[n];r&&d(r)}e.addEventListener("change",()=>{const r=e.value;if(localStorage.setItem(s,r),t==="versioned"){const i=window.location.pathname,c=i.replace(/\/(specification|functions)\/[^/]+\//,`/$1/${r}/`);c!==i&&(window.location.href=c)}else{const i=o[r];i?d(i):E()}})}document.readyState==="loading"?document.addEventListener("DOMContentLoaded",l):l();</script> <script type="module">const e=document.querySelector(".hamburger"),t=document.getElementById("nav-links");e&&t&&e.addEventListener("click",()=>{const n=e.getAttribute("aria-expanded")==="true";e.setAttribute("aria-expanded",String(!n)),t.classList.toggle("open")});</script> </body> </html>
